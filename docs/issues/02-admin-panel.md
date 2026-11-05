@@ -1,7 +1,7 @@
 # Admin panel: unified look, light/dark theme, authentication
 
 ## Description
-One consistent admin panel for all content, built on **EasyAdminBundle 4**, so the CRUD screens don't have to be hand-built.
+One consistent admin panel for all content, built on **EasyAdminBundle 5**, so the CRUD screens don't have to be hand-built.
 
 ## Scope
 - `/admin` dashboard with sidebar sections: Site (settings, menus, page blocks, theme), LARPs, Characters, Tags, Galleries

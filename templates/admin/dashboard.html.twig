@@ -1,0 +1,44 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'menu.dashboard'|trans }}{% endblock %}
+
+{% block main %}
+    <div class="dashboard">
+        <p class="dashboard-intro">
+            <strong>{{ 'dashboard.welcome'|trans({'%name%': app.user}) }}</strong>
+            {{ 'dashboard.intro'|trans }}
+        </p>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="dashboard-card-label"><i class="fa fa-people-group"></i> {{ 'dashboard.organization'|trans }}</div>
+                <div class="dashboard-card-value">{{ settings.organizationName }}</div>
+                <a class="btn btn-secondary btn-sm" href="{{ ea_url().setController('App\\Controller\\Admin\\SiteSettingsCrudController').setAction('edit').setEntityId(settings.id) }}">
+                    {{ 'dashboard.edit_settings'|trans }}
+                </a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-label"><i class="fa fa-palette"></i> {{ 'dashboard.theme'|trans }}</div>
+                <div class="dashboard-card-value">{{ settings.theme }}</div>
+                <small class="text-muted">{{ 'dashboard.color_scheme_hint'|trans }}</small>
+            </div>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="dashboard-card">
+                    <div class="dashboard-card-label"><i class="fa fa-users"></i> {{ 'dashboard.users'|trans }}</div>
+                    <div class="dashboard-card-value">{{ userCount }}</div>
+                    <a class="btn btn-secondary btn-sm" href="{{ ea_url().setController('App\\Controller\\Admin\\UserCrudController').setAction('index') }}">
+                        {{ 'dashboard.manage_users'|trans }}
+                    </a>
+                </div>
+            {% endif %}
+
+            <div class="dashboard-card dashboard-card-muted">
+                <div class="dashboard-card-label"><i class="fa fa-hourglass-half"></i> {{ 'dashboard.coming_soon'|trans }}</div>
+                <small>{{ 'dashboard.coming_soon_text'|trans }}</small>
+            </div>
+        </div>
+    </div>
+{% endblock %}

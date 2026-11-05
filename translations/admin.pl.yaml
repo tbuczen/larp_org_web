@@ -1,0 +1,56 @@
+menu:
+    dashboard: Pulpit
+    view_site: Zobacz stronę
+    settings: Ustawienia strony
+    users: Użytkownicy
+    section:
+        site: Strona
+        access: Dostęp
+
+dashboard:
+    welcome: 'Witaj, %name%!'
+    intro: 'To jest panel administracyjny. Wszystkie sekcje strony znajdziesz w menu po lewej.'
+    organization: Organizacja
+    users: Użytkownicy
+    theme: Motyw
+    edit_settings: Edytuj ustawienia
+    manage_users: Zarządzaj użytkownikami
+    coming_soon: Wkrótce
+    coming_soon_text: 'Kolejne sekcje (larpy, postacie, tagi, galerie, menu, bloki strony, motywy) pojawią się tutaj wraz z realizacją kolejnych zadań.'
+    color_scheme_hint: 'Motyw jasny/ciemny zmienisz w menu użytkownika (prawy górny róg).'
+
+settings:
+    label: Ustawienia
+    title: Ustawienia strony
+    tab:
+        organization: Organizacja
+        contact: Kontakt i social media
+        appearance: Wygląd
+    organization_name: Nazwa organizacji
+    tagline: Hasło przewodnie
+    about: O nas
+    contact_email: E-mail kontaktowy
+    theme: Motyw (katalog w themes/)
+    theme_help: 'Nazwa katalogu motywu. System motywów zostanie dodany w osobnym zadaniu; na razie dostępny jest tylko „base”.'
+
+user:
+    add: Dodaj użytkownika
+    label: Użytkownik
+    label_plural: Użytkownicy
+    email: E-mail
+    display_name: Wyświetlana nazwa
+    roles: Role
+    role:
+        editor: Redaktor
+        admin: Administrator
+    enabled: Aktywny
+    password: Hasło
+    password_repeat: Powtórz hasło
+    password_keep: 'Zostaw puste, aby nie zmieniać hasła.'
+    created_at: Utworzono
+
+login:
+    email: E-mail
+    password: Hasło
+    sign_in: Zaloguj się
+    remember_me: Zapamiętaj mnie

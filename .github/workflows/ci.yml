@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    name: Lint & static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, pdo_sqlite, pdo_mysql
+          tools: composer:v2
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: bin/console lint:container
+      - run: bin/console lint:twig templates
+      - run: bin/console lint:yaml config translations
+      - run: vendor/bin/php-cs-fixer fix --dry-run --diff
+      - run: bin/console cache:warmup --env=dev
+      - run: vendor/bin/phpstan analyse --no-progress
+
+  tests:
+    name: Tests (${{ matrix.database }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        database: [sqlite, mysql]
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: larp_test
+        ports: ['3306:3306']
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=5s --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, pdo_sqlite, pdo_mysql
+          tools: composer:v2
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Use MySQL
+        if: matrix.database == 'mysql'
+        # dbname_suffix "_test" is appended by config/packages/doctrine.yaml in the test env.
+        run: echo 'DATABASE_URL=mysql://root:root@127.0.0.1:3306/larp?serverVersion=8.0.32&charset=utf8mb4' >> "$GITHUB_ENV"
+      - run: vendor/bin/phpunit

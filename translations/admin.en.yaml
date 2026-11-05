@@ -1,0 +1,56 @@
+menu:
+    dashboard: Dashboard
+    view_site: View site
+    settings: Site settings
+    users: Users
+    section:
+        site: Site
+        access: Access
+
+dashboard:
+    welcome: 'Welcome, %name%!'
+    intro: 'This is the admin panel. Every section of the site is in the menu on the left.'
+    organization: Organization
+    users: Users
+    theme: Theme
+    edit_settings: Edit settings
+    manage_users: Manage users
+    coming_soon: Coming soon
+    coming_soon_text: 'More sections (LARPs, characters, tags, galleries, menus, page blocks, themes) will appear here as the next issues are implemented.'
+    color_scheme_hint: 'Switch between light and dark mode in the user menu (top right).'
+
+settings:
+    label: Settings
+    title: Site settings
+    tab:
+        organization: Organization
+        contact: Contact & social media
+        appearance: Appearance
+    organization_name: Organization name
+    tagline: Tagline
+    about: About us
+    contact_email: Contact e-mail
+    theme: Theme (folder in themes/)
+    theme_help: 'Name of the theme folder. The theme system comes in a separate issue; for now only "base" exists.'
+
+user:
+    add: Add user
+    label: User
+    label_plural: Users
+    email: E-mail
+    display_name: Display name
+    roles: Roles
+    role:
+        editor: Editor
+        admin: Administrator
+    enabled: Enabled
+    password: Password
+    password_repeat: Repeat password
+    password_keep: 'Leave empty to keep the current password.'
+    created_at: Created
+
+login:
+    email: E-mail
+    password: Password
+    sign_in: Sign in
+    remember_me: Remember me

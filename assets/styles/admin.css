@@ -1,0 +1,49 @@
+/*
+ * Small additions to EasyAdmin's own styles. Only EasyAdmin CSS variables are
+ * used, so everything follows the light/dark color scheme automatically.
+ */
+.dashboard-intro {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.dashboard-card {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-secondary-color);
+    border-radius: 8px;
+    color: var(--text-primary-color);
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: 1.25rem;
+}
+
+.dashboard-card-muted {
+    background: transparent;
+    border-style: dashed;
+    color: var(--text-secondary-color);
+}
+
+.dashboard-card-label {
+    color: var(--text-secondary-color);
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+.dashboard-card-value {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.dashboard-card .btn {
+    align-self: flex-start;
+    margin-top: auto;
+}

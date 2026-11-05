@@ -7,7 +7,7 @@
 - **Backend:** PHP 8.3, Symfony 7.4 LTS, using existing bundles where possible
 - **Database:** SQLite or MySQL through Doctrine ORM. Switching is one change to `DATABASE_URL`, and no SQL specific to one database is allowed.
 - **Frontend:** Twig + Symfony UX (Stimulus, Turbo, Live Components), AssetMapper (no Node build step)
-- **Admin:** EasyAdminBundle 4, which comes with a unified CRUD UI and light/dark mode
+- **Admin:** EasyAdminBundle 5, which comes with a unified CRUD UI and light/dark mode
 
 ## Sub-issues
 - [ ] 01 Project foundation

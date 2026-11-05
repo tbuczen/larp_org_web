@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{#
+    Temporary home page. The real front page is built from page blocks
+    and rendered by the active theme (see docs/issues/11, 13 and 15).
+#}
+{% block body %}
+    <main class="placeholder-home">
+        <h1>{{ settings.organizationName }}</h1>
+        {% if settings.tagline %}<p class="tagline">{{ settings.tagline }}</p>{% endif %}
+        {% if settings.about %}<div class="about">{{ settings.about|raw }}</div>{% endif %}
+
+        <nav class="social">
+            {% for label, url in {'Facebook': settings.facebookUrl, 'Instagram': settings.instagramUrl, 'Discord': settings.discordUrl} %}
+                {% if url %}<a href="{{ url }}" target="_blank" rel="noopener">{{ label }}</a>{% endif %}
+            {% endfor %}
+            {% if settings.contactEmail %}<a href="mailto:{{ settings.contactEmail }}">{{ settings.contactEmail }}</a>{% endif %}
+        </nav>
+    </main>
+{% endblock %}
