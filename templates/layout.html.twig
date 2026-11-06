@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{#
+    Shared public layout. With the theme system (#15) this moves into
+    themes/base/templates/ so organizations can override it.
+#}
+{% block body %}
+    <header class="site-header">
+        <a class="site-brand" href="{{ path('app_home') }}">{{ settings.organizationName }}</a>
+        <nav class="site-nav" aria-label="{{ 'nav.main'|trans }}">
+            <a href="{{ path('app_larp_index') }}" {% if app.current_route starts with 'app_larp' or app.current_route == 'app_character_show' %}aria-current="page"{% endif %}>{{ 'nav.larps'|trans }}</a>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        {% include 'partials/_social.html.twig' with {links: {
+            'Facebook': settings.facebookUrl,
+            'Instagram': settings.instagramUrl,
+            'Discord': settings.discordUrl,
+        }} %}
+        {% if settings.contactEmail %}
+            <p><a href="mailto:{{ settings.contactEmail }}">{{ settings.contactEmail }}</a></p>
+        {% endif %}
+        <p class="site-footer__copy">© {{ 'now'|date('Y') }} {{ settings.organizationName }}</p>
+    </footer>
+{% endblock %}

@@ -1,7 +1,7 @@
 # LARP Organization Website
 
 A website and admin panel for organizations that run LARPs, built with **Symfony 7.4 LTS** and replacing the Las Tajemnic Google Site.
-The feature roadmap is in [`docs/issues/`](docs/issues/).
+The roadmap is tracked in GitHub issues: epic [#2](https://github.com/tbuczen/larp_org_web/issues/2).
 
 | Part | Technology |
 |---|---|
@@ -57,6 +57,22 @@ Migrations use Doctrine's Schema API rather than raw SQL, so the same migrations
 - The admin UI is in Polish and English (`translations/admin.*.yaml`), switchable from the user menu.
 - Login is protected with CSRF and throttling (5 attempts per minute).
 
+## Content model
+
+| Entity | What it is |
+|---|---|
+| `Larp` | A LARP project or another initiative (e.g. a LARP group). Status: draft (hidden), current, past. |
+| `LarpEdition` | One run of a LARP: dates, place, recruitment status, registration link. Edited inside the LARP form. |
+| `Character` | A character in one edition: casting, availability (available / taken / hidden), portrait, description. |
+| `Tag` / `TagCategory` | Shared dictionary of **trigger** and **gameplay** tags, grouped in categories. |
+| `CharacterTag` | A tag on a character with a percentage (1–100). |
+
+The LARP page shows the **current edition**: the next one that hasn't ended, otherwise the latest.
+In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
+
+Public pages: `/larpy`, `/larp/{slug}`, `/larp/{slug}/postacie`, `/larp/{slug}/postac/{character}`.
+Uploaded images go to `public/uploads/` (not committed; back it up together with the database).
+
 ## Project layout
 
 ```
@@ -64,13 +80,16 @@ src/
   Controller/Admin/   EasyAdmin dashboard + CRUD controllers
   Controller/         Public controllers, login
   Entity/             Doctrine entities
+  Enum/               Statuses and types (translated via translations/enums.*.yaml)
+  Form/               Custom form types (CharacterTagType)
+  Twig/, Util/        Twig filters (edition_dates) and helpers
   Command/            Console commands (app:create-admin)
   DataFixtures/       Demo data
 templates/            Twig templates (public templates move into themes/ with the theme system)
-translations/         admin.{pl,en}.yaml, validators.{pl,en}.yaml
+translations/         admin.*, enums.*, validators.*, messages+intl-icu.* (public pages), PL + EN
 assets/               AssetMapper assets (styles/admin.css holds the admin additions)
 migrations/           Portable Doctrine migrations
-docs/issues/          Feature specifications / roadmap
+docs/issues/          Original issue drafts (now on GitHub)
 ```
 
 ## Quality checks

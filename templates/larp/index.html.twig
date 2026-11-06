@@ -1,0 +1,22 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'larp.index_title'|trans }} · {{ settings.organizationName }}{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">{{ 'larp.index_title'|trans }}</h1>
+
+    {% for key, larps in sections %}
+        {% if larps is not empty %}
+            <section class="larp-section" id="{{ key }}">
+                <h2>{{ ('larp.section.' ~ key)|trans }}</h2>
+                <div class="card-grid">
+                    {% for larp in larps %}
+                        {% include 'larp/_card.html.twig' %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    {% else %}
+        <p>{{ 'larp.none'|trans }}</p>
+    {% endfor %}
+{% endblock %}

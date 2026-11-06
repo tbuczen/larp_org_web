@@ -1,0 +1,35 @@
+nav:
+    main: Main menu
+    larps: LARPs
+    social: Social media
+
+home:
+    current: Currently organized LARPs
+    all_larps: All LARPs
+
+larp:
+    index_title: Our LARPs
+    section:
+        current: Currently organized LARPs
+        past: Previous LARP projects
+        initiatives: Other initiatives
+    none: No LARPs have been published yet.
+    edition_count: '{count, plural, one {# edition} other {# editions}}'
+    when: When
+    where: Where
+    edition: Edition
+    players: Players
+    price: Price
+    editions: Editions
+
+character:
+    title: Characters
+    see_all: '{count, plural, one {See the character} other {See all # characters}}'
+    matcher_soon: 'Coming soon: matching characters to your preferences.'
+    none: Characters have not been published yet.
+    gameplay: Gameplay
+    triggers: Triggers
+    casting: Casting
+    no_tags: No gameplay description.
+    triggers_hint: 'The percentage shows how strongly or often the content appears when playing this character.'
+    no_triggers: No triggers listed.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Repository\LarpRepository;
 use App\Repository\SiteSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,10 +17,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(SiteSettingsRepository $settings): Response
+    public function index(SiteSettingsRepository $settings, LarpRepository $larps): Response
     {
         return $this->render('site/home.html.twig', [
             'settings' => $settings->get(),
+            'current' => $larps->findPublishedSections()['current'],
         ]);
     }
 }

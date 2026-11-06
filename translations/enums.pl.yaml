@@ -1,0 +1,23 @@
+project_type:
+    larp: Larp
+    initiative: Inna inicjatywa
+larp_status:
+    draft: Szkic (ukryty)
+    current: Aktualnie organizowany
+    past: Poprzedni projekt
+recruitment:
+    not_started: Rekrutacja wkrótce
+    open: Rekrutacja trwa!
+    closed: Rekrutacja zakończona
+casting:
+    any: Dowolna
+    female: Kobieca
+    male: Męska
+    non_binary: Niebinarna
+availability:
+    available: Dostępna
+    taken: Zajęta
+    hidden: Ukryta
+tag_type:
+    trigger: Trigger
+    gameplay: Rozgrywka

@@ -1,20 +1,27 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {#
     Temporary home page. The real front page is built from page blocks
-    and rendered by the active theme (see docs/issues/11, 13 and 15).
+    and rendered by the active theme (see issues #13, #15 and #17).
 #}
-{% block body %}
-    <main class="placeholder-home">
+{% block content %}
+    <section class="placeholder-home">
         <h1>{{ settings.organizationName }}</h1>
         {% if settings.tagline %}<p class="tagline">{{ settings.tagline }}</p>{% endif %}
         {% if settings.about %}<div class="about">{{ settings.about|raw }}</div>{% endif %}
+    </section>
 
-        <nav class="social">
-            {% for label, url in {'Facebook': settings.facebookUrl, 'Instagram': settings.instagramUrl, 'Discord': settings.discordUrl} %}
-                {% if url %}<a href="{{ url }}" target="_blank" rel="noopener">{{ label }}</a>{% endif %}
-            {% endfor %}
-            {% if settings.contactEmail %}<a href="mailto:{{ settings.contactEmail }}">{{ settings.contactEmail }}</a>{% endif %}
-        </nav>
-    </main>
+    {% if current is not empty %}
+        <section class="larp-section">
+            <div class="section-head">
+                <h2>{{ 'home.current'|trans }}</h2>
+                <a href="{{ path('app_larp_index') }}">{{ 'home.all_larps'|trans }}</a>
+            </div>
+            <div class="card-grid">
+                {% for larp in current %}
+                    {% include 'larp/_card.html.twig' %}
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}

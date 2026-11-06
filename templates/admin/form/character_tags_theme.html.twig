@@ -1,0 +1,33 @@
+{#
+    Compact rows for the character's trigger and gameplay lists:
+    [tag select] [percentage %] [delete], instead of EasyAdmin's accordion.
+    Keeps the field-collection-item / field-collection-delete-button classes
+    that EasyAdmin's JavaScript uses to add and remove rows.
+#}
+{% block _Character_triggerTags_entry_row %}{{ block('character_tag_entry_row') }}{% endblock %}
+{% block _Character_gameplayTags_entry_row %}{{ block('character_tag_entry_row') }}{% endblock %}
+
+{% block character_tag_entry_row %}
+    <div class="field-collection-item character-tag-item {{ not form.vars.valid ? 'is-invalid' }}">
+        <div class="character-tag-item__tag">
+            {{ form_widget(form.tag, {attr: {'aria-label': 'character_tag.tag'|trans({}, 'admin')}}) }}
+            {{ form_errors(form.tag) }}
+        </div>
+        <div class="character-tag-item__percentage input-group">
+            {{ form_widget(form.percentage, {attr: {'aria-label': 'character_tag.percentage'|trans({}, 'admin')}}) }}
+            <span class="input-group-text">%</span>
+        </div>
+        {% if form_parent(form).vars.allow_delete|default(false) and not disabled %}
+            <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
+                    title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                <twig:ea:Icon name="internal:delete" />
+            </button>
+        {% endif %}
+        {{ form_errors(form.percentage) }}
+        {{ form_errors(form) }}
+        {# EasyAdmin's "add item" script expands the new row's accordion and fails
+           without these elements, so keep two hidden stand-ins. #}
+        <span class="accordion-button d-none" hidden></span>
+        <span class="accordion-collapse d-none" hidden></span>
+    </div>
+{% endblock %}

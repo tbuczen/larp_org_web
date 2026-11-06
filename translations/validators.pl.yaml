@@ -1,1 +1,6 @@
 settings.url_https: 'Adres musi zaczynać się od https://'
+slug.invalid: 'Adres może zawierać tylko małe litery, cyfry i myślniki.'
+edition.end_before_start: 'Koniec nie może być przed początkiem.'
+tag.duplicate: 'Taki tag tego typu już istnieje.'
+tag.category_type_mismatch: 'Kategoria ma inny typ niż tag.'
+character.duplicate_tag: 'Tag „%tag%” został dodany więcej niż raz.'

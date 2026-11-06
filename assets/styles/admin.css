@@ -47,3 +47,33 @@
     align-self: flex-start;
     margin-top: auto;
 }
+
+/* Character form: compact trigger / gameplay rows (templates/admin/form/character_tags_theme.html.twig) */
+.character-tag-item {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: .5rem;
+    max-width: 640px;
+}
+
+.character-tag-item__tag {
+    flex: 1 1 260px;
+}
+
+.character-tag-item__percentage {
+    flex: 0 0 120px;
+    width: 120px;
+}
+
+.character-tag-item .invalid-feedback,
+.character-tag-item > ul {
+    flex-basis: 100%;
+}
+
+.character-tag-item .field-collection-delete-button {
+    flex: 0 0 auto;
+    position: static;
+    transform: none;
+}

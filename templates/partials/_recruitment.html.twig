@@ -1,0 +1,9 @@
+{# Recruitment badge for an edition; links to registration when open. #}
+{% if edition %}
+    {% set status = edition.recruitment.value %}
+    {% if status == 'open' and edition.registrationUrl %}
+        <a class="badge badge--{{ status }}" href="{{ edition.registrationUrl }}" target="_blank" rel="noopener">{{ edition.recruitment|trans }}</a>
+    {% else %}
+        <span class="badge badge--{{ status }}">{{ edition.recruitment|trans }}</span>
+    {% endif %}
+{% endif %}

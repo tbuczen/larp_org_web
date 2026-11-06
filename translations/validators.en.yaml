@@ -1,1 +1,6 @@
 settings.url_https: 'The URL must start with https://'
+slug.invalid: 'The slug may only contain lowercase letters, digits and hyphens.'
+edition.end_before_start: 'The end cannot be before the start.'
+tag.duplicate: 'A tag of this type with this name already exists.'
+tag.category_type_mismatch: 'The category has a different type than the tag.'
+character.duplicate_tag: 'The tag "%tag%" was added more than once.'

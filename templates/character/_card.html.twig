@@ -1,0 +1,31 @@
+{# Character card. Shows the top gameplay tags and all trigger names. #}
+<article class="character-card{{ character.taken ? ' is-taken' : '' }}">
+    <a class="character-card__portrait" href="{{ path('app_character_show', {slug: character.larp.slug, characterSlug: character.slug}) }}" tabindex="-1" aria-hidden="true">
+        {% if character.portrait %}
+            <img src="{{ asset('uploads/characters/' ~ character.portrait) }}" alt="" loading="lazy">
+        {% else %}
+            <span>{{ character.name|first|upper }}</span>
+        {% endif %}
+    </a>
+    <div class="character-card__body">
+        <h3><a href="{{ path('app_character_show', {slug: character.larp.slug, characterSlug: character.slug}) }}">{{ character.name }}</a></h3>
+        <p class="character-card__meta">
+            {{ character.casting|trans }}
+            {% if character.taken %}<span class="badge badge--taken">{{ character.availability|trans }}</span>{% endif %}
+        </p>
+        {% if character.teaser %}<p class="character-card__teaser">{{ character.teaser }}</p>{% endif %}
+
+        {% if character.gameplayTags is not empty %}
+            <ul class="chips" aria-label="{{ 'character.gameplay'|trans }}">
+                {% for ct in character.gameplayTags|slice(0, 3) %}
+                    <li class="chip">{{ ct.tag.name }} <small>{{ ct.percentage }}%</small></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if character.triggerTags is not empty %}
+            <p class="character-card__triggers"><span class="label">{{ 'character.triggers'|trans }}:</span>
+                {% for ct in character.triggerTags %}<strong>{{ ct.tag.name }}</strong>{% if not loop.last %}, {% endif %}{% endfor %}
+            </p>
+        {% endif %}
+    </div>
+</article>

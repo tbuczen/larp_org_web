@@ -7,21 +7,19 @@ Admins can add and edit LARPs.
 - name, slug (auto-generated), short teaser, full description (rich text)
 - **project type:** LARP / other initiative (for example a LARP group such as "Wyprawa Rycerska Talabeclandu", which has no characters or dates but does have a gallery and social links)
 - **format/genre** label, e.g. "Chamber larp", "Field larp" (*larp terenowy*), and inspiration/setting (e.g. "Shadowrun", "Skyrim", "Fallout")
-- status: draft / announced / registration open / sold out / past
+- status: draft (hidden) / currently organized / previous project
 - **recruitment badge** shown on cards: "Recruitment open!" (links to the registration/Facebook event) or "Recruitment closed"
+- hero/cover image, optional promo images
+- player count and price (optional, free text)
+- social links (see #08)
+- color scheme (see #14)
+- position/sort order and a "featured on front page" flag
 
 ## Editions (entity `LarpEdition`)
 The LARPs on the current site run over several editions (Vault 47: 3 editions 2023–2025; Pradawne Zwoje: 3rd edition in 2026). So:
-- `LarpEdition`: LARP, edition number/name, start and end date, location, status, registration link, Facebook event, its own characters and galleries
+- `LarpEdition`: LARP, edition number/name, start and end date, location (text + optional map link), recruitment status, registration link (optional), Facebook event (see #09), its own characters and galleries
 - The LARP card shows "3 editions · 2023–2025" for past LARPs and the upcoming edition's dates and place for current ones
 - Characters (#04) and galleries (#07) belong to an edition, which defaults to the LARP's current edition
-- start date and end date, location (text + optional map link)
-- hero/cover image, optional promo images
-- player count and price (optional, free text)
-- registration link (external URL, optional)
-- social links, Facebook event link (see #08 and #09)
-- color scheme (see #14)
-- position/sort order and a "featured on front page" flag
 
 ## Public side
 - `/larps` lists LARPs in sections, as on the current site: **Currently organized LARPs**, **Previous LARP projects**, **Other initiatives**

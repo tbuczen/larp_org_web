@@ -1,0 +1,12 @@
+{# Percentage bars for a list of CharacterTag. #}
+<ul class="tag-bars">
+    {% for ct in tags %}
+        <li class="tag-bar{{ variant is defined ? ' tag-bar--' ~ variant : '' }}">
+            <span class="tag-bar__label">{{ ct.tag.name }}{% if ct.tag.category and show_category|default(false) %} <small>{{ ct.tag.category.name }}</small>{% endif %}</span>
+            <span class="tag-bar__track" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ ct.percentage }}" aria-label="{{ ct.tag.name }}">
+                <span class="tag-bar__fill" style="width: {{ ct.percentage }}%"></span>
+            </span>
+            <span class="tag-bar__value">{{ ct.percentage }}%</span>
+        </li>
+    {% endfor %}
+</ul>

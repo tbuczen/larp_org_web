@@ -1,0 +1,27 @@
+{% set edition = larp.currentEdition %}
+<article class="larp-card">
+    <a class="larp-card__media" href="{{ path('app_larp_show', {slug: larp.slug}) }}" tabindex="-1" aria-hidden="true">
+        {% include 'partials/_cover.html.twig' %}
+    </a>
+    <div class="larp-card__body">
+        <h3 class="larp-card__title"><a href="{{ path('app_larp_show', {slug: larp.slug}) }}">{{ larp.name }}</a></h3>
+        {% if larp.format or larp.setting %}
+            <p class="larp-card__meta">{{ [larp.format, larp.setting]|filter(v => v)|join(' · ') }}</p>
+        {% endif %}
+
+        {% if larp.status.value == 'current' and edition %}
+            <p class="larp-card__when">
+                {% if edition|edition_dates %}<strong>{{ edition|edition_dates }}</strong>{% endif %}
+                {% if edition.location %}<span>{{ edition.location }}</span>{% endif %}
+                {% if edition.name %}<span>{{ edition.name }}</span>{% endif %}
+            </p>
+            {% include 'partials/_recruitment.html.twig' %}
+        {% elseif not larp.initiative and larp.editionCount > 0 %}
+            <p class="larp-card__when">
+                {{ 'larp.edition_count'|trans({count: larp.editionCount}) }}{% if larp.yearRange %} · {{ larp.yearRange }}{% endif %}
+            </p>
+        {% endif %}
+
+        {% if larp.teaser %}<p class="larp-card__teaser">{{ larp.teaser }}</p>{% endif %}
+    </div>
+</article>

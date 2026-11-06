@@ -1,0 +1,62 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ larp.name }} · {{ settings.organizationName }}{% endblock %}
+
+{% block content %}
+    <article class="larp-page">
+        <header class="larp-hero">
+            <div class="larp-hero__media">{% include 'partials/_cover.html.twig' with {eager: true} %}</div>
+            <div class="larp-hero__text">
+                {% if larp.format or larp.setting %}
+                    <p class="eyebrow">{{ [larp.format, larp.setting]|filter(v => v)|join(' · ') }}</p>
+                {% endif %}
+                <h1>{{ larp.name }}</h1>
+                {% if larp.teaser %}<p class="lead">{{ larp.teaser }}</p>{% endif %}
+
+                {% if edition and not larp.initiative %}
+                    <dl class="facts">
+                        {% if edition|edition_dates %}<div><dt>{{ 'larp.when'|trans }}</dt><dd>{{ edition|edition_dates }}</dd></div>{% endif %}
+                        {% if edition.location %}
+                            <div><dt>{{ 'larp.where'|trans }}</dt><dd>
+                                {% if edition.locationUrl %}<a href="{{ edition.locationUrl }}" target="_blank" rel="noopener">{{ edition.location }}</a>{% else %}{{ edition.location }}{% endif %}
+                            </dd></div>
+                        {% endif %}
+                        <div><dt>{{ 'larp.edition'|trans }}</dt><dd>{{ edition.name }}</dd></div>
+                        {% if larp.playerCount %}<div><dt>{{ 'larp.players'|trans }}</dt><dd>{{ larp.playerCount }}</dd></div>{% endif %}
+                        {% if larp.price %}<div><dt>{{ 'larp.price'|trans }}</dt><dd>{{ larp.price }}</dd></div>{% endif %}
+                    </dl>
+                    {% if larp.status.value == 'current' %}{% include 'partials/_recruitment.html.twig' %}{% endif %}
+                {% endif %}
+            </div>
+        </header>
+
+        {% if larp.description %}
+            <section class="prose">{{ larp.description|raw }}</section>
+        {% endif %}
+
+        {% if characters is not empty %}
+            <section class="larp-characters">
+                <div class="section-head">
+                    <h2>{{ 'character.title'|trans }}</h2>
+                    <a href="{{ path('app_larp_characters', {slug: larp.slug}) }}">{{ 'character.see_all'|trans({count: characters|length}) }}</a>
+                </div>
+                <div class="card-grid card-grid--small">
+                    {% for character in characters|slice(0, 6) %}
+                        {% include 'character/_card.html.twig' %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% if larp.editionCount > 1 %}
+            <section class="larp-editions">
+                <h2>{{ 'larp.editions'|trans }}</h2>
+                <ul>
+                    {% for e in larp.sortedEditions|reverse %}
+                        <li><strong>{{ e.name }}</strong>{% if e|edition_dates %} · {{ e|edition_dates }}{% endif %}{% if e.location %} · {{ e.location }}{% endif %}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+    </article>
+{% endblock %}

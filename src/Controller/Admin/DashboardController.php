@@ -75,8 +75,16 @@ class DashboardController extends AbstractDashboardController
             ->setAction('edit')
             ->setEntityId($this->settings->get()->getId());
 
-        // Sections for LARPs, characters, tags, galleries, menus, page blocks and
-        // themes are added here as the corresponding issues are implemented.
+        yield MenuItem::section('menu.section.larps');
+        yield MenuItem::linkTo(LarpCrudController::class, 'menu.larps', 'fa fa-dragon');
+        yield MenuItem::linkTo(CharacterCrudController::class, 'menu.characters', 'fa fa-masks-theater');
+        yield MenuItem::subMenu('menu.tags', 'fa fa-tags')->setSubItems([
+            MenuItem::linkTo(TagCrudController::class, 'menu.tag_list'),
+            MenuItem::linkTo(TagCategoryCrudController::class, 'menu.tag_categories'),
+        ]);
+
+        // Galleries, menus, page blocks and themes are added here as the
+        // corresponding issues are implemented.
 
         yield MenuItem::section('menu.section.access')->setPermission(User::ROLE_ADMIN);
         yield MenuItem::linkTo(UserCrudController::class, 'menu.users', 'fa fa-users')

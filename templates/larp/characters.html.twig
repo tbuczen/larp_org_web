@@ -1,0 +1,17 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'character.title'|trans }} · {{ larp.name }} · {{ settings.organizationName }}{% endblock %}
+
+{% block content %}
+    <nav class="breadcrumbs"><a href="{{ path('app_larp_show', {slug: larp.slug}) }}">← {{ larp.name }}</a></nav>
+    <h1 class="page-title">{{ 'character.title'|trans }} <small>{{ larp.name }} · {{ edition.name }}</small></h1>
+    <p class="hint">{{ 'character.matcher_soon'|trans }}</p>
+
+    <div class="card-grid card-grid--small">
+        {% for character in characters %}
+            {% include 'character/_card.html.twig' %}
+        {% else %}
+            <p>{{ 'character.none'|trans }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}

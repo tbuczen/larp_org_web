@@ -3,8 +3,14 @@ menu:
     view_site: Zobacz stronę
     settings: Ustawienia strony
     users: Użytkownicy
+    larps: Larpy
+    characters: Postacie
+    tags: Tagi
+    tag_list: Lista tagów
+    tag_categories: Kategorie tagów
     section:
         site: Strona
+        larps: Larpy
         access: Dostęp
 
 dashboard:
@@ -16,7 +22,7 @@ dashboard:
     edit_settings: Edytuj ustawienia
     manage_users: Zarządzaj użytkownikami
     coming_soon: Wkrótce
-    coming_soon_text: 'Kolejne sekcje (larpy, postacie, tagi, galerie, menu, bloki strony, motywy) pojawią się tutaj wraz z realizacją kolejnych zadań.'
+    coming_soon_text: 'Kolejne sekcje (galerie, menu, bloki strony, motywy) pojawią się tutaj wraz z realizacją kolejnych zadań.'
     color_scheme_hint: 'Motyw jasny/ciemny zmienisz w menu użytkownika (prawy górny róg).'
 
 settings:
@@ -54,3 +60,93 @@ login:
     password: Hasło
     sign_in: Zaloguj się
     remember_me: Zapamiętaj mnie
+
+common:
+    position: Kolejność
+    position_help: 'Mniejsza liczba = wyżej na liście.'
+
+larp:
+    label: Larp
+    label_plural: Larpy
+    characters: Postacie
+    view_on_site: Zobacz na stronie
+    tab:
+        basics: Podstawowe
+        description: Opis
+        media: Grafika
+        editions: Edycje
+    name: Nazwa
+    slug: Adres (slug)
+    project_type: Rodzaj projektu
+    status: Status
+    featured: Wyróżniony
+    featured_help: 'Wyróżnione larpy trafiają na stronę główną.'
+    format: Format
+    format_help: 'Np. „Larp chamber”, „Larp terenowy”.'
+    setting: Świat / inspiracja
+    setting_help: 'Np. „Shadowrun”, „Skyrim”, „Fallout”.'
+    player_count: Liczba graczy
+    price: Cena
+    teaser: Zajawka
+    teaser_help: 'Krótki opis na karcie larpa (do 500 znaków).'
+    description: Pełny opis
+    cover_image: Grafika główna
+    cover_image_help: 'Duże zdjęcie lub plakat larpa (JPG/PNG/WebP, do 8 MB).'
+    cover_image_alt: Opis grafiki (alt)
+    cover_image_alt_help: 'Krótki opis zdjęcia dla czytników ekranu i wyszukiwarek.'
+    editions: Edycje
+    editions_help: 'Każda edycja ma własne daty, miejsce, rekrutację i postacie.'
+
+edition:
+    label: Edycja
+    label_plural: Edycje
+    name: Nazwa edycji
+    name_help: 'Np. „3. edycja” albo „2026”.'
+    start_date: Początek
+    end_date: Koniec
+    location: Miejsce
+    location_url: Link do mapy
+    recruitment: Rekrutacja
+    registration_url: Link do zapisów
+    registration_url_help: 'Formularz zapisów albo wydarzenie na Facebooku.'
+
+character:
+    label: Postać
+    label_plural: Postacie
+    larp: Larp
+    edition: Edycja larpa
+    tab:
+        basics: Podstawowe
+        description: Opis
+        tags: Triggery i rozgrywka
+    portrait: Portret
+    name: Imię / nazwa
+    slug: Adres (slug)
+    casting: Obsada
+    availability: Dostępność
+    teaser: Zajawka
+    teaser_help: 'Krótki opis na karcie postaci (do 500 znaków).'
+    description: Pełny opis
+    trigger_tags: Triggery
+    trigger_tags_help: 'Trudne treści, z którymi postać się zetknie. Procent = jak mocno / często się pojawiają.'
+    gameplay_tags: Rozgrywka
+    gameplay_tags_help: 'Jak wygląda gra tą postacią. Procent = jaka część rozgrywki; łącznie zwykle ok. 100%, ale nie jest to wymagane.'
+
+character_tag:
+    tag: Tag
+    choose: '— wybierz —'
+    percentage: '%'
+
+tag:
+    label: Tag
+    label_plural: Tagi
+    name: Nazwa
+    type: Typ
+    category: Kategoria
+    category_help: 'Kategoria musi mieć ten sam typ co tag.'
+    description: Opis
+
+tag_category:
+    label: Kategoria tagów
+    label_plural: Kategorie tagów
+    name: Nazwa

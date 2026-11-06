@@ -1,0 +1,35 @@
+nav:
+    main: Menu główne
+    larps: Larpy
+    social: Media społecznościowe
+
+home:
+    current: Aktualnie organizowane larpy
+    all_larps: Wszystkie larpy
+
+larp:
+    index_title: Nasze larpy
+    section:
+        current: Aktualnie organizowane larpy
+        past: Poprzednie projekty larpowe
+        initiatives: Inne inicjatywy
+    none: Nie ma jeszcze opublikowanych larpów.
+    edition_count: '{count, plural, one {# edycja} few {# edycje} other {# edycji}}'
+    when: Kiedy
+    where: Gdzie
+    edition: Edycja
+    players: Gracze
+    price: Cena
+    editions: Edycje
+
+character:
+    title: Postacie
+    see_all: '{count, plural, one {Zobacz postać} few {Zobacz wszystkie # postacie} other {Zobacz wszystkie # postaci}}'
+    matcher_soon: 'Wkrótce: dopasowanie postaci do Twoich preferencji.'
+    none: Postacie nie zostały jeszcze opublikowane.
+    gameplay: Rozgrywka
+    triggers: Triggery
+    casting: Obsada
+    no_tags: Brak opisu rozgrywki.
+    triggers_hint: 'Procent pokazuje, jak mocno lub często dana treść pojawia się w grze tą postacią.'
+    no_triggers: Brak zgłoszonych triggerów.

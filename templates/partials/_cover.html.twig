@@ -1,0 +1,6 @@
+{# Cover image of a LARP, or a generated placeholder with its initial. #}
+{% if larp.coverImage %}
+    <img class="cover" src="{{ asset('uploads/larps/' ~ larp.coverImage) }}" alt="{{ larp.coverImageAlt ?? larp.name }}" loading="{{ eager|default(false) ? 'eager' : 'lazy' }}">
+{% else %}
+    <div class="cover cover--placeholder" aria-hidden="true"><span>{{ larp.name|first|upper }}</span></div>
+{% endif %}

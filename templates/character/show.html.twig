@@ -1,0 +1,55 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ character.name }} · {{ larp.name }} · {{ settings.organizationName }}{% endblock %}
+
+{% block content %}
+    <nav class="breadcrumbs">
+        <a href="{{ path('app_larp_show', {slug: larp.slug}) }}">{{ larp.name }}</a> /
+        <a href="{{ path('app_larp_characters', {slug: larp.slug}) }}">{{ 'character.title'|trans }}</a>
+    </nav>
+
+    <article class="character-page">
+        <header class="character-page__head">
+            <div class="character-card__portrait character-card__portrait--large">
+                {% if character.portrait %}
+                    <img src="{{ asset('uploads/characters/' ~ character.portrait) }}" alt="{{ character.name }}">
+                {% else %}
+                    <span aria-hidden="true">{{ character.name|first|upper }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <p class="eyebrow">{{ larp.name }} · {{ edition.name }}</p>
+                <h1>{{ character.name }}</h1>
+                <p class="character-card__meta">
+                    {{ 'character.casting'|trans }}: {{ character.casting|trans }}
+                    <span class="badge badge--{{ character.availability.value }}">{{ character.availability|trans }}</span>
+                </p>
+                {% if character.teaser %}<p class="lead">{{ character.teaser }}</p>{% endif %}
+            </div>
+        </header>
+
+        <div class="character-page__grid">
+            <section>
+                <h2>{{ 'character.gameplay'|trans }}</h2>
+                {% if character.gameplayTags is not empty %}
+                    {% include 'character/_bars.html.twig' with {tags: character.gameplayTags, variant: 'gameplay'} %}
+                {% else %}
+                    <p class="hint">{{ 'character.no_tags'|trans }}</p>
+                {% endif %}
+            </section>
+            <section>
+                <h2>{{ 'character.triggers'|trans }}</h2>
+                {% if character.triggerTags is not empty %}
+                    <p class="hint">{{ 'character.triggers_hint'|trans }}</p>
+                    {% include 'character/_bars.html.twig' with {tags: character.triggerTags, variant: 'trigger', show_category: true} %}
+                {% else %}
+                    <p class="hint">{{ 'character.no_triggers'|trans }}</p>
+                {% endif %}
+            </section>
+        </div>
+
+        {% if character.description %}
+            <section class="prose">{{ character.description|raw }}</section>
+        {% endif %}
+    </article>
+{% endblock %}

@@ -1,0 +1,23 @@
+project_type:
+    larp: LARP
+    initiative: Other initiative
+larp_status:
+    draft: Draft (hidden)
+    current: Currently organized
+    past: Previous project
+recruitment:
+    not_started: Recruitment soon
+    open: Recruitment open!
+    closed: Recruitment closed
+casting:
+    any: Any
+    female: Female
+    male: Male
+    non_binary: Non-binary
+availability:
+    available: Available
+    taken: Taken
+    hidden: Hidden
+tag_type:
+    trigger: Trigger
+    gameplay: Gameplay

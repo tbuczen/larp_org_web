@@ -3,8 +3,14 @@ menu:
     view_site: View site
     settings: Site settings
     users: Users
+    larps: LARPs
+    characters: Characters
+    tags: Tags
+    tag_list: Tag list
+    tag_categories: Tag categories
     section:
         site: Site
+        larps: LARPs
         access: Access
 
 dashboard:
@@ -16,7 +22,7 @@ dashboard:
     edit_settings: Edit settings
     manage_users: Manage users
     coming_soon: Coming soon
-    coming_soon_text: 'More sections (LARPs, characters, tags, galleries, menus, page blocks, themes) will appear here as the next issues are implemented.'
+    coming_soon_text: 'More sections (galleries, menus, page blocks, themes) will appear here as the next issues are implemented.'
     color_scheme_hint: 'Switch between light and dark mode in the user menu (top right).'
 
 settings:
@@ -54,3 +60,93 @@ login:
     password: Password
     sign_in: Sign in
     remember_me: Remember me
+
+common:
+    position: Order
+    position_help: 'Lower numbers come first.'
+
+larp:
+    label: LARP
+    label_plural: LARPs
+    characters: Characters
+    view_on_site: View on site
+    tab:
+        basics: Basics
+        description: Description
+        media: Images
+        editions: Editions
+    name: Name
+    slug: URL slug
+    project_type: Project type
+    status: Status
+    featured: Featured
+    featured_help: 'Featured LARPs are shown on the front page.'
+    format: Format
+    format_help: 'E.g. "Chamber larp", "Field larp".'
+    setting: Setting / inspiration
+    setting_help: 'E.g. "Shadowrun", "Skyrim", "Fallout".'
+    player_count: Number of players
+    price: Price
+    teaser: Teaser
+    teaser_help: 'Short text for the LARP card (up to 500 characters).'
+    description: Full description
+    cover_image: Cover image
+    cover_image_help: 'Large photo or poster of the LARP (JPG/PNG/WebP, up to 8 MB).'
+    cover_image_alt: Image description (alt)
+    cover_image_alt_help: 'Short description of the image for screen readers and search engines.'
+    editions: Editions
+    editions_help: 'Each edition has its own dates, place, recruitment and characters.'
+
+edition:
+    label: Edition
+    label_plural: Editions
+    name: Edition name
+    name_help: 'E.g. "3rd edition" or "2026".'
+    start_date: Start
+    end_date: End
+    location: Place
+    location_url: Map link
+    recruitment: Recruitment
+    registration_url: Registration link
+    registration_url_help: 'Sign-up form or Facebook event.'
+
+character:
+    label: Character
+    label_plural: Characters
+    larp: LARP
+    edition: LARP edition
+    tab:
+        basics: Basics
+        description: Description
+        tags: Triggers & gameplay
+    portrait: Portrait
+    name: Name
+    slug: URL slug
+    casting: Casting
+    availability: Availability
+    teaser: Teaser
+    teaser_help: 'Short text for the character card (up to 500 characters).'
+    description: Full description
+    trigger_tags: Triggers
+    trigger_tags_help: 'Difficult content the character will face. Percentage = how strongly / often it appears.'
+    gameplay_tags: Gameplay
+    gameplay_tags_help: 'What playing this character is like. Percentage = share of the play; usually about 100% in total, but not required.'
+
+character_tag:
+    tag: Tag
+    choose: '— choose —'
+    percentage: '%'
+
+tag:
+    label: Tag
+    label_plural: Tags
+    name: Name
+    type: Type
+    category: Category
+    category_help: 'The category must have the same type as the tag.'
+    description: Description
+
+tag_category:
+    label: Tag category
+    label_plural: Tag categories
+    name: Name

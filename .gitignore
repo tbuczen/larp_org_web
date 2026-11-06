@@ -23,3 +23,8 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
+
+###> app uploads ###
+/public/uploads/*/*
+!/public/uploads/*/.gitkeep
+###< app uploads ###
