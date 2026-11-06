@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Field\FileFormField;
 
 final class AdminLarpTest extends WebTestCase
 {
@@ -113,7 +114,9 @@ final class AdminLarpTest extends WebTestCase
         $larp = $this->larp('cybercrush');
         $crawler = $this->client->request('GET', '/admin/larp/'.$larp->getId().'/edit');
         $form = $crawler->filter('form[name="Larp"]')->form();
-        $form['Larp[coverImage][file]']->upload($file);
+        $upload = $form['Larp[coverImage][file]'];
+        self::assertInstanceOf(FileFormField::class, $upload);
+        $upload->upload($file);
         $this->client->submit($form);
         self::assertResponseRedirects();
 

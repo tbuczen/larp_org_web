@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Settings are a single row, so only the "edit" page exists. Any other page redirects to it.
+ *
+ * @extends AbstractCrudController<SiteSettings>
  */
 class SiteSettingsCrudController extends AbstractCrudController
 {

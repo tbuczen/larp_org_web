@@ -17,6 +17,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * One row in a character's trigger or gameplay list: tag + percentage.
+ *
+ * @extends AbstractType<CharacterTag>
  */
 final class CharacterTagType extends AbstractType
 {

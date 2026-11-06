@@ -20,6 +20,9 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * @extends AbstractCrudController<User>
+ */
 #[IsGranted(User::ROLE_ADMIN)]
 class UserCrudController extends AbstractCrudController
 {

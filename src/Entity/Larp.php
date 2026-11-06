@@ -356,6 +356,6 @@ class Larp implements SluggableInterface, \Stringable
         $editions = $this->editions->toArray();
         usort($editions, static fn (LarpEdition $a, LarpEdition $b): int => [null === $a->getStartDate(), $a->getStartDate()] <=> [null === $b->getStartDate(), $b->getStartDate()]);
 
-        return array_values($editions);
+        return $editions;
     }
 }
