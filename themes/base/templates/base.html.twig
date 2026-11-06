@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{#
+    HTML skeleton for every public page. Theme stylesheets and scripts come from
+    theme.yaml of the active theme and its parents (base first).
+#}
+<html lang="{{ app.request.locale }}" data-theme="{{ theme().name }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>{% block title %}{{ settings.organizationName ?? 'LARP' }}{% endblock %}</title>
+        {% block meta %}
+            {% if settings.tagline is defined and settings.tagline %}<meta name="description" content="{{ settings.tagline }}">{% endif %}
+        {% endblock %}
+        <meta name="theme-color" content="#111318">
+        <link rel="icon" href="{{ asset(theme_asset('images/favicon.svg') ?? 'favicon.svg') }}" type="image/svg+xml">
+        {% block stylesheets %}
+            {% for path in theme_stylesheets() %}
+                <link rel="stylesheet" href="{{ asset(path) }}">
+            {% endfor %}
+        {% endblock %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% for path in theme_scripts() %}
+                <script type="module" src="{{ asset(path) }}"></script>
+            {% endfor %}
+        {% endblock %}
+    </head>
+    <body class="{% block body_class %}{% endblock %}">
+        {% block body %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{#
+    Shared public layout: header with the "main" menu (a burger on phones), main
+    content, and footer with the "footer" menu and social links.
+
+    Blocks you can override in a page template:
+      main     – everything between header and footer (full width)
+      content  – the page content inside a centred container
+#}
+{% block body %}
+    <a class="skip-link" href="#main">{{ 'nav.skip'|trans }}</a>
+
+    <header class="site-header" data-controller="site-nav">
+        <div class="site-header__inner">
+            <a class="site-brand" href="{{ path('app_home') }}">
+                {% block brand %}
+                    {% set logo = theme_asset('images/logo.svg') %}
+                    {% if logo %}<img class="site-brand__logo" src="{{ asset(logo) }}" alt="" width="40" height="40">{% endif %}
+                    <span class="site-brand__name">{{ settings.organizationName }}</span>
+                {% endblock %}
+            </a>
+
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"
+                    data-site-nav-target="button" data-action="site-nav#toggle">
+                <twig:ux:icon name="lucide:menu" class="nav-toggle__open" aria-hidden="true" />
+                <twig:ux:icon name="lucide:x" class="nav-toggle__close" aria-hidden="true" />
+                <span class="visually-hidden">{{ 'nav.main'|trans }}</span>
+            </button>
+
+            <nav id="site-nav" class="site-nav" aria-label="{{ 'nav.main'|trans }}" data-site-nav-target="menu">
+                {% set links = menu('main') %}
+                {% if links is empty %}
+                    {# No menu built yet in the admin: show the built-in pages. #}
+                    <ul class="menu">
+                        <li class="menu__item"><a class="menu__link" href="{{ path('app_larp_index') }}" {% if app.current_route in ['app_larp_index', 'app_larp_show'] %}aria-current="page"{% endif %}>{{ 'nav.larps'|trans }}</a></li>
+                        <li class="menu__item"><a class="menu__link" href="{{ path('app_characters') }}" {% if app.current_route in ['app_characters', 'app_larp_characters', 'app_character_show'] %}aria-current="page"{% endif %}>{{ 'nav.characters'|trans }}</a></li>
+                    </ul>
+                {% else %}
+                    {% include 'partials/_menu.html.twig' with {links: links} %}
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main id="main" class="site-main">
+        {% block main %}
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        {% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            {% set footer_links = menu('footer') %}
+            {% if footer_links is not empty %}
+                <nav aria-label="{{ 'nav.footer'|trans }}">{% include 'partials/_menu.html.twig' with {links: footer_links, variant: 'footer'} %}</nav>
+            {% endif %}
+            {% include 'partials/_social.html.twig' with {site: settings} %}
+            {% if settings.contactEmail %}
+                <p><a href="mailto:{{ settings.contactEmail }}">{{ settings.contactEmail }}</a></p>
+            {% endif %}
+            <p class="site-footer__copy">© {{ 'now'|date('Y') }} {{ settings.organizationName }}</p>
+        </div>
+    </footer>
+{% endblock %}

@@ -1,5 +1,8 @@
 nav:
     main: Menu główne
+    skip: Przejdź do treści
+    see_all: Zobacz wszystko
+    footer: Menu w stopce
     larps: Larpy
     characters: Postacie
     social: Media społecznościowe
@@ -65,3 +68,15 @@ matcher:
         good: Pasuje
         maybe: Może być
         poor: Raczej nie dla Ciebie
+
+block:
+    hero:
+        see_larp: Poznaj larpa
+    matcher_teaser:
+        button: Znajdź swoją postać
+    countdown:
+        default_title: 'Do {name} zostało'
+        days: dni
+        hours: godz.
+        minutes: min
+        seconds: sek.

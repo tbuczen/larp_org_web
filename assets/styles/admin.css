@@ -77,3 +77,84 @@
     position: static;
     transform: none;
 }
+
+/* Page layout screen (templates/admin/page/layout.html.twig) */
+.page-layout {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+}
+
+@media (max-width: 992px) {
+    .page-layout { grid-template-columns: 1fr; }
+}
+
+.page-layout__empty {
+    border: 1px dashed var(--border-secondary-color);
+    border-radius: 8px;
+    color: var(--text-secondary-color);
+    padding: 2rem;
+    text-align: center;
+}
+
+.block-list {
+    display: grid;
+    gap: .5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.block-item {
+    align-items: center;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-secondary-color);
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    padding: .6rem .75rem;
+}
+
+.block-item.is-disabled { opacity: .55; }
+.block-item.is-ghost { opacity: .3; }
+.block-item__handle { color: var(--text-secondary-color); cursor: grab; padding: .25rem; touch-action: none; }
+.block-item__icon { color: var(--text-secondary-color); text-align: center; width: 1.5rem; }
+.block-item__text { display: flex; flex: 1 1 200px; flex-direction: column; min-width: 0; }
+.block-item__text .text-muted { font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.block-item__actions { display: flex; flex-wrap: wrap; gap: .25rem; }
+.block-item__actions form { margin: 0; }
+
+.block-types { display: grid; gap: .5rem; }
+.block-types form { margin: 0; }
+
+.block-type {
+    align-items: start;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-secondary-color);
+    border-radius: 8px;
+    color: var(--text-primary-color);
+    display: grid;
+    gap: 0 .6rem;
+    grid-template-columns: 1.5rem 1fr;
+    padding: .6rem .75rem;
+    text-align: left;
+    width: 100%;
+}
+
+.block-type:hover { border-color: var(--text-secondary-color); }
+.block-type i { grid-row: span 2; margin-top: .2rem; }
+.block-type small { color: var(--text-secondary-color); }
+
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+/* Menu items screen */
+.block-item--menu { align-items: flex-start; }
+.block-list--nested { flex-basis: 100%; margin-left: 2rem; }

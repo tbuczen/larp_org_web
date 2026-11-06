@@ -21,3 +21,13 @@ availability:
 tag_type:
     trigger: Trigger
     gameplay: Gameplay
+menu_target:
+    page: Page
+    larp: LARP
+    route: Built-in page
+    url: External address
+    none: No link (only opens a submenu)
+menu_route:
+    home: Front page
+    larps: LARP list
+    characters: Character matcher

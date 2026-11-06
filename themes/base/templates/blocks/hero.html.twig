@@ -1,0 +1,43 @@
+{#
+    Hero banner. Image: uploaded image → featured LARP's cover → theme illustration
+    (themes/<theme>/assets/images/hero.*) → plain gradient.
+#}
+{% set image = settings.image
+    ? asset('uploads/blocks/' ~ settings.image)
+    : (larp and larp.coverImage ? asset('uploads/larps/' ~ larp.coverImage) : (theme_asset('images/hero.svg') ? asset(theme_asset('images/hero.svg')) : null)) %}
+{% set title = settings.title ?: (larp ? larp.name : null) %}
+<section class="block block--hero hero hero--{{ settings.height }}" id="block-{{ block.id }}">
+    {% if image %}
+        <img class="hero__image" src="{{ image }}" alt="" fetchpriority="high">
+    {% endif %}
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="container hero__content">
+        {% if larp and (larp.format or larp.setting) %}
+            <p class="eyebrow">{{ [larp.format, larp.setting]|filter(v => v)|join(' · ') }}</p>
+        {% endif %}
+        <h1 class="hero__title">{{ title ?: block.page.title }}</h1>
+        {% set subtitle = settings.subtitle ?: (larp ? larp.teaser : null) %}
+        {% if subtitle %}<p class="hero__subtitle">{{ subtitle }}</p>{% endif %}
+
+        {% if larp and edition and not larp.initiative and larp.status.value == 'current' %}
+            <ul class="hero__facts">
+                {% if edition|edition_dates %}<li><twig:ux:icon name="lucide:calendar" aria-hidden="true" /> {{ edition|edition_dates }}</li>{% endif %}
+                {% if edition.location %}<li><twig:ux:icon name="lucide:map-pin" aria-hidden="true" /> {{ edition.location }}</li>{% endif %}
+                <li>{% include 'partials/_recruitment.html.twig' %}</li>
+            </ul>
+        {% endif %}
+
+        <div class="button-row">
+            {% if settings.primary_label and settings.primary_url %}
+                <a class="button button--primary" href="{{ settings.primary_url }}">{{ settings.primary_label }}</a>
+            {% elseif larp %}
+                <a class="button button--primary" href="{{ path('app_larp_show', {slug: larp.slug}) }}">{{ 'block.hero.see_larp'|trans }} <twig:ux:icon name="lucide:arrow-right" aria-hidden="true" /></a>
+            {% endif %}
+            {% if settings.secondary_label and settings.secondary_url %}
+                <a class="button button--ghost" href="{{ settings.secondary_url }}">{{ settings.secondary_label }}</a>
+            {% elseif larp and not larp.initiative and edition and edition.visibleCharacters is not empty %}
+                <a class="button button--ghost" href="{{ path('app_larp_characters', {slug: larp.slug}) }}">{{ 'matcher.title'|trans }}</a>
+            {% endif %}
+        </div>
+    </div>
+</section>

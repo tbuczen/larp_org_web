@@ -1,0 +1,78 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'page.layout'|trans }}: {{ page.title }}{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ viewUrl }}" target="_blank"><i class="fa fa-arrow-up-right-from-square"></i> {{ 'larp.view_on_site'|trans }}</a>
+    <a class="btn btn-secondary" href="{{ ea_url().setController('App\\Controller\\Admin\\PageCrudController').setAction('edit').setEntityId(page.id) }}"><i class="fa fa-pen"></i> {{ 'page.edit_page'|trans }}</a>
+{% endblock %}
+
+{% block main %}
+    {% set token = csrf_token(csrfId) %}
+    <div class="page-layout">
+        <section class="page-layout__blocks">
+            <p class="text-muted">{{ 'page.layout_help'|trans }}</p>
+
+            {% if blocks is empty %}
+                <div class="page-layout__empty">{{ 'page.no_blocks'|trans }}</div>
+            {% endif %}
+
+            <ol class="block-list" data-sortable-url="{{ reorderUrl }}" data-csrf-token="{{ token }}">
+                {% for block in blocks %}
+                    {% set type = blockTypes[block.type] ?? null %}
+                    <li class="block-item{{ block.enabled ? '' : ' is-disabled' }}" data-id="{{ block.id }}">
+                        <span class="block-item__handle" title="{{ 'page.drag'|trans }}" aria-hidden="true"><i class="fa fa-grip-vertical"></i></span>
+                        <span class="block-item__icon"><i class="{{ type ? type.icon : 'fa fa-question' }}"></i></span>
+                        <span class="block-item__text">
+                            <strong>{{ type ? type.label|trans : block.type }}</strong>
+                            {% set summary = block.adminLabel ?: (block.settings.title ?? '') %}
+                            {% if summary %}<span class="text-muted">{{ summary }}</span>{% endif %}
+                            {% if not block.enabled %}<span class="badge badge-secondary">{{ 'block.hidden'|trans }}</span>{% endif %}
+                        </span>
+                        <span class="block-item__actions">
+                            {% for direction in ['up', 'down'] %}
+                                <form method="post" action="{{ path('admin_page_block_move', {id: block.id, direction: direction}) }}">
+                                    <input type="hidden" name="_token" value="{{ token }}">
+                                    <button class="btn btn-sm btn-secondary" title="{{ ('page.move_' ~ direction)|trans }}" {{ (direction == 'up' and loop.parent.loop.first) or (direction == 'down' and loop.parent.loop.last) ? 'disabled' }}>
+                                        <i class="fa fa-arrow-{{ direction }}"></i><span class="visually-hidden">{{ ('page.move_' ~ direction)|trans }}</span>
+                                    </button>
+                                </form>
+                            {% endfor %}
+                            <a class="btn btn-sm btn-primary" href="{{ ea_url().setController('App\\Controller\\Admin\\PageBlockCrudController').setAction('edit').setEntityId(block.id) }}"><i class="fa fa-pen"></i> {{ 'page.edit'|trans }}</a>
+                            <form method="post" action="{{ path('admin_page_block_toggle', {id: block.id}) }}">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <button class="btn btn-sm btn-secondary" title="{{ (block.enabled ? 'page.hide' : 'page.show')|trans }}"><i class="fa fa-{{ block.enabled ? 'eye-slash' : 'eye' }}"></i></button>
+                            </form>
+                            <form method="post" action="{{ path('admin_page_block_duplicate', {id: block.id}) }}">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <button class="btn btn-sm btn-secondary" title="{{ 'page.duplicate'|trans }}"><i class="fa fa-clone"></i></button>
+                            </form>
+                            <form method="post" action="{{ path('admin_page_block_remove', {id: block.id}) }}" onsubmit="return confirm('{{ 'page.remove_confirm'|trans|e('js') }}')">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <button class="btn btn-sm btn-link text-danger" title="{{ 'page.remove'|trans }}"><i class="fa fa-trash"></i></button>
+                            </form>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ol>
+            <p class="block-list__status text-muted" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="page-layout__add">
+            <h2>{{ 'page.add_block'|trans }}</h2>
+            <div class="block-types">
+                {% for key, type in blockTypes %}
+                    <form method="post" action="{{ path('admin_page_add_block', {id: page.id, type: key}) }}">
+                        <input type="hidden" name="_token" value="{{ token }}">
+                        <button class="block-type">
+                            <i class="{{ type.icon }}"></i>
+                            <strong>{{ type.label|trans }}</strong>
+                            <small>{{ ('block.' ~ key ~ '.description')|trans }}</small>
+                        </button>
+                    </form>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock %}

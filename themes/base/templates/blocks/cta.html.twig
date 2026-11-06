@@ -1,0 +1,13 @@
+<section class="block block--cta" id="block-{{ block.id }}">
+    <div class="container">
+        <div class="cta cta--{{ settings.style }}">
+            <div>
+                <h2 class="cta__title">{{ settings.title }}</h2>
+                {% if settings.text %}<p>{{ settings.text }}</p>{% endif %}
+            </div>
+            {% if settings.button_label and settings.button_url %}
+                <a class="button button--on-cta" href="{{ settings.button_url }}">{{ settings.button_label }}</a>
+            {% endif %}
+        </div>
+    </div>
+</section>

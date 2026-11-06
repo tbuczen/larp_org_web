@@ -6,11 +6,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\SiteSettings;
 use App\Repository\SiteSettingsRepository;
+use App\Theme\ThemeManager;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -30,6 +32,7 @@ class SiteSettingsCrudController extends AbstractCrudController
     public function __construct(
         private readonly SiteSettingsRepository $settings,
         private readonly AdminUrlGenerator $urls,
+        private readonly ThemeManager $themes,
     ) {
     }
 
@@ -71,7 +74,18 @@ class SiteSettingsCrudController extends AbstractCrudController
         yield UrlField::new('discordUrl', 'Discord')->setRequired(false);
 
         yield FormField::addTab('settings.tab.appearance', 'fa fa-palette');
-        yield TextField::new('theme', 'settings.theme')
+        $choices = [];
+        foreach ($this->themes->all() as $theme) {
+            $choices[$theme->label.($theme->description ? ' — '.$theme->description : '')] = $theme->name;
+        }
+        // Keep a saved theme selectable even if its folder is missing (the site then uses "base").
+        $saved = $this->settings->get()->getTheme();
+        if (!\in_array($saved, $choices, true)) {
+            $choices[$saved.' (?)'] = $saved;
+        }
+        yield ChoiceField::new('theme', 'settings.theme')
+            ->setChoices($choices)
+            ->setFormTypeOption('choice_translation_domain', false)
             ->setHelp('settings.theme_help');
     }
 

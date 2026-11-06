@@ -1,9 +1,0 @@
-{# links: {label: url|null}. Proper icons come with the social links issue (#10). #}
-{% set links = links|filter(url => url) %}
-{% if links is not empty %}
-    <nav class="social-links" aria-label="{{ 'nav.social'|trans }}">
-        {% for label, url in links %}
-            <a href="{{ url }}" target="_blank" rel="noopener">{{ label }}</a>
-        {% endfor %}
-    </nav>
-{% endif %}

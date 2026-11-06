@@ -51,7 +51,9 @@ class DashboardController extends AbstractDashboardController
 
     public function configureAssets(): Assets
     {
-        return Assets::new()->addCssFile('styles/admin.css');
+        return Assets::new()
+            ->addCssFile('styles/admin.css')
+            ->addAssetMapperEntry('admin');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu
@@ -75,6 +77,9 @@ class DashboardController extends AbstractDashboardController
             ->setAction('edit')
             ->setEntityId($this->settings->get()->getId());
 
+        yield MenuItem::linkTo(PageCrudController::class, 'menu.pages', 'fa fa-table-cells-large');
+        yield MenuItem::linkTo(MenuCrudController::class, 'menu.menus', 'fa fa-bars');
+
         yield MenuItem::section('menu.section.larps');
         yield MenuItem::linkTo(LarpCrudController::class, 'menu.larps', 'fa fa-dragon');
         yield MenuItem::linkTo(CharacterCrudController::class, 'menu.characters', 'fa fa-masks-theater');
@@ -83,8 +88,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkTo(TagCategoryCrudController::class, 'menu.tag_categories'),
         ]);
 
-        // Galleries, menus, page blocks and themes are added here as the
-        // corresponding issues are implemented.
+        // Galleries are added here with issue #9.
 
         yield MenuItem::section('menu.section.access')->setPermission(User::ROLE_ADMIN);
         yield MenuItem::linkTo(UserCrudController::class, 'menu.users', 'fa fa-users')

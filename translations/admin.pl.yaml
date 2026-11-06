@@ -1,4 +1,6 @@
 menu:
+    menus: Menu nawigacji
+    pages: Strony i układ
     dashboard: Pulpit
     view_site: Zobacz stronę
     settings: Ustawienia strony
@@ -36,8 +38,8 @@ settings:
     tagline: Hasło przewodnie
     about: O nas
     contact_email: E-mail kontaktowy
-    theme: Motyw (katalog w themes/)
-    theme_help: 'Nazwa katalogu motywu. System motywów zostanie dodany w osobnym zadaniu; na razie dostępny jest tylko „base”.'
+    theme: Motyw strony
+    theme_help: 'Wygląd strony publicznej. Motywy to katalogi w themes/ — nowy utworzysz poleceniem: bin/console app:theme:create nazwa'
 
 user:
     add: Dodaj użytkownika
@@ -150,3 +152,138 @@ tag_category:
     label: Kategoria tagów
     label_plural: Kategorie tagów
     name: Nazwa
+
+page:
+    label: Strona
+    label_plural: Strony
+    title: Tytuł
+    slug: Adres
+    slug_help: 'Np. „kontakt” → /kontakt. Strona główna nie potrzebuje adresu.'
+    is_home: Strona główna
+    is_home_help: 'Tylko jedna strona może być stroną główną.'
+    published: Opublikowana
+    meta_description: Opis dla wyszukiwarek
+    meta_description_help: 'Krótki opis (do 300 znaków), widoczny w Google i przy udostępnianiu.'
+    blocks: Bloki
+    layout: Układ strony
+    layout_help: 'Przeciągnij bloki za uchwyt (⠿) albo użyj strzałek, aby zmienić kolejność. Ukryte bloki nie są widoczne na stronie.'
+    no_blocks: 'Ta strona nie ma jeszcze bloków. Dodaj pierwszy z listy obok.'
+    edit_page: Ustawienia strony
+    add_block: Dodaj blok
+    drag: Przeciągnij, aby zmienić kolejność
+    move_up: Przesuń wyżej
+    move_down: Przesuń niżej
+    edit: Edytuj
+    hide: Ukryj
+    show: Pokaż
+    duplicate: Duplikuj
+    remove: Usuń
+    remove_confirm: 'Usunąć ten blok? Tej operacji nie można cofnąć.'
+    back_to_layout: Wróć do układu
+    save_block: Zapisz blok
+    reserved_slug: 'Ten adres jest zajęty przez stronę systemową.'
+
+block:
+    label: Blok
+    label_plural: Bloki
+    admin_label: Nazwa robocza
+    admin_label_help: 'Widoczna tylko w panelu, żeby łatwiej odróżnić bloki.'
+    enabled: Widoczny
+    hidden: Ukryty
+    none: '— brak —'
+    auto_larp: 'Automatycznie (wyróżniony albo najbliższy larp)'
+    default_help: 'Zostaw puste, aby użyć domyślnego tekstu.'
+    title: Tytuł
+    intro: Wstęp
+    text: Tekst
+    content: Treść
+    image: Zdjęcie
+    image_alt: Opis zdjęcia (alt)
+    image_alt_help: 'Krótki opis dla czytników ekranu i wyszukiwarek.'
+    button_label: Tekst przycisku
+    button_url: Link przycisku
+    limit: Ile pokazać
+    width: Szerokość
+    width_narrow: Wąska (wygodna do czytania)
+    width_wide: Szeroka
+    hero:
+        label: Baner główny
+        description: 'Duże zdjęcie z hasłem i przyciskami — zwykle na górze strony.'
+        title: Hasło
+        title_help: 'Puste = nazwa wybranego larpa albo organizacji.'
+        subtitle: Podtytuł
+        larp: Pokaż larpa
+        larp_help: 'Pokazuje daty, miejsce, status rekrutacji i grafikę larpa.'
+        image: Zdjęcie w tle
+        image_help: 'Puste = grafika larpa albo ilustracja motywu. Najlepiej poziome, min. 1920 px szerokości.'
+        secondary_label: Tekst drugiego przycisku
+        secondary_url: Link drugiego przycisku
+        height: Wysokość
+        height_full: Cały ekran
+        height_large: Duża
+        height_medium: Średnia
+    larp_showcase:
+        label: Karty larpów
+        description: 'Aktualne, poprzednie albo wyróżnione larpy jako karty.'
+        mode: Które larpy
+        mode_current: Aktualnie organizowane
+        mode_past: Poprzednie projekty
+        mode_initiatives: Inne inicjatywy
+        mode_featured: Wyróżnione
+    rich_text:
+        label: Tekst
+        description: 'Akapity, nagłówki, listy i linki.'
+    image_text:
+        label: Zdjęcie z tekstem
+        description: 'Zdjęcie obok tekstu, np. „O nas”.'
+        side: Zdjęcie po
+        side_left: lewej
+        side_right: prawej
+    matcher_teaser:
+        label: Zaproszenie do wyboru postaci
+        description: 'Zachęta do znalezienia postaci dopasowanej do siebie.'
+    social_links:
+        label: Media społecznościowe i kontakt
+        description: 'Przyciski Facebook / Instagram / Discord i e-mail z ustawień strony.'
+        show_email: Pokaż e-mail kontaktowy
+    cta:
+        label: Wezwanie do działania
+        description: 'Wyróżniony pasek z przyciskiem, np. „Rekrutacja trwa!”.'
+        style: Kolor
+        style_primary: Podstawowy
+        style_accent: Akcent
+    countdown:
+        label: Odliczanie
+        description: 'Ile zostało do najbliższego larpa.'
+        larp: Do którego larpa
+    embed:
+        label: Film lub mapa
+        description: 'Film z YouTube albo mapa Google.'
+        url: Link
+        url_help: 'Link do filmu na YouTube albo link „Umieść mapę” z Google Maps (https://www.google.com/maps/embed?...).'
+        caption: Podpis
+
+menu_admin:
+    label: Menu
+    label_plural: Menu
+    name: Nazwa
+    key: Klucz
+    key_help: 'Używany przez motyw: „main” (górne menu), „footer” (stopka).'
+    items: Pozycje
+    items_help: 'Przeciągnij za uchwyt (⠿), aby zmienić kolejność. Pozycje podrzędne tworzą rozwijane podmenu.'
+    no_items: 'To menu jest puste.'
+
+menu_item:
+    label: Pozycja menu
+    label_plural: Pozycje menu
+    label_field: Tekst
+    add: Dodaj pozycję
+    parent: Pozycja nadrzędna
+    parent_help: 'Wybierz, aby ta pozycja była w rozwijanym podmenu.'
+    target: Prowadzi do
+    target_help: 'Następnie wybierz stronę, larpa, stronę systemową albo wpisz adres.'
+    page: Strona
+    larp: Larp
+    route: Strona systemowa
+    url: Adres zewnętrzny
+    new_tab: Otwórz w nowej karcie

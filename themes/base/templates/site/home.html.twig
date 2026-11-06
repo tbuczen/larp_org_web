@@ -1,0 +1,23 @@
+{% extends 'layout.html.twig' %}
+
+{#
+    Fallback front page, used only until a page is marked as "Front page" in
+    Admin → Pages & layout.
+#}
+{% block content %}
+    <h1 class="page-title">{{ settings.organizationName }}</h1>
+    {% if settings.tagline %}<p class="lead">{{ settings.tagline }}</p>{% endif %}
+    {% if settings.about %}<div class="prose">{{ settings.about|raw }}</div>{% endif %}
+
+    {% if current is not empty %}
+        <section class="larp-section">
+            <div class="section-head">
+                <h2>{{ 'home.current'|trans }}</h2>
+                <a href="{{ path('app_larp_index') }}">{{ 'home.all_larps'|trans }}</a>
+            </div>
+            <div class="card-grid">
+                {% for larp in current %}{% include 'larp/_card.html.twig' %}{% endfor %}
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

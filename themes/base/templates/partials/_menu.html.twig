@@ -1,0 +1,27 @@
+{#
+    A menu built in the admin. links: list of App\Menu\MenuLink.
+    Submenus use <details>, so they open on tap on phones and need no JavaScript.
+#}
+<ul class="menu{{ variant is defined ? ' menu--' ~ variant : '' }}">
+    {% for link in links %}
+        <li class="menu__item{{ link.hasChildren ? ' menu__item--parent' : '' }}">
+            {% if link.hasChildren %}
+                <details class="submenu" data-site-nav-target="submenu">
+                    <summary class="menu__link{{ link.active ? ' is-active' : '' }}">
+                        {{ link.label }} <twig:ux:icon name="lucide:chevron-down" class="submenu__chevron" aria-hidden="true" />
+                    </summary>
+                    <ul class="submenu__list">
+                        {% if link.url %}
+                            <li><a class="menu__link" href="{{ link.url }}" {% if link.url == app.request.pathInfo %}aria-current="page"{% endif %} {{ link.newTab ? 'target="_blank" rel="noopener"' }}>{{ 'nav.see_all'|trans }}</a></li>
+                        {% endif %}
+                        {% for child in link.children %}
+                            <li><a class="menu__link" href="{{ child.url }}" {% if child.active %}aria-current="page"{% endif %} {{ child.newTab ? 'target="_blank" rel="noopener"' }}>{{ child.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </details>
+            {% else %}
+                <a class="menu__link" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %} {{ link.newTab ? 'target="_blank" rel="noopener"' }}>{{ link.label }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

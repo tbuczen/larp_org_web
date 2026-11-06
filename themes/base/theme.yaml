@@ -1,0 +1,14 @@
+# Base theme: clean, calm and neutral. Every other theme extends it.
+name: Base
+description: Neutral, modern starting point. Extend it instead of editing it.
+# extends: (none: this is the root theme)
+
+# CSS files in assets/styles/, loaded in this order (after any parent theme's files).
+styles:
+    - tokens.css
+    - base.css
+    - components.css
+    - effects.css
+
+# JS modules in assets/scripts/ (plain ES modules, no imports from npm).
+scripts: []

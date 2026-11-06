@@ -1,0 +1,16 @@
+<section class="block block--image-text" id="block-{{ block.id }}">
+    <div class="container image-text image-text--{{ settings.image_side }}">
+        {% if settings.image %}
+            <figure class="image-text__media">
+                <img src="{{ asset('uploads/blocks/' ~ settings.image) }}" alt="{{ settings.image_alt }}" loading="lazy">
+            </figure>
+        {% endif %}
+        <div class="image-text__body">
+            {% if settings.title %}<h2 class="block__title">{{ settings.title }}</h2>{% endif %}
+            <div class="prose">{{ settings.content|raw }}</div>
+            {% if settings.button_label and settings.button_url %}
+                <p><a class="button button--primary" href="{{ settings.button_url }}">{{ settings.button_label }}</a></p>
+            {% endif %}
+        </div>
+    </div>
+</section>

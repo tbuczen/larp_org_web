@@ -1,0 +1,13 @@
+<section class="block block--larp-showcase" id="block-{{ block.id }}">
+    <div class="container">
+        {% if settings.title %}<h2 class="block__title">{{ settings.title }}</h2>{% endif %}
+        {% if settings.intro %}<p class="block__intro">{{ settings.intro }}</p>{% endif %}
+        {% if larps is empty %}
+            <p class="hint">{{ 'larp.none'|trans }}</p>
+        {% else %}
+            <div class="card-grid">
+                {% for larp in larps %}{% include 'larp/_card.html.twig' %}{% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

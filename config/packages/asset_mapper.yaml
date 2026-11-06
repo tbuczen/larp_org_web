@@ -2,7 +2,14 @@ framework:
     asset_mapper:
         # The paths to make available to the asset mapper.
         paths:
-            - assets/
+            assets/: ''
+            # Theme assets, e.g. themes/lastajemnic/assets/styles/tokens.css
+            themes/: themes
+        # Never serve theme templates or config as public assets.
+        excluded_patterns:
+            - '*/themes/*/templates/*'
+            - '*/themes/*/theme.yaml'
+            - '*/themes/*/README.md'
         missing_import_mode: strict
 
 when@prod:

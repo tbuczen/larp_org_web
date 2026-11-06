@@ -21,3 +21,13 @@ availability:
 tag_type:
     trigger: Trigger
     gameplay: Rozgrywka
+menu_target:
+    page: Strona
+    larp: Larp
+    route: Strona systemowa
+    url: Adres zewnętrzny
+    none: Brak linku (tylko rozwija podmenu)
+menu_route:
+    home: Strona główna
+    larps: Lista larpów
+    characters: Wybór postaci

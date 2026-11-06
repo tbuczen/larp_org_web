@@ -1,0 +1,38 @@
+/*
+ * Base theme — design tokens.
+ * Every colour, font, radius and spacing value used by templates and the other
+ * CSS files comes from here. Child themes override these variables first; LARP
+ * colour schemes (#16) override them per LARP.
+ */
+:root {
+    color-scheme: dark;
+
+    /* Colours */
+    --color-bg: #111318;
+    --color-surface: #191c23;
+    --color-surface-2: #222630;
+    --color-border: #2f3441;
+    --color-text: #eceef3;
+    --color-muted: #a3a9b8;
+    --color-primary: #8b9cff;
+    --color-accent: #f2c46d;
+    --color-danger: #ef8a7e;
+    --color-on-primary: #10121a;
+
+    /* Typography */
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-heading: var(--font-body);
+    --font-ui: var(--font-body);
+
+    /* Shape & layout */
+    --radius: 14px;
+    --radius-small: 8px;
+    --max-width: 1180px;
+    --gutter: 16px;
+    --header-height: 64px;
+
+    /* Effects */
+    --shadow: 0 10px 30px rgb(0 0 0 / .25);
+    --hero-overlay: linear-gradient(180deg, rgb(0 0 0 / .15), var(--color-bg));
+    --page-background: radial-gradient(circle at 50% -10%, var(--color-surface-2), var(--color-bg) 900px) no-repeat;
+}

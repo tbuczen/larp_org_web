@@ -1,4 +1,6 @@
 menu:
+    menus: Navigation menus
+    pages: Pages & layout
     dashboard: Dashboard
     view_site: View site
     settings: Site settings
@@ -36,8 +38,8 @@ settings:
     tagline: Tagline
     about: About us
     contact_email: Contact e-mail
-    theme: Theme (folder in themes/)
-    theme_help: 'Name of the theme folder. The theme system comes in a separate issue; for now only "base" exists.'
+    theme: Site theme
+    theme_help: 'Look of the public site. Themes are folders in themes/ — create one with: bin/console app:theme:create name'
 
 user:
     add: Add user
@@ -150,3 +152,138 @@ tag_category:
     label: Tag category
     label_plural: Tag categories
     name: Name
+
+page:
+    label: Page
+    label_plural: Pages
+    title: Title
+    slug: Address
+    slug_help: 'E.g. "contact" → /contact. The front page needs no address.'
+    is_home: Front page
+    is_home_help: 'Only one page can be the front page.'
+    published: Published
+    meta_description: Search engine description
+    meta_description_help: 'Short description (up to 300 characters) shown in Google and when shared.'
+    blocks: Blocks
+    layout: Page layout
+    layout_help: 'Drag blocks by the handle (⠿) or use the arrows to reorder them. Hidden blocks are not shown on the site.'
+    no_blocks: 'This page has no blocks yet. Add the first one from the list.'
+    edit_page: Page settings
+    add_block: Add a block
+    drag: Drag to reorder
+    move_up: Move up
+    move_down: Move down
+    edit: Edit
+    hide: Hide
+    show: Show
+    duplicate: Duplicate
+    remove: Remove
+    remove_confirm: 'Remove this block? This cannot be undone.'
+    back_to_layout: Back to layout
+    save_block: Save block
+    reserved_slug: 'This address is used by a built-in page.'
+
+block:
+    label: Block
+    label_plural: Blocks
+    admin_label: Working name
+    admin_label_help: 'Shown only in the admin, to tell blocks apart.'
+    enabled: Visible
+    hidden: Hidden
+    none: '— none —'
+    auto_larp: 'Automatic (featured or next LARP)'
+    default_help: 'Leave empty to use the default text.'
+    title: Title
+    intro: Introduction
+    text: Text
+    content: Content
+    image: Image
+    image_alt: Image description (alt)
+    image_alt_help: 'Short description for screen readers and search engines.'
+    button_label: Button text
+    button_url: Button link
+    limit: How many
+    width: Width
+    width_narrow: Narrow (comfortable to read)
+    width_wide: Wide
+    hero:
+        label: Hero banner
+        description: 'Large image with a headline and buttons — usually at the top.'
+        title: Headline
+        title_help: "Empty = the chosen LARP's or the organization's name."
+        subtitle: Subtitle
+        larp: Feature a LARP
+        larp_help: "Shows the LARP's dates, place, recruitment status and image."
+        image: Background image
+        image_help: "Empty = the LARP's image or the theme's illustration. Landscape, at least 1920 px wide."
+        secondary_label: Second button text
+        secondary_url: Second button link
+        height: Height
+        height_full: Full screen
+        height_large: Large
+        height_medium: Medium
+    larp_showcase:
+        label: LARP cards
+        description: 'Current, previous or featured LARPs as cards.'
+        mode: Which LARPs
+        mode_current: Currently organized
+        mode_past: Previous projects
+        mode_initiatives: Other initiatives
+        mode_featured: Featured
+    rich_text:
+        label: Text
+        description: 'Paragraphs, headings, lists and links.'
+    image_text:
+        label: Image with text
+        description: 'An image beside text, e.g. "About us".'
+        side: Image on the
+        side_left: left
+        side_right: right
+    matcher_teaser:
+        label: Character matcher invitation
+        description: 'Invites visitors to find a character that suits them.'
+    social_links:
+        label: Social media & contact
+        description: 'Facebook / Instagram / Discord buttons and e-mail from Site settings.'
+        show_email: Show contact e-mail
+    cta:
+        label: Call to action
+        description: 'A highlighted banner with a button, e.g. "Recruitment is open!".'
+        style: Colour
+        style_primary: Primary
+        style_accent: Accent
+    countdown:
+        label: Countdown
+        description: 'Time left until the next LARP.'
+        larp: Which LARP
+    embed:
+        label: Video or map
+        description: 'A YouTube video or a Google map.'
+        url: Link
+        url_help: 'A YouTube video link, or the "Embed a map" link from Google Maps (https://www.google.com/maps/embed?...).'
+        caption: Caption
+
+menu_admin:
+    label: Menu
+    label_plural: Menus
+    name: Name
+    key: Key
+    key_help: 'Used by the theme: "main" (top menu), "footer".'
+    items: Items
+    items_help: 'Drag by the handle (⠿) to reorder. Child items form a dropdown submenu.'
+    no_items: 'This menu is empty.'
+
+menu_item:
+    label: Menu item
+    label_plural: Menu items
+    label_field: Text
+    add: Add item
+    parent: Parent item
+    parent_help: 'Choose one to put this item in a dropdown submenu.'
+    target: Links to
+    target_help: 'Then choose the page, LARP or built-in page, or enter an address.'
+    page: Page
+    larp: LARP
+    route: Built-in page
+    url: External address
+    new_tab: Open in a new tab

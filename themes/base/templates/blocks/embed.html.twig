@@ -1,0 +1,13 @@
+{% if embed_url %}
+    <section class="block block--embed" id="block-{{ block.id }}">
+        <div class="container container--narrow">
+            {% if settings.title %}<h2 class="block__title">{{ settings.title }}</h2>{% endif %}
+            <figure class="embed">
+                <iframe src="{{ embed_url }}" title="{{ settings.title ?: settings.caption ?: 'Embed' }}" loading="lazy"
+                        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                {% if settings.caption %}<figcaption>{{ settings.caption }}</figcaption>{% endif %}
+            </figure>
+        </div>
+    </section>
+{% endif %}

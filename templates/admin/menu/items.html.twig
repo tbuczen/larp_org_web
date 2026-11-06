@@ -1,0 +1,45 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'menu_admin.items'|trans }}: {{ menu.name }}{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-primary" href="{{ newItemUrl }}"><i class="fa fa-plus"></i> {{ 'menu_item.add'|trans }}</a>
+{% endblock %}
+
+{% macro item_row(item) %}
+    <span class="block-item__handle" title="{{ 'page.drag'|trans({}, 'admin') }}" aria-hidden="true"><i class="fa fa-grip-vertical"></i></span>
+    <span class="block-item__text">
+        <strong>{{ item.label }}</strong>
+        <span class="text-muted">
+            {{ item.target|trans }}:
+            {% if item.target.value == 'page' %}{{ item.page ?? '—' }}{% elseif item.target.value == 'larp' %}{{ item.larp ?? '—' }}{% elseif item.target.value == 'route' %}{{ item.route ? ((constant('App\\Entity\\MenuItem::ROUTES')[item.route] ?? item.route)|trans({}, 'enums')) : '—' }}{% elseif item.target.value == 'url' %}{{ item.url }}{% endif %}
+        </span>
+        {% if not item.enabled %}<span class="badge badge-secondary">{{ 'block.hidden'|trans({}, 'admin') }}</span>{% endif %}
+    </span>
+    <span class="block-item__actions">
+        <a class="btn btn-sm btn-primary" href="{{ ea_url().setController('App\\Controller\\Admin\\MenuItemCrudController').setAction('edit').setEntityId(item.id) }}"><i class="fa fa-pen"></i> {{ 'page.edit'|trans({}, 'admin') }}</a>
+    </span>
+{% endmacro %}
+
+{% block main %}
+    {% set token = csrf_token(csrfId) %}
+    <p class="text-muted">{{ 'menu_admin.items_help'|trans }}</p>
+    {% if menu.rootItems is empty %}<div class="page-layout__empty">{{ 'menu_admin.no_items'|trans }}</div>{% endif %}
+
+    <ol class="block-list" data-sortable-url="{{ reorderUrl }}" data-csrf-token="{{ token }}">
+        {% for item in menu.rootItems %}
+            <li class="block-item block-item--menu{{ item.enabled ? '' : ' is-disabled' }}" data-id="{{ item.id }}">
+                {{ _self.item_row(item) }}
+                {% if item.children is not empty %}
+                    <ol class="block-list block-list--nested" data-sortable-url="{{ reorderUrl }}" data-csrf-token="{{ token }}">
+                        {% for child in item.children %}
+                            <li class="block-item{{ child.enabled ? '' : ' is-disabled' }}" data-id="{{ child.id }}">{{ _self.item_row(child) }}</li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+    <p class="block-list__status text-muted" role="status" aria-live="polite"></p>
+{% endblock %}

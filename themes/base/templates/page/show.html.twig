@@ -1,0 +1,22 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ page.isHome ? settings.organizationName ~ (settings.tagline ? ' — ' ~ settings.tagline : '') : page.title ~ ' · ' ~ settings.organizationName }}{% endblock %}
+
+{% block meta %}
+    {% set description = page.metaDescription ?: settings.tagline %}
+    {% if description %}<meta name="description" content="{{ description }}">{% endif %}
+    <meta property="og:title" content="{{ page.isHome ? settings.organizationName : page.title }}">
+    {% if description %}<meta property="og:description" content="{{ description }}">{% endif %}
+{% endblock %}
+
+{% block body_class %}page page--{{ page.isHome ? 'home' : page.slug }}{% endblock %}
+
+{# Blocks are full width; each block centres its own content. #}
+{% block main %}
+    {% if not page.isHome and (page.enabledBlocks is empty or page.enabledBlocks|first.type != 'hero') %}
+        <div class="container"><h1 class="page-title">{{ page.title }}</h1></div>
+    {% endif %}
+    {% for block in page.enabledBlocks %}
+        {{ render_block(block) }}
+    {% endfor %}
+{% endblock %}

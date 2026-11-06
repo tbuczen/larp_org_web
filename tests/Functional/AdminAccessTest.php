@@ -27,7 +27,8 @@ final class AdminAccessTest extends WebTestCase
         $client->request('GET', '/');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Las Tajemnic');
+        self::assertSelectorTextContains('.site-brand', 'Las Tajemnic');
+        self::assertSelectorTextContains('h1', 'Przeżyj prawdziwą przygodę');
     }
 
     public function testLoginWithFormShowsDashboard(): void
@@ -89,7 +90,8 @@ final class AdminAccessTest extends WebTestCase
         $client->followRedirect();
 
         $client->request('GET', '/');
-        self::assertSelectorTextContains('.tagline', 'Nowe hasło');
+        self::assertSelectorExists('meta[name="description"]');
+        self::assertStringContainsString('Nowe hasło', (string) $client->getResponse()->getContent());
     }
 
     public function testSettingsRejectNonHttpsSocialLinks(): void

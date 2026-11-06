@@ -1,0 +1,18 @@
+{# Hidden when there is no upcoming edition. The numbers tick in the browser (countdown_controller.js). #}
+{% if start %}
+    {% set seconds = start.timestamp - 'now'|date('U') %}
+    <section class="block block--countdown" id="block-{{ block.id }}">
+        <div class="container center">
+            <h2 class="block__title">{{ settings.title ?: 'block.countdown.default_title'|trans({name: larp.name}) }}</h2>
+            <div class="countdown" data-controller="countdown" data-countdown-target-value="{{ start|date('c') }}" role="timer">
+                {% for unit, value in {days: seconds // 86400, hours: (seconds % 86400) // 3600, minutes: (seconds % 3600) // 60, seconds: seconds % 60} %}
+                    <div class="countdown__unit">
+                        <span class="countdown__value" data-countdown-target="{{ unit }}">{{ value }}</span>
+                        <span class="countdown__label">{{ ('block.countdown.' ~ unit)|trans }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <p><a href="{{ path('app_larp_show', {slug: larp.slug}) }}">{{ larp.name }} · {{ edition|edition_dates }}{% if edition.location %} · {{ edition.location }}{% endif %}</a></p>
+        </div>
+    </section>
+{% endif %}

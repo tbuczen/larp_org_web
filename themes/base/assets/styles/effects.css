@@ -1,0 +1,12 @@
+/*
+ * Base theme — effects. Deliberately almost empty: the base theme is calm.
+ * Child themes put animations, glows and decorations here.
+ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
+}
