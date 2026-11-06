@@ -113,6 +113,17 @@ edition:
     registration_url_help: 'Formularz zapisów albo wydarzenie na Facebooku.'
 
 character:
+    add: Dodaj postać
+    list: Lista postaci
+    list_for: 'Postacie: %larp%'
+    new_for: 'Nowa postać: %larp%'
+    choose_larp: Wybierz larpa
+    choose_larp_help: 'Postacie dodaje się do konkretnego larpa. Wybierz larpa, aby zobaczyć jego postacie albo dodać nową.'
+    no_larps: 'Nie ma jeszcze larpów. Najpierw dodaj larpa.'
+    count: '{0}brak postaci|{1}1 postać|]1,4]%count% postacie|]4,Inf[%count% postaci'
+    add_edition_first: Najpierw dodaj edycję
+    needs_edition: 'Larp „%larp%” nie ma jeszcze edycji. Dodaj edycję (zakładka „Edycje”), a potem postacie.'
+    edition_help: 'Domyślnie bieżąca edycja larpa.'
     label: Postać
     label_plural: Postacie
     larp: Larp

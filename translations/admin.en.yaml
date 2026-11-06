@@ -113,6 +113,17 @@ edition:
     registration_url_help: 'Sign-up form or Facebook event.'
 
 character:
+    add: Add character
+    list: Character list
+    list_for: 'Characters: %larp%'
+    new_for: 'New character: %larp%'
+    choose_larp: Choose a LARP
+    choose_larp_help: 'Characters belong to a LARP. Choose one to see its characters or add a new one.'
+    no_larps: 'There are no LARPs yet. Add a LARP first.'
+    count: '{0}no characters|{1}1 character|]1,Inf[%count% characters'
+    add_edition_first: Add an edition first
+    needs_edition: 'The LARP "%larp%" has no editions yet. Add one (the "Editions" tab), then its characters.'
+    edition_help: "Defaults to the LARP's current edition."
     label: Character
     label_plural: Characters
     larp: LARP

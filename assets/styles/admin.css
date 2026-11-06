@@ -158,3 +158,20 @@
 /* Menu items screen */
 .block-item--menu { align-items: flex-start; }
 .block-list--nested { flex-basis: 100%; margin-left: 2rem; }
+
+/* Character LARP picker (templates/admin/character/choose_larp.html.twig) */
+.larp-picker { display: grid; gap: .5rem; max-width: 900px; }
+.larp-picker__item {
+    align-items: center;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-secondary-color);
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    justify-content: space-between;
+    padding: .75rem 1rem;
+}
+.larp-picker__main { color: var(--text-primary-color); display: flex; flex: 1 1 260px; flex-direction: column; gap: .15rem; text-decoration: none; }
+.larp-picker__main .badge { align-self: flex-start; }
+.larp-picker__actions { display: flex; flex-wrap: wrap; gap: .4rem; }

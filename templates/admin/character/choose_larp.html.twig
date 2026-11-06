@@ -1,0 +1,37 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'character.label_plural'|trans }}{% endblock %}
+{% block content_title %}{{ 'character.choose_larp'|trans }}{% endblock %}
+
+{% block main %}
+    <p class="text-muted">{{ 'character.choose_larp_help'|trans }}</p>
+
+    {% if rows is empty %}
+        <div class="page-layout__empty">{{ 'character.no_larps'|trans }}</div>
+    {% endif %}
+
+    <div class="larp-picker">
+        {% for row in rows %}
+            {% set larp = row.larp %}
+            <div class="larp-picker__item">
+                <a class="larp-picker__main" href="{{ row.listUrl }}">
+                    <strong>{{ larp.name }}</strong>
+                    <span class="text-muted">
+                        {{ larp.status|trans }}
+                        {% if larp.currentEdition %} · {{ larp.currentEdition.name }}{% if larp.currentEdition|edition_dates %} · {{ larp.currentEdition|edition_dates }}{% endif %}{% endif %}
+                    </span>
+                    <span class="badge badge-secondary">{{ 'character.count'|trans({'%count%': row.count}) }}</span>
+                </a>
+                <span class="larp-picker__actions">
+                    {% if larp.editions is empty %}
+                        <a class="btn btn-sm btn-secondary" href="{{ row.editLarpUrl }}"><i class="fa fa-calendar-plus"></i> {{ 'character.add_edition_first'|trans }}</a>
+                    {% else %}
+                        <a class="btn btn-sm btn-secondary" href="{{ row.listUrl }}"><i class="fa fa-list"></i> {{ 'character.list'|trans }}</a>
+                        <a class="btn btn-sm btn-primary" href="{{ row.newUrl }}"><i class="fa fa-plus"></i> {{ 'character.add'|trans }}</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

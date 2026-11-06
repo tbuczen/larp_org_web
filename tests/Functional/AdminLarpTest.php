@@ -37,7 +37,9 @@ final class AdminLarpTest extends WebTestCase
     {
         foreach (['larp', 'character', 'tag', 'tag-category'] as $crud) {
             yield $crud.' index' => ['/admin/'.$crud];
-            yield $crud.' new' => ['/admin/'.$crud.'/new'];
+            if ('character' !== $crud) { // characters are added from a LARP (see below)
+                yield $crud.' new' => ['/admin/'.$crud.'/new'];
+            }
         }
     }
 
@@ -153,7 +155,7 @@ final class AdminLarpTest extends WebTestCase
         $edition = $this->larp('cybercrush')->getCurrentEdition();
         self::assertNotNull($edition);
 
-        $crawler = $this->client->request('GET', '/admin/character/new');
+        $crawler = $this->client->request('GET', $this->newCharacterUrl('cybercrush'));
         $form = $crawler->filter('form[name="Character"]')->form();
         $values = $form->getPhpValues();
         $values['Character']['name'] = 'Netrunnerka Vex';
@@ -167,16 +169,74 @@ final class AdminLarpTest extends WebTestCase
             1 => ['tag' => (string) $this->tag('Konflikt / walka')->getId(), 'percentage' => '30'],
         ];
         $this->client->request('POST', $form->getUri(), $values);
+        // Back to Cybercrush's character list, not the LARP picker.
         self::assertResponseRedirects();
+        self::assertStringContainsString('edition:larp', urldecode((string) $this->client->getResponse()->headers->get('Location')));
 
         $character = $this->character('netrunnerka-vex');
         self::assertSame(['Broń palna'], array_map(static fn ($ct) => $ct->getTag()?->getName(), $character->getTriggerTags()));
         self::assertSame([70, 30], array_map(static fn ($ct) => $ct->getPercentage(), $character->getGameplayTags()));
     }
 
+    public function testCharacterListStartsWithALarpPicker(): void
+    {
+        $crawler = $this->client->request('GET', '/admin/character');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Wybierz larpa');
+        $names = $crawler->filter('.larp-picker__main strong')->each(static fn ($n): string => $n->text());
+        self::assertContains('Pradawne Zwoje', $names);
+        self::assertContains('Vault 47', $names);
+        self::assertNotContains('Wyprawa Rycerska Talabeclandu', $names, 'initiatives have no characters');
+        $zwoje = $crawler->filter('.larp-picker__item')->reduce(static fn ($i): bool => str_contains($i->text(), 'Pradawne Zwoje'));
+        self::assertStringContainsString('7 postaci', $zwoje->text());
+
+        $this->client->click($crawler->filter('.larp-picker__item')->reduce(static fn ($i): bool => str_contains($i->text(), 'Cybercrush'))->selectLink('Dodaj postać')->link());
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Nowa postać: Cybercrush');
+    }
+
+    public function testNewCharacterWithoutLarpGoesToThePicker(): void
+    {
+        $this->client->request('GET', '/admin/character/new');
+
+        self::assertResponseRedirects();
+        $this->client->followRedirect();
+        self::assertSelectorTextContains('h1', 'Wybierz larpa');
+    }
+
+    public function testEditionChoicesAreLimitedToTheLarp(): void
+    {
+        $crawler = $this->client->request('GET', $this->newCharacterUrl('pradawne-zwoje'));
+
+        $options = $crawler->filter('#Character_edition option')->each(static fn ($o): string => $o->text());
+        $options = array_values(array_filter($options, static fn (string $o): bool => '' !== trim($o)));
+        self::assertSame(['3. edycja · 6–9.VIII.2026', '2. edycja · 7–10.VIII.2025', '1. edycja · 8–11.VIII.2024'], $options);
+        self::assertSame('3. edycja · 6–9.VIII.2026', $crawler->filter('#Character_edition option[selected]')->text(), 'current edition preselected');
+
+        $character = $this->character('jarl-ulfgar');
+        $crawler = $this->client->request('GET', '/admin/character/'.$character->getId().'/edit');
+        self::assertCount(3, $crawler->filter('#Character_edition option[value]:not([value=""])'));
+        self::assertSelectorTextContains('h1', 'Jarl Ulfgar');
+    }
+
+    public function testLarpWithoutEditionsAsksForOneFirst(): void
+    {
+        $larp = (new Larp())->setName('Bez edycji')->setSlug('bez-edycji');
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+        $em->persist($larp);
+        $em->flush();
+
+        $this->client->request('GET', $this->newCharacterUrl('bez-edycji'));
+
+        self::assertResponseRedirects();
+        $this->client->followRedirect();
+        self::assertSelectorTextContains('.alert', 'nie ma jeszcze edycji');
+    }
+
     public function testDuplicateTagIsRejected(): void
     {
-        $crawler = $this->client->request('GET', '/admin/character/new');
+        $crawler = $this->client->request('GET', $this->newCharacterUrl('cybercrush'));
         $form = $crawler->filter('form[name="Character"]')->form();
         $values = $form->getPhpValues();
         $values['Character']['name'] = 'Duplikat';
@@ -194,7 +254,7 @@ final class AdminLarpTest extends WebTestCase
 
     public function testPercentageOutOfRangeIsRejected(): void
     {
-        $crawler = $this->client->request('GET', '/admin/character/new');
+        $crawler = $this->client->request('GET', $this->newCharacterUrl('cybercrush'));
         $form = $crawler->filter('form[name="Character"]')->form();
         $values = $form->getPhpValues();
         $values['Character']['name'] = 'Za dużo';
@@ -207,7 +267,7 @@ final class AdminLarpTest extends WebTestCase
 
     public function testTriggerListOnlyOffersTriggerTags(): void
     {
-        $crawler = $this->client->request('GET', '/admin/character/new');
+        $crawler = $this->client->request('GET', $this->newCharacterUrl('cybercrush'));
         // The first collection on the form is the trigger list, the second the gameplay list.
         $prototype = (string) $crawler->filter('[data-prototype]')->eq(0)->attr('data-prototype');
 
@@ -228,6 +288,11 @@ final class AdminLarpTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'Kategoria ma inny typ niż tag.');
+    }
+
+    private function newCharacterUrl(string $larpSlug): string
+    {
+        return '/admin/character/new?'.http_build_query(['filters' => ['edition:larp' => ['comparison' => '=', 'value' => $this->larp($larpSlug)->getId()]]]);
     }
 
     private function em(): EntityManagerInterface

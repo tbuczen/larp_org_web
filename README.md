@@ -68,6 +68,9 @@ Migrations use Doctrine's Schema API rather than raw SQL, so the same migrations
 | `CharacterTag` | A tag on a character with a percentage (1–100). |
 
 The LARP page shows the **current edition**: the next one that hasn't ended, otherwise the latest.
+In the admin, characters are managed **per LARP**: *Postacie* first asks which LARP, and its list,
+"Dodaj postać" and the edition field all stay within that LARP (new characters start in its
+current edition). Each LARP row and edit page also has *Postacie* / *Dodaj postać* buttons.
 In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
 
 Public pages: `/larpy`, `/larp/{slug}`, `/larp/{slug}/postac/{character}`, and the character matcher

@@ -52,13 +52,11 @@ class LarpCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         $characters = Action::new('characters', 'larp.characters', 'fa fa-masks-theater')
-            ->linkToUrl(fn (Larp $larp): string => $this->urls
-                ->unsetAll()
-                ->setController(CharacterCrudController::class)
-                ->setAction(Action::INDEX)
-                ->set('filters', [CharacterCrudController::LARP_FILTER => ['comparison' => '=', 'value' => $larp->getId()]])
-                ->generateUrl())
+            ->linkToUrl(fn (Larp $larp): string => CharacterCrudController::larpListUrl($this->urls, $larp))
             ->displayIf(static fn (Larp $larp): bool => !$larp->isInitiative());
+        $addCharacter = Action::new('addCharacter', 'character.add', 'fa fa-plus')
+            ->linkToUrl(fn (Larp $larp): string => CharacterCrudController::larpListUrl($this->urls, $larp, Action::NEW))
+            ->displayIf(static fn (Larp $larp): bool => !$larp->isInitiative() && !$larp->getEditions()->isEmpty());
 
         $view = Action::new('viewOnSite', 'larp.view_on_site', 'fa fa-arrow-up-right-from-square')
             ->linkToRoute('app_larp_show', static fn (Larp $larp): array => ['slug' => $larp->getSlug()])
@@ -67,7 +65,9 @@ class LarpCrudController extends AbstractCrudController
 
         return $actions
             ->add(Crud::PAGE_INDEX, $characters)
+            ->add(Crud::PAGE_INDEX, $addCharacter)
             ->add(Crud::PAGE_INDEX, $view)
+            ->add(Crud::PAGE_EDIT, $characters)
             ->add(Crud::PAGE_EDIT, $view);
     }
 
