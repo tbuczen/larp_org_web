@@ -1,0 +1,131 @@
+/*
+ * Las Tajemnic — component overrides on top of the base theme.
+ * Signature details: angled "tech" buttons, HUD corner brackets on cards,
+ * carved Cinzel headings with an amber rune-diamond, Rajdhani for UI text.
+ */
+
+/* Typography & small UI text */
+.eyebrow, .menu__link, .badge, .button, .countdown__label, .chip, .larp-card__meta,
+.character-card__meta, .facts dt, .matcher__category, .rating-legend {
+    font-family: var(--font-ui);
+}
+.menu__link { font-size: 1.02rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+.eyebrow { align-items: center; display: flex; font-size: .9rem; font-weight: 700; gap: .6rem; letter-spacing: .18em; }
+.eyebrow::before { background: linear-gradient(90deg, var(--color-accent), transparent); content: ""; height: 1px; width: 2.5rem; }
+h1, h2, h3 { text-wrap: balance; }
+
+/* Section titles: carved heading + glowing rune diamond + fading rule */
+.block__title, .page-title, .larp-section h2, .larp-characters h2, .larp-editions h2 {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem .8rem;
+}
+.block__title::before, .larp-section h2::before {
+    border: 2px solid var(--color-accent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 70%, transparent);
+    content: "";
+    flex: none;
+    height: .55em;
+    transform: rotate(45deg);
+    width: .55em;
+}
+.center .block__title { justify-content: center; }
+
+/* Header */
+.site-brand { font-size: 1.1rem; font-weight: 800; letter-spacing: .02em; }
+.site-brand__name { text-shadow: 0 0 18px color-mix(in srgb, var(--color-primary) 30%, transparent); }
+.menu__link[aria-current="page"] { box-shadow: inset 0 -2px var(--color-primary), 0 6px 14px -8px var(--color-primary); color: var(--color-primary); }
+.submenu__list { background: color-mix(in srgb, var(--color-surface) 96%, transparent); border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border)); }
+.nav-toggle { border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border)); color: var(--color-primary); }
+
+/* Buttons: angled corners like a terminal frame */
+.button {
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.button--primary { box-shadow: var(--glow); }
+.button--primary:hover { background: color-mix(in srgb, var(--color-primary) 80%, white); }
+.button--ghost {
+    /* Square corners: a clip-path would cut the outline at the corners. */
+    background: color-mix(in srgb, var(--color-bg) 45%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--color-text) 65%, transparent);
+    clip-path: none;
+    color: var(--color-text);
+}
+.button--ghost:hover { border-color: var(--color-neon-cyan); box-shadow: 0 0 14px -4px var(--color-neon-cyan); color: var(--color-neon-cyan); }
+
+/* Cards & panels: HUD corner brackets that light up on hover */
+.larp-card, .character-card, .match-card, .teaser, .matcher__block, .countdown__unit, .cta {
+    --corner: color-mix(in srgb, var(--color-primary) 55%, transparent);
+    position: relative;
+}
+.larp-card::after, .character-card::after, .match-card::after, .teaser::after, .countdown__unit::after {
+    background:
+        linear-gradient(var(--corner) 0 0) top left / 16px 2px,
+        linear-gradient(var(--corner) 0 0) top left / 2px 16px,
+        linear-gradient(var(--corner) 0 0) bottom right / 16px 2px,
+        linear-gradient(var(--corner) 0 0) bottom right / 2px 16px;
+    background-repeat: no-repeat;
+    content: "";
+    inset: -1px;
+    pointer-events: none;
+    position: absolute;
+}
+.larp-card:hover, .character-card:hover, .match-card:hover { --corner: var(--color-primary); border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border)); box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--color-primary) 35%, transparent); }
+.larp-card, .character-card, .match-card { background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface)); }
+.larp-card__title, .character-card h3, .match-card__body h3 { font-weight: 600; }
+
+/* Covers without an image: the theme's night-forest placeholder */
+.cover--placeholder, .character-card__portrait {
+    background: url("../images/card-placeholder.svg") center / cover, var(--color-surface-2);
+    color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    text-shadow: 0 0 22px color-mix(in srgb, var(--color-accent) 60%, transparent);
+}
+
+/* Badges */
+.badge { border-radius: 2px; letter-spacing: .06em; text-transform: uppercase; }
+a.badge--open { box-shadow: 0 0 14px color-mix(in srgb, var(--color-primary) 60%, transparent); }
+.badge--taken { color: var(--color-accent); }
+
+/* Hero */
+.hero__title {
+    font-weight: 800;
+    text-shadow:
+        -1.5px 0 color-mix(in srgb, var(--color-neon-cyan) 55%, transparent),
+        1.5px 0 color-mix(in srgb, var(--color-neon-magenta) 45%, transparent),
+        0 4px 30px rgb(0 0 0 / .7);
+}
+.hero__subtitle { color: color-mix(in srgb, var(--color-text) 88%, var(--color-primary)); }
+
+/* Matcher teaser scale and CTA */
+.teaser { background: linear-gradient(120deg, var(--color-surface-2), var(--color-surface)); }
+.teaser__scale span { border-radius: 2px; font-weight: 700; }
+.cta { clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px); }
+.cta__title { font-weight: 800; }
+.button--on-cta { background: var(--color-on-primary); color: var(--color-primary); }
+
+/* Countdown: glowing digital numbers */
+.countdown__value { color: var(--color-primary); text-shadow: 0 0 16px color-mix(in srgb, var(--color-primary) 55%, transparent); }
+
+/* Percentage bars: gameplay = moss → neon, triggers = rust → warning red */
+.tag-bar__fill { background: linear-gradient(90deg, var(--color-primary), var(--color-neon-cyan)); }
+.tag-bar--trigger .tag-bar__fill { background: linear-gradient(90deg, var(--color-rust), var(--color-danger)); }
+.tag-bar__track, .match-bar { border-radius: 0; }
+
+/* Social links */
+.social-links__link { border-radius: 2px; font-family: var(--font-ui); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.social-links__link:hover { border-color: var(--color-neon-cyan); box-shadow: 0 0 14px -4px var(--color-neon-cyan); color: var(--color-neon-cyan); }
+
+/* Footer: a thin rule in the three colours of the three worlds */
+.site-footer { background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--color-surface) 70%, transparent)); border-top: 0; position: relative; }
+.site-footer::before {
+    background: linear-gradient(90deg, transparent, var(--color-accent), var(--color-primary), var(--color-neon-cyan), transparent);
+    content: "";
+    height: 1px;
+    inset: 0 0 auto 0;
+    opacity: .7;
+    position: absolute;
+}

@@ -17,8 +17,8 @@ jobs:
           tools: composer:v2
       - run: composer install --no-interaction --prefer-dist --no-progress
       - run: bin/console lint:container
-      - run: bin/console lint:twig templates
-      - run: bin/console lint:yaml config translations
+      - run: bin/console lint:twig templates themes
+      - run: bin/console lint:yaml config translations themes
       - run: vendor/bin/php-cs-fixer fix --dry-run --diff
       - run: bin/console cache:warmup --env=dev
       - run: vendor/bin/phpstan analyse --no-progress

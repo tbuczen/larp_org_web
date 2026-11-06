@@ -1,0 +1,16 @@
+# Las Tajemnic — theme of Stowarzyszenie Larpowe "Las Tajemnic" only.
+# Other organizations: create your own with  bin/console app:theme:create <name>
+name: Las Tajemnic
+description: 'Nocny las tajemnic: fantasy, neon i postapo'
+extends: base
+
+# Loaded after the base theme's CSS, in this order.
+styles:
+    - fonts.css
+    - tokens.css
+    - components.css
+    - effects.css
+
+# Small progressive enhancements (fireflies in the hero, reveal on scroll).
+scripts:
+    - effects.js

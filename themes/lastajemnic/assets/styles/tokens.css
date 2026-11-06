@@ -1,0 +1,51 @@
+/*
+ * Las Tajemnic — design tokens. A night forest where three worlds meet:
+ *   --color-primary  "radioactive moss"  – post-apo (Vault 47) + forest; buttons, links
+ *   --color-accent   rune amber          – fantasy (Pradawne Zwoje, Czasy Pogardy)
+ *   --color-neon-*   cyan / magenta      – futuristic (Cybercrush); used only in effects
+ * Change the look of the whole site here first.
+ */
+:root {
+    --color-bg: #060b09;
+    --color-surface: #0d1612;
+    --color-surface-2: #13211b;
+    --color-border: #22372d;
+    --color-text: #e4ede6;
+    --color-muted: #94a99c;
+    --color-primary: #a6e35f;
+    --color-accent: #f2b64c;
+    --color-danger: #ff7262;
+    --color-on-primary: #08110b;
+    --color-link: #b9ec7c;
+
+    --color-neon-cyan: #3ee6f0;
+    --color-neon-magenta: #ff4fa8;
+    --color-rust: #c4622d;
+
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-heading: "Cinzel", Georgia, "Times New Roman", serif;
+    --font-ui: "Rajdhani", "Inter", system-ui, sans-serif;
+    --font-brand: "Cinzel", Georgia, serif;
+    --heading-weight: 800;
+    --heading-tracking: .01em;
+
+    --radius: 4px;
+    --radius-small: 3px;
+    --button-radius: 0;
+    --button-tracking: .06em;
+    --header-height: 68px;
+
+    --shadow: 0 18px 40px rgb(0 0 0 / .45);
+    --glow: 0 0 18px color-mix(in srgb, var(--color-primary) 45%, transparent);
+    --header-bg: color-mix(in srgb, var(--color-bg) 78%, transparent);
+    --header-border: color-mix(in srgb, var(--color-primary) 18%, transparent);
+    --hero-overlay:
+        linear-gradient(90deg, rgb(6 11 9 / .85) 0%, rgb(6 11 9 / .35) 55%, rgb(6 11 9 / 0) 100%),
+        linear-gradient(180deg, rgb(6 11 9 / 0) 55%, var(--color-bg) 100%);
+    --page-background:
+        radial-gradient(ellipse 80% 50% at 85% -10%, color-mix(in srgb, var(--color-neon-cyan) 9%, transparent), transparent 60%),
+        radial-gradient(ellipse 70% 45% at 0% 30%, color-mix(in srgb, var(--color-primary) 7%, transparent), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 100% 90%, color-mix(in srgb, var(--color-rust) 8%, transparent), transparent 60%),
+        var(--color-bg);
+    --cta-bg: linear-gradient(120deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 55%, var(--color-neon-cyan)));
+}

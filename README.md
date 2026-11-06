@@ -89,6 +89,22 @@ Triggers never change the score: matching characters get a ⚠ warning, or are h
 localStorage for the next visit.
 Uploaded images go to `public/uploads/` (not committed; back it up together with the database).
 
+## Themes, pages and menus
+
+- **Themes** live in `themes/<name>/` and are chosen in *Admin → Ustawienia strony → Wygląd*.
+  `base` is the neutral theme every other theme extends; `lastajemnic` is the Las Tajemnic
+  organization's own theme. Start a new organization's look with
+  `php bin/console app:theme:create my-org` and read `themes/base/README.md` (templates,
+  tokens and rules, written so an AI assistant can work from it too).
+- **Pages** (*Admin → Strony i układ*) are built from blocks: hero, LARP cards, text,
+  image + text, matcher invitation, social/contact, call to action, countdown, video/map.
+  The page marked *Strona główna* is the front page; others are served at `/{slug}`.
+  On a page's *Układ* screen blocks are added, dragged into order (or moved with arrows on a
+  phone), hidden, duplicated and edited. A new block type is one class in
+  `src/Block/Type/` plus `themes/base/templates/blocks/<key>.html.twig`.
+- **Menus** (*Admin → Menu nawigacji*): `main` (header) and `footer`. Items link to a page,
+  a LARP, a built-in page or a URL, with one level of dropdowns.
+
 ## Project layout
 
 ```
@@ -99,9 +115,14 @@ src/
   Enum/               Statuses and types (translated via translations/enums.*.yaml)
   Form/               Custom form types (CharacterTagType)
   Twig/, Util/        Twig filters (edition_dates) and helpers
+  Theme/              Theme discovery and template loader
+  Block/              Page block types and renderer
+  Menu/               Menu builder (menu() Twig function)
+  Matcher/            Character match calculator
   Command/            Console commands (app:create-admin)
   DataFixtures/       Demo data
-templates/            Twig templates (public templates move into themes/ with the theme system)
+templates/            Admin templates (public templates live in themes/)
+themes/               base and lastajemnic themes (templates, CSS, JS, images, fonts)
 translations/         admin.*, enums.*, validators.*, messages+intl-icu.* (public pages), PL + EN
 assets/               AssetMapper assets (styles/admin.css holds the admin additions)
 migrations/           Portable Doctrine migrations

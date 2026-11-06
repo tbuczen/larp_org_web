@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Las Tajemnic logo: a pine inside a rune ring with a circuit node -->
+  <circle cx="32" cy="32" r="28" fill="#0d1612" stroke="#a6e35f" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="22.5" fill="none" stroke="#f2b64c" stroke-width="1" stroke-dasharray="3 4" opacity=".8"/>
+  <path d="M32 11 L41 25 H36.5 L44 36 H38.5 L46 47 H35 V53 H29 V47 H18 L25.5 36 H20 L27.5 25 H23 Z" fill="#a6e35f"/>
+  <path d="M46 47 H52 V40" fill="none" stroke="#3ee6f0" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="52" cy="38" r="2.6" fill="#3ee6f0"/>
+</svg>

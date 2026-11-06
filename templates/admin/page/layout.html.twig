@@ -2,6 +2,7 @@
 {% trans_default_domain 'admin' %}
 
 {% block page_title %}{{ 'page.layout'|trans }}: {{ page.title }}{% endblock %}
+{% block content_title %}{{ 'page.layout'|trans }}: {{ page.title }}{% endblock %}
 
 {% block page_actions %}
     <a class="btn btn-secondary" href="{{ viewUrl }}" target="_blank"><i class="fa fa-arrow-up-right-from-square"></i> {{ 'larp.view_on_site'|trans }}</a>

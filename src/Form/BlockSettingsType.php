@@ -35,6 +35,9 @@ final class BlockSettingsType extends AbstractType
     {
         $resolver
             ->setDefaults(['translation_domain' => 'admin', 'label' => false])
+            // EasyAdmin treats the JSON "settings" column like a collection and passes
+            // these options; they don't apply to a settings form, so accept and ignore them.
+            ->setDefined(['allow_add', 'allow_delete', 'delete_empty', 'entry_options', 'entry_type'])
             ->setRequired('block_type')
             ->setAllowedTypes('block_type', BlockTypeInterface::class);
     }

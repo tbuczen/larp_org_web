@@ -2,6 +2,7 @@
 {% trans_default_domain 'admin' %}
 
 {% block page_title %}{{ 'menu_admin.items'|trans }}: {{ menu.name }}{% endblock %}
+{% block content_title %}{{ 'menu_admin.items'|trans }}: {{ menu.name }}{% endblock %}
 
 {% block page_actions %}
     <a class="btn btn-primary" href="{{ newItemUrl }}"><i class="fa fa-plus"></i> {{ 'menu_item.add'|trans }}</a>
