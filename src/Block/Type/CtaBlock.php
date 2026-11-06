@@ -28,6 +28,7 @@ final class CtaBlock extends AbstractBlockType
         return ['title' => '', 'text' => '', 'button_label' => '', 'button_url' => '', 'style' => 'primary'];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

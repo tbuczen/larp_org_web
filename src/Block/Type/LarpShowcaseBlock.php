@@ -36,6 +36,7 @@ final class LarpShowcaseBlock extends AbstractBlockType
         return ['title' => '', 'intro' => '', 'mode' => 'current', 'limit' => 6];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

@@ -39,7 +39,11 @@ abstract class AbstractBlockType implements BlockTypeInterface
         return [];
     }
 
-    /** Adds an image upload field stored in public/uploads/blocks/. */
+    /**
+     * Adds an image upload field stored in public/uploads/blocks/.
+     *
+     * @param FormBuilderInterface<array<string, mixed>|null> $builder
+     */
     protected function addImage(FormBuilderInterface $builder, string $name, string $label, ?string $help = null): void
     {
         $builder->add($name, FileUploadType::class, [

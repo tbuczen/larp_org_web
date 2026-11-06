@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 
 final class AdminPagesAndMenusTest extends WebTestCase
 {
@@ -143,7 +144,9 @@ final class AdminPagesAndMenusTest extends WebTestCase
         $form['MenuItem[label]'] = 'Discord';
         $form['MenuItem[target]'] = 'url';
         $form['MenuItem[url]'] = 'https://discord.gg/Zjf2mZN5jV';
-        $form['MenuItem[newTab]']->tick();
+        $newTab = $form['MenuItem[newTab]'];
+        self::assertInstanceOf(ChoiceFormField::class, $newTab);
+        $newTab->tick();
         $this->client->submit($form);
         self::assertResponseRedirects();
 
@@ -171,8 +174,10 @@ final class AdminPagesAndMenusTest extends WebTestCase
         $settings = $this->em()->getRepository(SiteSettings::class)->findOneBy([]);
         $crawler = $this->client->request('GET', '/admin/site-settings/'.$settings?->getId().'/edit');
         $form = $crawler->filter('form[name="SiteSettings"]')->form();
-        self::assertContains('base', $form['SiteSettings[theme]']->availableOptionValues());
-        self::assertContains('lastajemnic', $form['SiteSettings[theme]']->availableOptionValues());
+        $theme = $form['SiteSettings[theme]'];
+        self::assertInstanceOf(ChoiceFormField::class, $theme);
+        self::assertContains('base', $theme->availableOptionValues());
+        self::assertContains('lastajemnic', $theme->availableOptionValues());
         $form['SiteSettings[theme]'] = 'base';
         $this->client->submit($form);
 
@@ -197,8 +202,7 @@ final class AdminPagesAndMenusTest extends WebTestCase
     private function sortedBlocks(): array
     {
         $this->em()->clear();
-        $blocks = $this->em()->getRepository(PageBlock::class)->findBy(['page' => $this->home()], ['position' => 'ASC', 'id' => 'ASC']);
 
-        return array_values($blocks);
+        return $this->em()->getRepository(PageBlock::class)->findBy(['page' => $this->home()], ['position' => 'ASC', 'id' => 'ASC']);
     }
 }

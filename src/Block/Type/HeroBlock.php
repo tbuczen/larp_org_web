@@ -40,6 +40,7 @@ final class HeroBlock extends AbstractBlockType
         return ['title' => '', 'subtitle' => '', 'larp' => '', 'image' => null, 'primary_label' => '', 'primary_url' => '', 'secondary_label' => '', 'secondary_url' => '', 'height' => 'large'];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

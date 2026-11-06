@@ -27,6 +27,7 @@ final class MatcherTeaserBlock extends AbstractBlockType
         return ['title' => '', 'text' => '', 'button_label' => ''];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

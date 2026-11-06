@@ -134,6 +134,8 @@ final class CharacterMatcherTest extends WebTestCase
      * assume the value can't change between actions).
      *
      * @return array<int|string, int|string>
+     *
+     * @phpstan-impure
      */
     private function ratings(TestLiveComponent $component): array
     {

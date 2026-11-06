@@ -33,7 +33,11 @@ interface BlockTypeInterface
     /** @return array<string, mixed> settings of a newly added block */
     public function getDefaultSettings(): array;
 
-    /** Adds this block's settings fields; the field names are the settings keys. */
+    /**
+     * Adds this block's settings fields; the field names are the settings keys.
+     *
+     * @param FormBuilderInterface<array<string, mixed>|null> $builder
+     */
     public function buildSettingsForm(FormBuilderInterface $builder): void;
 
     /** Template name, normally "blocks/<key>.html.twig". */

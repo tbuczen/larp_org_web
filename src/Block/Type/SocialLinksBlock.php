@@ -34,6 +34,7 @@ final class SocialLinksBlock extends AbstractBlockType
         return ['title' => '', 'text' => '', 'show_email' => true];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

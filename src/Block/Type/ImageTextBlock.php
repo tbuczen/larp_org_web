@@ -28,6 +28,7 @@ final class ImageTextBlock extends AbstractBlockType
         return ['title' => '', 'content' => '', 'image' => null, 'image_alt' => '', 'image_side' => 'left', 'button_label' => '', 'button_url' => ''];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

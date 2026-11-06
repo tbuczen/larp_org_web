@@ -27,6 +27,7 @@ final class RichTextBlock extends AbstractBlockType
         return ['title' => '', 'content' => '', 'width' => 'narrow'];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

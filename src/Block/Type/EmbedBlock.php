@@ -31,6 +31,7 @@ final class EmbedBlock extends AbstractBlockType
         return ['title' => '', 'url' => '', 'caption' => ''];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder

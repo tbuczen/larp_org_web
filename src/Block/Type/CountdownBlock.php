@@ -36,6 +36,7 @@ final class CountdownBlock extends AbstractBlockType
         return ['title' => '', 'larp' => self::AUTO];
     }
 
+    /** @param FormBuilderInterface<array<string, mixed>|null> $builder */
     public function buildSettingsForm(FormBuilderInterface $builder): void
     {
         $builder
