@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\UX\LiveComponent\Test\InteractsWithLiveComponents;
+use Symfony\UX\LiveComponent\Test\TestLiveComponent;
 
 final class CharacterMatcherTest extends WebTestCase
 {
@@ -103,16 +104,16 @@ final class CharacterMatcherTest extends WebTestCase
         $component->call('rate', ['tag' => $combat, 'value' => 2]);
         $crawler = $component->render()->crawler();
         self::assertSame('Najemniczka Hrafna', $crawler->filter('.match-card h3 a')->first()->text());
-        self::assertSame([$combat => 2], $component->component()->ratings);
+        self::assertSame([$combat => 2], $this->ratings($component));
 
         // Neutral removes the rating, so it doesn't end up in the URL.
         $component->call('rate', ['tag' => $combat, 'value' => 0]);
-        self::assertSame([], $component->component()->ratings);
+        self::assertSame([], $this->ratings($component));
 
         $component->call('rate', ['tag' => $combat, 'value' => -2]);
         $component->set('onlyAvailable', true);
         $component->call('reset');
-        self::assertSame([], $component->component()->ratings);
+        self::assertSame([], $this->ratings($component));
         self::assertNull($component->component()->onlyAvailable);
     }
 
@@ -126,6 +127,20 @@ final class CharacterMatcherTest extends WebTestCase
         self::assertNull($component->component()->hideTriggers);
         $component->set('casting', '');
         self::assertNull($component->component()->casting);
+    }
+
+    /**
+     * Reads the component's ratings afresh (a helper, so static analysis doesn't
+     * assume the value can't change between actions).
+     *
+     * @return array<int|string, int|string>
+     */
+    private function ratings(TestLiveComponent $component): array
+    {
+        $matcher = $component->component();
+        self::assertInstanceOf(CharacterMatcher::class, $matcher);
+
+        return $matcher->ratings;
     }
 
     /** @param array<string, mixed> $query */
