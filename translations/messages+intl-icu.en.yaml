@@ -1,6 +1,7 @@
 nav:
     main: Main menu
     larps: LARPs
+    characters: Characters
     social: Social media
 
 home:
@@ -24,8 +25,7 @@ larp:
 
 character:
     title: Characters
-    see_all: '{count, plural, one {See the character} other {See all # characters}}'
-    matcher_soon: 'Coming soon: matching characters to your preferences.'
+    see_all: '{count, plural, one {Find your character (# character)} other {Find your character (# characters)}}'
     none: Characters have not been published yet.
     gameplay: Gameplay
     triggers: Triggers
@@ -33,3 +33,35 @@ character:
     no_tags: No gameplay description.
     triggers_hint: 'The percentage shows how strongly or often the content appears when playing this character.'
     no_triggers: No triggers listed.
+
+matcher:
+    title: Find your character
+    intro: 'Rate what you enjoy, tick the triggers you want to avoid, and characters are sorted from the best match.'
+    preferences: Your preferences
+    step1: '1. What do you like to play?'
+    step1_hint: "Rate the kinds of gameplay. The match takes into account how much of each character's play each one is."
+    step2: '2. Triggers'
+    step2_hint: 'Open a category and tick what you want to avoid. Those characters are marked with ⚠.'
+    hide_triggers: Hide characters with my triggers
+    filters: '3. Filters'
+    all: All
+    only_available: Only available characters
+    other: Other
+    reset: Clear choices
+    count: '{count, plural, =0 {No characters} one {# character} other {# characters}}'
+    start_hint: 'start by rating the gameplay on the left'
+    no_results: 'No character matches the filters.'
+    match: Match
+    your_triggers: Your triggers
+    dislikes: 'Might not suit you'
+    scale:
+        hate: Hate it
+        dislike: Rather not
+        neutral: "Don't mind"
+        like: Like
+        love: Love it
+    label:
+        great: Great match
+        good: Good match
+        maybe: Could work
+        poor: Probably not for you

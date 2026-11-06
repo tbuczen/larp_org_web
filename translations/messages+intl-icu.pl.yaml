@@ -1,6 +1,7 @@
 nav:
     main: Menu główne
     larps: Larpy
+    characters: Postacie
     social: Media społecznościowe
 
 home:
@@ -24,8 +25,7 @@ larp:
 
 character:
     title: Postacie
-    see_all: '{count, plural, one {Zobacz postać} few {Zobacz wszystkie # postacie} other {Zobacz wszystkie # postaci}}'
-    matcher_soon: 'Wkrótce: dopasowanie postaci do Twoich preferencji.'
+    see_all: '{count, plural, one {Znajdź swoją postać (# postać)} few {Znajdź swoją postać (# postacie)} other {Znajdź swoją postać (# postaci)}}'
     none: Postacie nie zostały jeszcze opublikowane.
     gameplay: Rozgrywka
     triggers: Triggery
@@ -33,3 +33,35 @@ character:
     no_tags: Brak opisu rozgrywki.
     triggers_hint: 'Procent pokazuje, jak mocno lub często dana treść pojawia się w grze tą postacią.'
     no_triggers: Brak zgłoszonych triggerów.
+
+matcher:
+    title: Znajdź swoją postać
+    intro: 'Oceń, co lubisz w grze, zaznacz triggery, których chcesz uniknąć — postacie ułożą się od najlepiej dopasowanych.'
+    preferences: Twoje preferencje
+    step1: '1. Co lubisz grać?'
+    step1_hint: 'Oceń rodzaje rozgrywki. Procent dopasowania uwzględnia, jak dużą część gry postacią stanowi każdy z nich.'
+    step2: '2. Triggery'
+    step2_hint: 'Rozwiń kategorię i zaznacz to, czego chcesz uniknąć. Takie postacie zostaną oznaczone ⚠.'
+    hide_triggers: Ukryj postacie z moimi triggerami
+    filters: '3. Filtry'
+    all: Wszystkie
+    only_available: Tylko dostępne postacie
+    other: Inne
+    reset: Wyczyść wybory
+    count: '{count, plural, =0 {Brak postaci} one {# postać} few {# postacie} other {# postaci}}'
+    start_hint: 'zacznij od oceny rozgrywki po lewej'
+    no_results: 'Żadna postać nie spełnia filtrów.'
+    match: Dopasowanie
+    your_triggers: Twoje triggery
+    dislikes: 'Może Ci nie pasować'
+    scale:
+        hate: Nie znoszę
+        dislike: Raczej nie
+        neutral: Obojętne
+        like: Lubię
+        love: Uwielbiam
+    label:
+        great: Świetnie pasuje
+        good: Pasuje
+        maybe: Może być
+        poor: Raczej nie dla Ciebie

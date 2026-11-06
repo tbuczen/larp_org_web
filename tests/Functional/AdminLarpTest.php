@@ -19,11 +19,14 @@ use Symfony\Component\DomCrawler\Field\FileFormField;
 
 final class AdminLarpTest extends WebTestCase
 {
+    use RollbackTransactionTrait;
+
     private KernelBrowser $client;
 
     protected function setUp(): void
     {
         $this->client = self::createClient();
+        $this->startTransaction($this->client);
         $user = self::getContainer()->get(UserRepository::class)->findOneBy(['email' => AppFixtures::EDITOR_EMAIL]);
         self::assertNotNull($user);
         $this->client->loginUser($user);

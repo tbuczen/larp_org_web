@@ -1,0 +1,10 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'matcher.title'|trans }} · {{ settings.organizationName }}{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">{{ 'matcher.title'|trans }}</h1>
+    <p class="lead">{{ 'matcher.intro'|trans }}</p>
+
+    <twig:CharacterMatcher />
+{% endblock %}

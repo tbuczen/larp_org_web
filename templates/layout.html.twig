@@ -8,7 +8,8 @@
     <header class="site-header">
         <a class="site-brand" href="{{ path('app_home') }}">{{ settings.organizationName }}</a>
         <nav class="site-nav" aria-label="{{ 'nav.main'|trans }}">
-            <a href="{{ path('app_larp_index') }}" {% if app.current_route starts with 'app_larp' or app.current_route == 'app_character_show' %}aria-current="page"{% endif %}>{{ 'nav.larps'|trans }}</a>
+            <a href="{{ path('app_larp_index') }}" {% if app.current_route in ['app_larp_index', 'app_larp_show'] %}aria-current="page"{% endif %}>{{ 'nav.larps'|trans }}</a>
+            <a href="{{ path('app_characters') }}" {% if app.current_route in ['app_characters', 'app_larp_characters', 'app_character_show'] %}aria-current="page"{% endif %}>{{ 'nav.characters'|trans }}</a>
         </nav>
     </header>
 

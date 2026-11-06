@@ -43,6 +43,36 @@ class CharacterRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Visible characters of several editions with their tags and LARP, in one query.
+     *
+     * @param list<LarpEdition> $editions
+     *
+     * @return list<Character>
+     */
+    public function findVisibleForEditions(array $editions): array
+    {
+        if ([] === $editions) {
+            return [];
+        }
+
+        /* @var list<Character> */
+        return $this->createQueryBuilder('c')
+            ->addSelect('e', 'l', 'ct', 't', 'tc')
+            ->join('c.edition', 'e')
+            ->join('e.larp', 'l')
+            ->leftJoin('c.characterTags', 'ct')
+            ->leftJoin('ct.tag', 't')
+            ->leftJoin('t.category', 'tc')
+            ->andWhere('c.edition IN (:editions)')
+            ->andWhere('c.availability != :hidden')
+            ->setParameter('editions', $editions)
+            ->setParameter('hidden', CharacterAvailability::Hidden)
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findVisibleBySlug(LarpEdition $edition, string $slug): ?Character
     {
         return $this->createQueryBuilder('c')

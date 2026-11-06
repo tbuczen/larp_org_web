@@ -41,8 +41,8 @@ final class PublicLarpPagesTest extends WebTestCase
         $crawler = $client->request('GET', '/larp/pradawne-zwoje/postacie');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(6, $crawler->filter('.character-card'));
-        self::assertSelectorTextContains('.character-card.is-taken', 'Uczeń maga Eirik');
+        self::assertCount(6, $crawler->filter('.match-card'));
+        self::assertSelectorTextContains('.match-card.is-taken', 'Uczeń maga Eirik');
         self::assertSelectorTextNotContains('body', 'Tajna postać');
     }
 

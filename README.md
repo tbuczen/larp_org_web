@@ -70,7 +70,23 @@ Migrations use Doctrine's Schema API rather than raw SQL, so the same migrations
 The LARP page shows the **current edition**: the next one that hasn't ended, otherwise the latest.
 In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
 
-Public pages: `/larpy`, `/larp/{slug}`, `/larp/{slug}/postacie`, `/larp/{slug}/postac/{character}`.
+Public pages: `/larpy`, `/larp/{slug}`, `/larp/{slug}/postac/{character}`, and the character matcher
+at `/postacie` (all current LARPs) and `/larp/{slug}/postacie` (one LARP).
+
+### Character matcher
+
+Visitors rate gameplay tags from −2 (hate it) to +2 (love it) and tick triggers to avoid
+(`src/Twig/Components/CharacterMatcher.php`, a Symfony UX Live Component). Scoring lives in
+`src/Matcher/CharacterMatchCalculator.php`:
+
+```
+score  = Σ(rating × tag %) / Σ(tag %)    over the character's gameplay tags (unrated = 0)
+match% = round((score + 2) / 4 × 100)    no gameplay tags → 50%
+```
+
+Triggers never change the score: matching characters get a ⚠ warning, or are hidden with
+"Ukryj postacie z moimi triggerami". Choices live in the URL (shareable) and are remembered in
+localStorage for the next visit.
 Uploaded images go to `public/uploads/` (not committed; back it up together with the database).
 
 ## Project layout

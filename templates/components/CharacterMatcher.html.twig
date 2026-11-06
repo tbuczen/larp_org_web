@@ -1,0 +1,161 @@
+{#
+    Character matcher (issue #12). Live component: every change re-renders on the
+    server; see App\Twig\Components\CharacterMatcher.
+#}
+{% set scale_keys = {'-2': 'hate', '-1': 'dislike', '0': 'neutral', '1': 'like', '2': 'love'} %}
+<div {{ attributes.defaults({class: 'matcher', 'data-controller': 'remember-query'}) }}>
+    {% if not this.hasCharacters %}
+        <p class="hint">{{ 'character.none'|trans }}</p>
+    {% else %}
+    <aside class="matcher__prefs" aria-label="{{ 'matcher.preferences'|trans }}">
+        <section class="matcher__block">
+            <h2>{{ 'matcher.step1'|trans }}</h2>
+            <p class="hint">{{ 'matcher.step1_hint'|trans }}</p>
+
+            <div class="rating-legend" aria-hidden="true">
+                <span></span>
+                {% for value in this.ratingScale %}<span>{{ ('matcher.scale.' ~ scale_keys[value])|trans }}</span>{% endfor %}
+            </div>
+
+            {% for category, tags in this.gameplayGroups %}
+                {% if category %}<h3 class="matcher__category">{{ category }}</h3>{% endif %}
+                {% for tag in tags %}
+                    {% set current = this.rating(tag) %}
+                    <fieldset class="rating-row">
+                        <legend>{{ tag.name }}</legend>
+                        {% for value in this.ratingScale %}
+                            <label class="rating-option rating-option--{{ scale_keys[value] }}">
+                                <input type="radio"
+                                       name="ratings[{{ tag.id }}]"
+                                       value="{{ value }}"
+                                       data-action="change->live#action"
+                                       data-live-action-param="rate"
+                                       data-live-tag-param="{{ tag.id }}"
+                                       data-live-value-param="{{ value }}"
+                                       {{ current == value ? 'checked' }}>
+                                <span class="visually-hidden">{{ ('matcher.scale.' ~ scale_keys[value])|trans }}</span>
+                            </label>
+                        {% endfor %}
+                    </fieldset>
+                {% endfor %}
+            {% endfor %}
+        </section>
+
+        {% if this.triggerGroups is not empty %}
+            <section class="matcher__block">
+                <h2>{{ 'matcher.step2'|trans }}</h2>
+                <p class="hint">{{ 'matcher.step2_hint'|trans }}</p>
+                {% for category, tags in this.triggerGroups %}
+                    {% set open = tags|filter(t => this.triggerSelected(t))|length > 0 %}
+                    <details class="trigger-group" {{ open ? 'open' }}>
+                        <summary>{{ category ?: 'matcher.other'|trans }}</summary>
+                        {% for tag in tags %}
+                            <label class="check">
+                                <input type="checkbox" value="{{ tag.id }}" data-model="triggers[]" {{ this.triggerSelected(tag) ? 'checked' }}>
+                                {{ tag.name }}
+                            </label>
+                        {% endfor %}
+                    </details>
+                {% endfor %}
+                <label class="check check--toggle">
+                    <input type="checkbox" data-model="hideTriggers" {{ hideTriggers ? 'checked' }}>
+                    {{ 'matcher.hide_triggers'|trans }}
+                </label>
+            </section>
+        {% endif %}
+
+        <section class="matcher__block">
+            <h2>{{ 'matcher.filters'|trans }}</h2>
+            {% if this.larpOptions|length > 1 %}
+                <label class="field">
+                    <span>{{ 'nav.larps'|trans }}</span>
+                    <select data-model="larpFilter">
+                        <option value="">{{ 'matcher.all'|trans }}</option>
+                        {% for larp in this.larpOptions %}
+                            <option value="{{ larp.slug }}" {{ larpFilter == larp.slug ? 'selected' }}>{{ larp.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            {% endif %}
+            <label class="field">
+                <span>{{ 'character.casting'|trans }}</span>
+                <select data-model="casting">
+                    <option value="">{{ 'matcher.all'|trans }}</option>
+                    {% for option in this.castingOptions %}
+                        <option value="{{ option.value }}" {{ casting == option.value ? 'selected' }}>{{ option|trans }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="check">
+                <input type="checkbox" data-model="onlyAvailable" {{ onlyAvailable ? 'checked' }}>
+                {{ 'matcher.only_available'|trans }}
+            </label>
+        </section>
+
+        {% if this.selectedCount > 0 or casting or onlyAvailable or larpFilter or hideTriggers %}
+            <button type="button" class="button-link" data-action="live#action" data-live-action-param="reset">{{ 'matcher.reset'|trans }}</button>
+        {% endif %}
+    </aside>
+
+    <section class="matcher__results" aria-live="polite" data-loading="addClass(is-loading)">
+        {% set results = this.results %}
+        <p class="matcher__count">
+            {{ 'matcher.count'|trans({count: results|length}) }}
+            {% if this.selectedCount == 0 %}<span class="hint">· {{ 'matcher.start_hint'|trans }}</span>{% endif %}
+        </p>
+
+        <ol class="match-list">
+            {% for result in results %}
+                {% set character = result.character %}
+                <li class="match-card{{ character.taken ? ' is-taken' : '' }}{{ result.hasTriggerHits ? ' has-triggers' : '' }}">
+                    <div class="match-card__score" style="--match: {{ result.percentage }}">
+                        <strong>{{ result.percentage }}%</strong>
+                        <span>{{ ('matcher.label.' ~ result.label)|trans }}</span>
+                        <span class="match-bar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ result.percentage }}" aria-label="{{ 'matcher.match'|trans }}"><span></span></span>
+                    </div>
+                    <div class="match-card__body">
+                        <h3>
+                            <a href="{{ path('app_character_show', {slug: character.larp.slug, characterSlug: character.slug}) }}">{{ character.name }}</a>
+                            {% if larpSlug is null %}<small>{{ character.larp.name }}</small>{% endif %}
+                        </h3>
+                        <p class="character-card__meta">
+                            {{ character.casting|trans }}
+                            {% if character.taken %}<span class="badge badge--taken">{{ character.availability|trans }}</span>{% endif %}
+                        </p>
+                        {% if character.teaser %}<p class="character-card__teaser">{{ character.teaser }}</p>{% endif %}
+
+                        {% if character.gameplayTags is not empty %}
+                            <ul class="chips">
+                                {% for ct in character.gameplayTags %}
+                                    {% set r = this.rating(ct.tag) %}
+                                    <li class="chip{{ r > 0 ? ' chip--liked' : (r < 0 ? ' chip--disliked' : '') }}">{{ ct.tag.name }} <small>{{ ct.percentage }}%</small></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if result.hasTriggerHits %}
+                            <p class="match-card__warning">
+                                <span aria-hidden="true">⚠</span> {{ 'matcher.your_triggers'|trans }}:
+                                {% for ct in result.triggerHits %}<strong>{{ ct.tag.name }} ({{ ct.percentage }}%)</strong>{% if not loop.last %}, {% endif %}{% endfor %}
+                            </p>
+                        {% endif %}
+                        {% if result.dislikes is not empty %}
+                            <p class="match-card__dislikes">
+                                {{ 'matcher.dislikes'|trans }}: {{ result.dislikes|map(ct => ct.tag.name)|join(', ') }}
+                            </p>
+                        {% endif %}
+                        {% set other_triggers = character.triggerTags|filter(ct => ct not in result.triggerHits) %}
+                        {% if other_triggers is not empty %}
+                            <p class="character-card__triggers"><span class="label">{{ 'character.triggers'|trans }}:</span>
+                                {% for ct in other_triggers %}<strong>{{ ct.tag.name }}</strong>{% if not loop.last %}, {% endif %}{% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+                </li>
+            {% else %}
+                <li class="hint">{{ 'matcher.no_results'|trans }}</li>
+            {% endfor %}
+        </ol>
+    </section>
+    {% endif %}
+</div>

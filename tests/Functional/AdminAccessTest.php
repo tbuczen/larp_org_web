@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminAccessTest extends WebTestCase
 {
+    use RollbackTransactionTrait;
+
     public function testAnonymousVisitorIsRedirectedToLogin(): void
     {
         $client = self::createClient();
@@ -149,6 +151,7 @@ final class AdminAccessTest extends WebTestCase
     private function loginAs(string $email): KernelBrowser
     {
         $client = self::createClient();
+        $this->startTransaction($client);
         $user = self::getContainer()->get(UserRepository::class)->findOneBy(['email' => $email]);
         self::assertNotNull($user);
         $client->loginUser($user);

@@ -46,6 +46,16 @@ class LarpController extends AbstractController
         ]);
     }
 
+    /** Character matcher across all currently organized LARPs. */
+    #[Route('/postacie', name: 'app_characters')]
+    public function allCharacters(): Response
+    {
+        return $this->render('character/matcher.html.twig', [
+            'settings' => $this->settings->get(),
+        ]);
+    }
+
+    /** Character matcher for one LARP (its current edition). */
     #[Route('/larp/{slug}/postacie', name: 'app_larp_characters')]
     public function characters(string $slug): Response
     {
@@ -59,7 +69,6 @@ class LarpController extends AbstractController
             'settings' => $this->settings->get(),
             'larp' => $larp,
             'edition' => $edition,
-            'characters' => $this->characters->findVisibleForEdition($edition),
         ]);
     }
 
