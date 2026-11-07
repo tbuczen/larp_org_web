@@ -79,7 +79,7 @@ final class LarpTagsAndImportTest extends WebTestCase
 
         self::assertSelectorTextContains('.alert-success', 'Magia');
         self::assertNull($this->em()->getRepository(Tag::class)->findOneBy(['name' => 'Magia']));
-        self::assertNotNull($this->character('uczen-maga-eirik'), 'characters stay, only the tag goes');
+        self::assertSame('Uczeń maga Eirik', $this->character('uczen-maga-eirik')->getName(), 'characters stay, only the tag goes');
     }
 
     public function testInitiativesHaveNoTagsScreen(): void
@@ -220,7 +220,7 @@ final class LarpTagsAndImportTest extends WebTestCase
         self::assertSelectorTextContains('.import-count--skip', '1');
         $this->client->submit($crawler->filter('form[action$="/characters/import/confirm"]')->form());
         self::assertNotSame('Zmieniona', $this->character('fixer-mama-lou')->getTeaser());
-        self::assertNotNull($this->character('nowy-runner'));
+        self::assertSame('Nowy Runner', $this->character('nowy-runner')->getName());
     }
 
     public function testWindows1250FileFromPolishExcel(): void

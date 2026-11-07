@@ -312,6 +312,7 @@ class LarpCrudController extends AbstractCrudController
         return $response;
     }
 
+    /** @return FormInterface<mixed> */
     private function importForm(Larp $larp): FormInterface
     {
         return $this->createFormBuilder(null, ['translation_domain' => 'admin'])
@@ -338,6 +339,7 @@ class LarpCrudController extends AbstractCrudController
             ->getForm();
     }
 
+    /** @param FormInterface<mixed> $form */
     private function renderImportForm(Larp $larp, FormInterface $form): Response
     {
         return $this->render('admin/character/import.html.twig', [

@@ -10,7 +10,6 @@ use App\Entity\LarpEdition;
 use App\Enum\CharacterAvailability;
 use App\Enum\CharacterCasting;
 use App\Enum\TagType;
-use App\Repository\CharacterRepository;
 use App\Tagging\TagResolver;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -49,7 +48,6 @@ final class CharacterCsvImporter
     public function __construct(
         private readonly CsvReader $reader,
         private readonly TagResolver $tags,
-        private readonly CharacterRepository $characters,
         private readonly EntityManagerInterface $em,
     ) {
     }
