@@ -1,0 +1,84 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'import.preview_title'|trans({'%larp%': larp.name}) }}{% endblock %}
+{% block content_title %}{{ 'import.preview_title'|trans({'%larp%': larp.name}) }}{% endblock %}
+
+{% block main %}
+    <p class="text-muted">
+        {{ filename }} · {{ 'import.edition_info'|trans({'%edition%': plan.edition.name}) }} ·
+        {{ 'import.file_info'|trans({'%encoding%': plan.table.encoding, '%delimiter%': plan.table.delimiter == "\t" ? 'TAB' : plan.table.delimiter}) }}
+    </p>
+
+    <div class="import-summary">
+        {% for action in ['create', 'update', 'skip', 'error'] %}
+            <span class="import-count import-count--{{ action }}"><strong>{{ plan.count(action) }}</strong> {{ ('import.action_' ~ action)|trans }}</span>
+        {% endfor %}
+    </div>
+
+    {% if plan.table.ignoredHeaders is not empty %}
+        <div class="alert alert-info">{{ 'import.ignored_columns'|trans({'%columns%': plan.table.ignoredHeaders|join(', ')}) }}</div>
+    {% endif %}
+
+    {% set newTags = plan.newTags %}
+    {% if newTags is not empty %}
+        <div class="alert alert-warning">
+            <strong>{{ 'import.new_tags'|trans }}</strong>
+            {% for type, names in newTags %}
+                <div>{{ ('tag_type.' ~ type)|trans({}, 'enums') }}: {{ names|join(', ') }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table import-table">
+            <thead>
+                <tr>
+                    <th>{{ 'import.line'|trans }}</th>
+                    <th>{{ 'character.name'|trans }}</th>
+                    <th>{{ 'import.what'|trans }}</th>
+                    <th>{{ 'character.gameplay_tags'|trans }}</th>
+                    <th>{{ 'character.trigger_tags'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in plan.rows %}
+                    <tr class="import-row--{{ row.action }}">
+                        <td>{{ row.line }}</td>
+                        <td>
+                            <strong>{{ row.name ?: '—' }}</strong>
+                            {% if row.casting %}<div class="text-muted small">{{ row.casting|trans }}{% if row.availability %} · {{ row.availability|trans }}{% endif %}</div>{% endif %}
+                        </td>
+                        <td>
+                            <span class="badge import-badge--{{ row.action }}">{{ ('import.action_' ~ row.action)|trans }}</span>
+                            {% for error in row.errors %}<div class="text-danger small">{{ error[0]|trans(error[1]) }}</div>{% endfor %}
+                        </td>
+                        {% for type in ['gameplay', 'trigger'] %}
+                            <td class="small">
+                                {% if row.tags[type] is defined %}
+                                    {% for item in row.tags[type] %}{{ item.name }} {{ item.percentage }}%{% if (type ~ '|' ~ item.name) in row.newTags %} <span class="badge badge-warning">{{ 'import.new'|trans }}</span>{% endif %}{% if not loop.last %}, {% endif %}{% else %}<span class="text-muted">{{ 'import.no_tags'|trans }}</span>{% endfor %}
+                                {% else %}
+                                    <span class="text-muted">{{ 'import.unchanged'|trans }}</span>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="import-actions">
+        {% if plan.hasErrors %}
+            <div class="alert alert-danger">{{ 'import.fix_errors'|trans }}</div>
+            <a class="btn btn-primary" href="{{ backUrl }}"><i class="fa fa-arrow-left"></i> {{ 'import.upload_again'|trans }}</a>
+        {% else %}
+            <form method="post" action="{{ confirmUrl }}">
+                <input type="hidden" name="_token" value="{{ csrf_token(csrfId) }}">
+                <input type="hidden" name="token" value="{{ token }}">
+                <button class="btn btn-primary"><i class="fa fa-check"></i> {{ 'import.confirm'|trans({'%count%': plan.count('create') + plan.count('update')}) }}</button>
+                <a class="btn btn-link" href="{{ backUrl }}">{{ 'import.cancel'|trans }}</a>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

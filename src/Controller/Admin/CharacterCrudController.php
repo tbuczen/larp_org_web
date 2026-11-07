@@ -99,12 +99,26 @@ class CharacterCrudController extends AbstractCrudController
     {
         $larp = $this->currentLarp();
 
-        return $actions
+        $actions
             ->add(Crud::PAGE_EDIT, Action::INDEX)
             // Keep the LARP when adding a character from its list.
             ->update(Crud::PAGE_INDEX, Action::NEW, fn (Action $action): Action => null === $larp
                 ? $action
                 : $action->linkToUrl(self::larpListUrl($this->urls, $larp, Action::NEW))->setLabel('character.add'));
+
+        if (null !== $larp) {
+            $actions
+                ->add(Crud::PAGE_INDEX, Action::new('importCharacters', 'import.action', 'fa fa-file-csv')
+                    ->linkToUrl(LarpCrudController::larpToolUrl($this->urls, 'importCharacters', $larp))
+                    ->createAsGlobalAction()
+                    ->setCssClass('btn btn-secondary'))
+                ->add(Crud::PAGE_INDEX, Action::new('larpTags', 'larp_tags.action', 'fa fa-tags')
+                    ->linkToUrl(LarpCrudController::larpToolUrl($this->urls, 'tags', $larp))
+                    ->createAsGlobalAction()
+                    ->setCssClass('btn btn-secondary'));
+        }
+
+        return $actions;
     }
 
     /** Without a LARP, the list asks which LARP's characters to manage. */
@@ -126,6 +140,8 @@ class CharacterCrudController extends AbstractCrudController
                 'listUrl' => self::larpListUrl($this->urls, $larp),
                 'newUrl' => self::larpListUrl($this->urls, $larp, Action::NEW),
                 'editLarpUrl' => $this->urls->unsetAll()->setController(LarpCrudController::class)->setAction(Action::EDIT)->setEntityId($larp->getId())->generateUrl(),
+                'importUrl' => LarpCrudController::larpToolUrl($this->urls, 'importCharacters', $larp),
+                'tagsUrl' => LarpCrudController::larpToolUrl($this->urls, 'tags', $larp),
             ];
         }
 
@@ -264,7 +280,7 @@ class CharacterCrudController extends AbstractCrudController
             ->setEntryType(CharacterTagType::class)
             ->setFormTypeOptions([
                 'by_reference' => false,
-                'entry_options' => ['tag_type' => $type, 'label' => false],
+                'entry_options' => ['tag_type' => $type, 'larp' => $this->currentLarp(), 'label' => false],
                 'error_bubbling' => false,
             ])
             ->setHelp($help)

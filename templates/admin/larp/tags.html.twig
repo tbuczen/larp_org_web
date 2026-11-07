@@ -1,0 +1,55 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'larp_tags.title'|trans({'%larp%': larp.name}) }}{% endblock %}
+{% block content_title %}{{ 'larp_tags.title'|trans({'%larp%': larp.name}) }}{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ charactersUrl }}"><i class="fa fa-masks-theater"></i> {{ 'larp.characters'|trans }}</a>
+{% endblock %}
+
+{% block main %}
+    {% set token = csrf_token(csrfId) %}
+    <p class="text-muted">{{ 'larp_tags.intro'|trans }}</p>
+
+    <div class="larp-tags">
+        {% for key, list in lists %}
+            <section class="larp-tags__column">
+                <h2>{{ (key == 'trigger' ? 'character.trigger_tags' : 'character.gameplay_tags')|trans }}</h2>
+
+                <form method="post" action="{{ path('admin_larp_add_tags', {id: larp.id}) }}" class="larp-tags__add">
+                    <input type="hidden" name="_token" value="{{ token }}">
+                    <input type="hidden" name="type" value="{{ key }}">
+                    <label class="form-label" for="tags-{{ key }}">{{ 'larp_tags.add_label'|trans }}</label>
+                    <textarea class="form-control" id="tags-{{ key }}" name="tags" rows="5" placeholder="{{ ('larp_tags.placeholder_' ~ key)|trans }}"></textarea>
+                    <div class="form-text">{{ 'larp_tags.add_help'|trans }}</div>
+                    <button class="btn btn-primary mt-2"><i class="fa fa-plus"></i> {{ 'larp_tags.add_button'|trans }}</button>
+                </form>
+
+                {% if list.tags is empty %}
+                    <p class="text-muted mt-3">{{ 'larp_tags.none'|trans }}</p>
+                {% else %}
+                    <ul class="larp-tags__list">
+                        {% for tag in list.tags %}
+                            <li>
+                                <span>
+                                    <strong>{{ tag.name }}</strong>
+                                    {% if tag.category %}<span class="text-muted">· {{ tag.category.name }}</span>{% endif %}
+                                    <span class="badge badge-secondary">{{ 'larp_tags.used_by'|trans({'%count%': usage[tag.id] ?? 0}) }}</span>
+                                </span>
+                                <span class="larp-tags__actions">
+                                    <a class="btn btn-sm btn-secondary" href="{{ ea_url().setController('App\\Controller\\Admin\\TagCrudController').setAction('edit').setEntityId(tag.id) }}" title="{{ 'page.edit'|trans }}"><i class="fa fa-pen"></i></a>
+                                    <form method="post" action="{{ path('admin_larp_remove_tag', {id: larp.id, tag: tag.id}) }}" onsubmit="return confirm('{{ 'larp_tags.remove_confirm'|trans({'%count%': usage[tag.id] ?? 0})|e('js') }}')">
+                                        <input type="hidden" name="_token" value="{{ token }}">
+                                        <button class="btn btn-sm btn-link text-danger" title="{{ 'page.remove'|trans }}"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <p class="text-muted small mt-2">{{ 'larp_tags.shared_note'|trans({'%count%': list.sharedCount}) }} <a href="{{ sharedTagsUrl }}">{{ 'larp_tags.shared_link'|trans }}</a></p>
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}

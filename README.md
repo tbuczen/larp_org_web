@@ -71,6 +71,16 @@ The LARP page shows the **current edition**: the next one that hasn't ended, oth
 In the admin, characters are managed **per LARP**: *Postacie* first asks which LARP, and its list,
 "Dodaj postać" and the edition field all stay within that LARP (new characters start in its
 current edition). Each LARP row and edit page also has *Postacie* / *Dodaj postać* buttons.
+
+**Tags per LARP.** Besides the tags shared by all LARPs (*Tagi*), each LARP can have its own
+(*Tagi larpa*: paste a list, one per line, optionally `Kategoria: Tag`). A character's form offers
+the shared tags plus its LARP's own; a LARP tag can't reuse a shared tag's name.
+
+**CSV import** (*Import CSV* on a LARP): upload a file exported from Excel / LibreOffice / Google
+Sheets (`;` `,` or tab; UTF-8 or Windows-1250), check the preview (new / updated / skipped / errors,
+new tags), then confirm — all rows are saved in one transaction, or none. Only the `nazwa` column
+is required; tag cells look like `Polityka / intryga 50%; Magia 30%`. *Pobierz szablon CSV* gives
+a ready-to-fill file. Code: `src/Import/`, `src/Tagging/TagResolver.php`.
 In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
 
 Public pages: `/larpy`, `/larp/{slug}`, `/larp/{slug}/postac/{character}`, and the character matcher

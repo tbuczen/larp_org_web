@@ -175,3 +175,37 @@
 .larp-picker__main { color: var(--text-primary-color); display: flex; flex: 1 1 260px; flex-direction: column; gap: .15rem; text-decoration: none; }
 .larp-picker__main .badge { align-self: flex-start; }
 .larp-picker__actions { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+/* LARP tags screen (templates/admin/larp/tags.html.twig) */
+.larp-tags { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.larp-tags__column h2 { font-size: 1.2rem; }
+.larp-tags__list { display: grid; gap: .35rem; list-style: none; margin: 1rem 0 0; padding: 0; }
+.larp-tags__list li {
+    align-items: center;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-secondary-color);
+    border-radius: 6px;
+    display: flex;
+    gap: .5rem;
+    justify-content: space-between;
+    padding: .4rem .6rem;
+}
+.larp-tags__actions { display: flex; gap: .25rem; }
+.larp-tags__actions form { margin: 0; }
+
+/* CSV import (templates/admin/character/import*.html.twig) */
+.import-layout { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr) minmax(280px, 420px); }
+@media (max-width: 992px) { .import-layout { grid-template-columns: 1fr; } }
+.import-help { background: var(--secondary-bg); border: 1px solid var(--border-secondary-color); border-radius: 8px; padding: 1rem; }
+.import-help h2 { font-size: 1.1rem; }
+.import-example { background: var(--body-bg); border-radius: 6px; padding: .5rem .75rem; white-space: pre-wrap; }
+.import-summary { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.import-count { background: var(--secondary-bg); border: 1px solid var(--border-secondary-color); border-radius: 6px; padding: .35rem .75rem; }
+.import-count--error strong { color: var(--red-500, #dc2626); }
+.import-row--error { background: color-mix(in srgb, #dc2626 8%, transparent); }
+.import-row--skip { opacity: .6; }
+.import-badge--create { background: #16a34a; color: #fff; }
+.import-badge--update { background: #2563eb; color: #fff; }
+.import-badge--skip { background: #6b7280; color: #fff; }
+.import-badge--error { background: #dc2626; color: #fff; }
+.import-actions { margin-top: 1rem; }

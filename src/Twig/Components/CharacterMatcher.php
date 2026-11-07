@@ -231,7 +231,8 @@ final class CharacterMatcher
 
         $groups = [];
         foreach ($tags as $tag) {
-            $groups[$tag->getCategory()?->getName() ?? ''][] = $tag;
+            // A LARP's own tags without a category are grouped under the LARP's name.
+            $groups[$tag->getCategory()?->getName() ?? $tag->getLarp()?->getName() ?? ''][] = $tag;
         }
 
         return $groups;

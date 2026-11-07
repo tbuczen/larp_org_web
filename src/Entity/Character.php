@@ -96,6 +96,12 @@ class Character implements SluggableInterface, \Stringable
                 if (null === $tag) {
                     continue;
                 }
+                if (!$tag->isAvailableFor($this->getLarp())) {
+                    $context->buildViolation('character.tag_wrong_larp')
+                        ->setParameter('%tag%', $tag->getName())
+                        ->atPath($path)
+                        ->addViolation();
+                }
                 $key = spl_object_id($tag);
                 if (isset($seen[$key])) {
                     $context->buildViolation('character.duplicate_tag')

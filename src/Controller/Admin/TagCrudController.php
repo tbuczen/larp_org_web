@@ -29,13 +29,13 @@ class TagCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('tag.label')
             ->setEntityLabelInPlural('tag.label_plural')
             ->setDefaultSort(['type' => 'ASC', 'name' => 'ASC'])
-            ->setSearchFields(['name', 'description', 'category.name'])
+            ->setSearchFields(['name', 'description', 'category.name', 'larp.name'])
             ->setPaginatorPageSize(50);
     }
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters->add('type')->add('category');
+        return $filters->add('type')->add('category')->add('larp');
     }
 
     public function configureFields(string $pageName): iterable
@@ -45,6 +45,10 @@ class TagCrudController extends AbstractCrudController
         yield AssociationField::new('category', 'tag.category')
             ->setRequired(false)
             ->setHelp('tag.category_help');
+        yield AssociationField::new('larp', 'tag.larp')
+            ->setRequired(false)
+            ->setHelp('tag.larp_help')
+            ->setFormTypeOption('placeholder', 'tag.shared');
         yield TextareaField::new('description', 'tag.description')
             ->setRequired(false)
             ->hideOnIndex();

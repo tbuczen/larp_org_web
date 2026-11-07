@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Enum\TagType;
 use App\Repository\TagRepository;
+use App\Validator\NotShadowingSharedTag;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -13,12 +14,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * A trigger (sensitive content) or gameplay tag, shared by all LARPs so a
- * visitor's preferences apply to every game.
+ * A trigger (sensitive content) or gameplay tag.
+ *
+ * Shared tags (no LARP) are used by every LARP, so a visitor's preferences apply
+ * across games. A LARP can also define its own tags (larp set), offered only for
+ * its characters.
  */
 #[ORM\Entity(repositoryClass: TagRepository::class)]
-#[ORM\UniqueConstraint(fields: ['type', 'slug'])]
-#[UniqueEntity(fields: ['type', 'slug'], errorPath: 'name', message: 'tag.duplicate')]
+#[ORM\UniqueConstraint(fields: ['type', 'slug', 'larp'])]
+#[UniqueEntity(fields: ['type', 'slug', 'larp'], errorPath: 'name', message: 'tag.duplicate', ignoreNull: false)]
+#[NotShadowingSharedTag]
 class Tag implements SluggableInterface, \Stringable
 {
     #[ORM\Id]
@@ -43,6 +48,11 @@ class Tag implements SluggableInterface, \Stringable
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
+    /** Null: shared by all LARPs. Set: this LARP's own tag. */
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?Larp $larp = null;
 
     public function __toString(): string
     {
@@ -118,6 +128,29 @@ class Tag implements SluggableInterface, \Stringable
         $this->category = $category;
 
         return $this;
+    }
+
+    public function getLarp(): ?Larp
+    {
+        return $this->larp;
+    }
+
+    public function setLarp(?Larp $larp): static
+    {
+        $this->larp = $larp;
+
+        return $this;
+    }
+
+    public function isShared(): bool
+    {
+        return null === $this->larp;
+    }
+
+    /** Whether this tag may be used for a character of the given LARP. */
+    public function isAvailableFor(?Larp $larp): bool
+    {
+        return null === $this->larp || $this->larp === $larp;
     }
 
     public function getDescription(): ?string

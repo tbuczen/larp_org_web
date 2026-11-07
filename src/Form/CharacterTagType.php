@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\CharacterTag;
+use App\Entity\Larp;
 use App\Entity\Tag;
 use App\Enum\TagType;
 use App\Repository\TagRepository;
@@ -26,6 +27,8 @@ final class CharacterTagType extends AbstractType
     {
         /** @var TagType $tagType */
         $tagType = $options['tag_type'];
+        /** @var Larp|null $larp */
+        $larp = $options['larp'];
 
         $builder
             ->add('tag', EntityType::class, [
@@ -33,14 +36,11 @@ final class CharacterTagType extends AbstractType
                 'label' => 'character_tag.tag',
                 'placeholder' => 'character_tag.choose',
                 'choice_label' => 'name',
-                'group_by' => static fn (Tag $tag): ?string => $tag->getCategory()?->getName(),
-                'query_builder' => static fn (TagRepository $repo): QueryBuilder => $repo->createQueryBuilder('t')
-                    ->leftJoin('t.category', 'c')
-                    ->andWhere('t.type = :type')
-                    ->setParameter('type', $tagType)
-                    ->orderBy('c.position', 'ASC')
-                    ->addOrderBy('c.name', 'ASC')
-                    ->addOrderBy('t.name', 'ASC'),
+                // Shared tags by category; the LARP's own tags in their own group.
+                'group_by' => static fn (Tag $tag): ?string => $tag->isShared()
+                    ? $tag->getCategory()?->getName()
+                    : '★ '.$tag->getLarp()?->getName().($tag->getCategory() ? ' — '.$tag->getCategory()->getName() : ''),
+                'query_builder' => static fn (TagRepository $repo): QueryBuilder => $repo->availableForQuery($tagType, $larp),
                 'row_attr' => ['class' => 'character-tag-row__tag'],
             ])
             ->add('percentage', IntegerType::class, [
@@ -59,6 +59,9 @@ final class CharacterTagType extends AbstractType
                 'attr' => ['class' => 'character-tag-row'],
             ])
             ->setRequired('tag_type')
-            ->setAllowedTypes('tag_type', TagType::class);
+            ->setAllowedTypes('tag_type', TagType::class)
+            // The character's LARP: its own tags are offered next to the shared ones.
+            ->setDefault('larp', null)
+            ->setAllowedTypes('larp', ['null', Larp::class]);
     }
 }

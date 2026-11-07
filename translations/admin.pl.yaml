@@ -151,6 +151,9 @@ character_tag:
     percentage: '%'
 
 tag:
+    larp: Larp
+    larp_help: 'Puste = tag wspólny dla wszystkich larpów. Wybierz larpa, aby był to tag tylko tego larpa.'
+    shared: '— wspólny dla wszystkich larpów —'
     label: Tag
     label_plural: Tagi
     name: Nazwa
@@ -298,3 +301,85 @@ menu_item:
     route: Strona systemowa
     url: Adres zewnętrzny
     new_tab: Otwórz w nowej karcie
+
+larp_tags:
+    action: Tagi larpa
+    title: 'Tagi larpa: %larp%'
+    intro: 'Własne tagi tego larpa uzupełniają wspólne tagi wszystkich larpów. Przy postaciach tego larpa wybierzesz jedne i drugie. Nazwa, która już istnieje (wspólna albo tego larpa), nie zostanie zdublowana.'
+    add_label: Dodaj listę tagów
+    add_help: 'Jeden tag w wierszu. Opcjonalnie z kategorią: „Kategoria: Tag”.'
+    add_button: Dodaj tagi
+    placeholder_gameplay: "Magia\nPolityka klanowa\nŁowy: Polowanie na smoki"
+    placeholder_trigger: "Opętanie\nSmoki: Spalenie żywcem"
+    none: 'Ten larp nie ma jeszcze własnych tagów.'
+    used_by: '{0}nieużywany|{1}1 postać|]1,4]%count% postacie|]4,Inf[%count% postaci'
+    remove_confirm: '{0}Usunąć ten tag?|]0,Inf[Usunąć ten tag? Zniknie z %count% postaci.'
+    created: 'Dodano: %tags%'
+    existing: 'Już istniały (użyto istniejących): %tags%'
+    skipped: 'Pominięto (za długie albo nieprawidłowe): %tags%'
+    removed: 'Usunięto tag „%tag%”.'
+    shared_note: 'Do tego dochodzi %count% wspólnych tagów.'
+    shared_link: Wspólne tagi
+
+import:
+    action: Import CSV
+    title: 'Import postaci: %larp%'
+    file: Plik CSV
+    file_help: 'Z Excela, LibreOffice albo Arkuszy Google (Plik → Pobierz → CSV). Do 1 MB, 1000 wierszy.'
+    update_existing: Aktualizuj istniejące postacie
+    update_existing_help: 'Postać o tej samej nazwie w wybranej edycji zostanie zaktualizowana. Wyłącz, aby je pominąć.'
+    create_tags: Twórz brakujące tagi
+    create_tags_help: 'Nieznane tagi zostaną dodane jako tagi tego larpa. Wyłącz, aby traktować je jako błąd.'
+    preview_button: Pokaż podgląd
+    download_template: Pobierz szablon CSV
+    cancel: Anuluj
+    format_title: Format pliku
+    format_intro: 'Pierwszy wiersz to nagłówki. Wymagana jest tylko kolumna „nazwa”; kolejność kolumn jest dowolna, a brakujące kolumny przy aktualizacji pozostawiają dane bez zmian.'
+    column: Kolumna
+    values: Wartości
+    col:
+        name: { header: nazwa, help: 'Imię / nazwa postaci (wymagane).' }
+        teaser: { header: zajawka, help: 'Krótki opis, do 500 znaków.' }
+        description: { header: opis, help: 'Pełny opis; pusta linia = nowy akapit.' }
+        casting: { header: obsada, help: 'dowolna, kobieca (K), męska (M), niebinarna (NB).' }
+        availability: { header: dostępność, help: 'dostępna, zajęta, ukryta.' }
+        position: { header: kolejność, help: 'Liczba; mniejsza = wyżej.' }
+        gameplay: { header: rozgrywka, help: 'Tagi rozgrywki z procentami.' }
+        triggers: { header: triggery, help: 'Triggery z procentami.' }
+    tags_format: 'Tagi w komórce rozdzielaj średnikiem, przecinkiem albo „|”. Procent po nazwie (spacja, dwukropek albo „=”); bez procentu = 50%:'
+    tags_note: 'Nazwy porównywane są bez wielkości liter i polskich znaków. Własne tagi larpa:'
+    preview_title: 'Podgląd importu: %larp%'
+    edition_info: 'edycja: %edition%'
+    file_info: 'kodowanie %encoding%, separator „%delimiter%”'
+    action_create: nowe
+    action_update: do aktualizacji
+    action_skip: pominięte
+    action_error: z błędami
+    ignored_columns: 'Pominięte kolumny (nieznane nagłówki): %columns%'
+    new_tags: 'Zostaną dodane nowe tagi tego larpa:'
+    line: Wiersz
+    what: Co się stanie
+    new: nowy
+    no_tags: brak
+    unchanged: bez zmian
+    fix_errors: 'Popraw błędy w pliku i wgraj go ponownie. Nic nie zostało zapisane.'
+    upload_again: Wgraj ponownie
+    confirm: '{1}Importuj 1 postać|]1,4]Importuj %count% postacie|]4,Inf[Importuj %count% postaci|{0}Zakończ (nic do zapisania)'
+    expired: 'Podgląd wygasł. Wgraj plik ponownie.'
+    done: 'Import zakończony: nowe %created%, zaktualizowane %updated%, nowe tagi %tags%.'
+    error:
+        empty: 'Plik jest pusty.'
+        too_large: 'Plik jest za duży (maks. %max%).'
+        too_many_rows: 'Za dużo wierszy (maks. %max%).'
+        no_rows: 'Plik nie zawiera żadnych postaci.'
+        no_name_column: 'Brak kolumny „nazwa”. Nagłówki w pliku: %headers%'
+    row:
+        too_many_columns: 'Więcej kolumn niż w nagłówku. Komórka zawiera „%delimiter%” bez cudzysłowu? Ujmij ją w cudzysłów albo rozdziel tagi przecinkiem lub „|”.'
+        name_missing: 'Brak nazwy postaci.'
+        too_long: '„%field%” jest za długie (maks. %max% znaków).'
+        duplicate: 'Ta sama postać jest już w wierszu %line%.'
+        bad_value: 'Nieznana wartość w kolumnie „%field%”: „%value%”.'
+        bad_percentage: 'Procent dla „%tag%” musi być od 1 do 100 (jest %value%).'
+        duplicate_tag: 'Tag „%tag%” powtarza się.'
+        wrong_column: '„%tag%” to tag z drugiej kolumny (rozgrywka/triggery). Sprawdź, czy kolumny się nie przesunęły.'
+        unknown_tag: 'Nieznany tag „%tag%”.'

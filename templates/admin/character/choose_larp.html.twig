@@ -28,6 +28,8 @@
                         <a class="btn btn-sm btn-secondary" href="{{ row.editLarpUrl }}"><i class="fa fa-calendar-plus"></i> {{ 'character.add_edition_first'|trans }}</a>
                     {% else %}
                         <a class="btn btn-sm btn-secondary" href="{{ row.listUrl }}"><i class="fa fa-list"></i> {{ 'character.list'|trans }}</a>
+                        <a class="btn btn-sm btn-secondary" href="{{ row.tagsUrl }}"><i class="fa fa-tags"></i> {{ 'larp_tags.action'|trans }}</a>
+                        <a class="btn btn-sm btn-secondary" href="{{ row.importUrl }}"><i class="fa fa-file-csv"></i> {{ 'import.action'|trans }}</a>
                         <a class="btn btn-sm btn-primary" href="{{ row.newUrl }}"><i class="fa fa-plus"></i> {{ 'character.add'|trans }}</a>
                     {% endif %}
                 </span>

@@ -87,6 +87,11 @@ class LarpFixtures extends Fixture
         // A draft that must stay hidden on the public site.
         $this->larp($manager, 'Projekt w przygotowaniu', LarpStatus::Draft, null, null, 'Szkic — niewidoczny publicznie.', 9);
 
+        // Each LARP can have its own tags next to the shared ones.
+        $this->tags['Magia'] = $this->larpTag($manager, $zwoje, TagType::Gameplay, 'Magia');
+        $this->tags['Smoki'] = $this->larpTag($manager, $zwoje, TagType::Trigger, 'Smoki');
+        $this->tags['Hakowanie'] = $this->larpTag($manager, $cybercrush, TagType::Gameplay, 'Hakowanie');
+
         $this->characters($manager, $zwojeEdition, [
             ['Jarl Ulfgar', CharacterCasting::Male, 'Władca twierdzy, który musi wybrać między honorem a przetrwaniem klanu.',
                 ['Polityka / intryga' => 50, 'Trudne wybory / dylematy moralne' => 30, 'Konflikt / walka' => 20],
@@ -101,17 +106,17 @@ class LarpFixtures extends Fixture
                 ['Handel i negocjacje' => 60, 'Komedia' => 25, 'Polityka / intryga' => 15],
                 ['Alkohol / alkoholizm' => 30, 'Manipulacja' => 40]],
             ['Uczeń maga Eirik', CharacterCasting::NonBinary, 'Adept, który otworzył księgę, której nie powinien był otwierać.',
-                ['Tajemnica / śledztwo' => 50, 'Groza / horror' => 30, 'Refleksja / filozofia' => 20],
+                ['Magia' => 50, 'Tajemnica / śledztwo' => 30, 'Groza / horror' => 20],
                 ['Okultyzm' => 70, 'Szaleństwo' => 40, 'Krzyk' => 20], CharacterAvailability::Taken],
             ['Zwiadowca Torvi', CharacterCasting::Male, 'Tropiciel, który wrócił z gór jako jedyny z oddziału.',
                 ['Przetrwanie' => 50, 'Silne emocje / dramat' => 30, 'Napięcie / akcja' => 20],
-                ['Trauma / PTSD' => 60, 'Śmierć bliskiej osoby' => 50]],
+                ['Trauma / PTSD' => 60, 'Śmierć bliskiej osoby' => 50, 'Smoki' => 40]],
             ['Tajna postać', CharacterCasting::Any, 'Ukryta — nie powinna być widoczna publicznie.', [], [], CharacterAvailability::Hidden],
         ]);
 
         $this->characters($manager, $cyberEdition, [
             ['Decker „Ghost”', CharacterCasting::Any, 'Hakerka, która włamała się o jeden system za daleko.',
-                ['Tajemnica / śledztwo' => 50, 'Napięcie / akcja' => 30, 'Trudne wybory / dylematy moralne' => 20],
+                ['Hakowanie' => 50, 'Tajemnica / śledztwo' => 30, 'Trudne wybory / dylematy moralne' => 20],
                 ['Manipulacja' => 40, 'Narkotyki / używki' => 30, 'Głośne dźwięki' => 20]],
             ['Fixer Mama Lou', CharacterCasting::Female, 'Pośredniczka, która zna cenę każdego w tym mieście.',
                 ['Handel i negocjacje' => 50, 'Polityka / intryga' => 40, 'Komedia' => 10],
@@ -137,6 +142,14 @@ class LarpFixtures extends Fixture
                 $this->tags[$name] = $tag;
             }
         }
+    }
+
+    private function larpTag(ObjectManager $manager, Larp $larp, TagType $type, string $name): Tag
+    {
+        $tag = (new Tag())->setName($name)->setType($type)->setLarp($larp);
+        $manager->persist($tag);
+
+        return $tag;
     }
 
     private function larp(ObjectManager $manager, string $name, LarpStatus $status, ?string $format, ?string $setting, string $teaser, int $position): Larp

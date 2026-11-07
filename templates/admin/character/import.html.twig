@@ -1,0 +1,38 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+{% form_theme form '@EasyAdmin/crud/form_theme.html.twig' %}
+
+{% block page_title %}{{ 'import.title'|trans({'%larp%': larp.name}) }}{% endblock %}
+{% block content_title %}{{ 'import.title'|trans({'%larp%': larp.name}) }}{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ templateUrl }}"><i class="fa fa-download"></i> {{ 'import.download_template'|trans }}</a>
+{% endblock %}
+
+{% block main %}
+    <div class="import-layout">
+        <section>
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-primary"><i class="fa fa-eye"></i> {{ 'import.preview_button'|trans }}</button>
+                <a class="btn btn-link" href="{{ charactersUrl }}">{{ 'import.cancel'|trans }}</a>
+            {{ form_end(form) }}
+        </section>
+
+        <aside class="import-help">
+            <h2>{{ 'import.format_title'|trans }}</h2>
+            <p>{{ 'import.format_intro'|trans }}</p>
+            <table class="table table-sm">
+                <thead><tr><th>{{ 'import.column'|trans }}</th><th>{{ 'import.values'|trans }}</th></tr></thead>
+                <tbody>
+                    {% for column in ['name', 'teaser', 'description', 'casting', 'availability', 'position', 'gameplay', 'triggers'] %}
+                        <tr><td><code>{{ ('import.col.' ~ column ~ '.header')|trans }}</code></td><td>{{ ('import.col.' ~ column ~ '.help')|trans }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>{{ 'import.tags_format'|trans }}</p>
+            <pre class="import-example">Polityka / intryga 50%; Konflikt / walka 30%; Magia 20%</pre>
+            <p class="text-muted">{{ 'import.tags_note'|trans }} <a href="{{ tagsUrl }}">{{ 'larp_tags.action'|trans }}</a></p>
+        </aside>
+    </div>
+{% endblock %}
