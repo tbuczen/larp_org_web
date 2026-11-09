@@ -34,7 +34,7 @@ class SiteFixtures extends Fixture implements DependentFixtureInterface
         $home = (new Page())->setTitle('Strona główna')->setIsHome(true)
             ->setMetaDescription('Stowarzyszenie Larpowe „Las Tajemnic” — larpy fantasy, science fiction i postapo: Pradawne Zwoje, Cybercrush, Vault 47.');
         $this->blocks($home, [
-            ['hero', ['title' => 'Przeżyj prawdziwą przygodę', 'subtitle' => 'Tworzymy larpy, w których magia, neon i ruiny przyszłości spotykają się w jednym lesie tajemnic.', 'larp' => '', 'primary_label' => 'Nasze larpy', 'primary_url' => '/larpy', 'secondary_label' => 'Znajdź swoją postać', 'secondary_url' => '/postacie', 'height' => 'full']],
+            ['hero', ['title' => 'Przeżyj prawdziwą przygodę', 'subtitle' => 'Od dawnych legend po ruiny przyszłości — tworzymy larpy, w które się wchodzi jak w las: bez mapy i z dreszczem.', 'larp' => '', 'primary_label' => 'Nasze larpy', 'primary_url' => '/larpy', 'secondary_label' => 'Znajdź swoją postać', 'secondary_url' => '/postacie', 'height' => 'full']],
             ['larp_showcase', ['title' => 'Aktualnie organizowane larpy — 2026', 'intro' => 'Zapisy, daty i miejsca naszych najbliższych gier.', 'mode' => 'current', 'limit' => 6]],
             ['countdown', ['title' => '', 'larp' => 'auto']],
             ['matcher_teaser', []],

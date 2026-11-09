@@ -1,0 +1,8 @@
+{#
+    Logo and name in the header. Override this file in a theme to change the
+    brand without copying the whole layout. The theme's images/logo.svg is used
+    when it exists.
+#}
+{% set logo = theme_asset('images/logo.svg') %}
+{% if logo %}<img class="site-brand__logo" src="{{ asset(logo) }}" alt="" width="40" height="40">{% endif %}
+<span class="site-brand__name">{{ settings.organizationName }}</span>

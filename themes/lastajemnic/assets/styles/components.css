@@ -1,131 +1,111 @@
 /*
  * Las Tajemnic — component overrides on top of the base theme.
- * Signature details: angled "tech" buttons, HUD corner brackets on cards,
- * carved Cinzel headings with an amber rune-diamond, Rajdhani for UI text.
+ * Signature details from the logo: squared lettering (Saira Extra Condensed,
+ * uppercase), square corners, the double frame on cards and buttons, and a
+ * small square "frame" mark before section titles.
  */
 
-/* Typography & small UI text */
-.eyebrow, .menu__link, .badge, .button, .countdown__label, .chip, .larp-card__meta,
-.character-card__meta, .facts dt, .matcher__category, .rating-legend {
+/* Typography: squared, uppercase headings like the logo */
+h1, h2, h3, .site-brand, .menu__link, .button, .badge, .eyebrow, .chip,
+.countdown__value, .countdown__label, .facts dt, .match-card__score strong,
+.matcher__category, .rating-legend, .social-links__link {
     font-family: var(--font-ui);
 }
-.menu__link { font-size: 1.02rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
-.eyebrow { align-items: center; display: flex; font-size: .9rem; font-weight: 700; gap: .6rem; letter-spacing: .18em; }
-.eyebrow::before { background: linear-gradient(90deg, var(--color-accent), transparent); content: ""; height: 1px; width: 2.5rem; }
-h1, h2, h3 { text-wrap: balance; }
+h1, h2, h3, .button, .menu__link, .eyebrow, .badge, .social-links__link { text-transform: uppercase; }
+h1, h2, h3 { letter-spacing: var(--heading-tracking); }
+.menu__link { font-size: 1.12rem; font-weight: 600; letter-spacing: .1em; }
+.eyebrow { align-items: center; color: var(--color-accent); display: flex; font-size: 1rem; font-weight: 600; gap: .7rem; letter-spacing: .2em; }
+.eyebrow::before { background: currentColor; content: ""; height: 1px; width: 2.5rem; }
 
-/* Section titles: carved heading + glowing rune diamond + fading rule */
-.block__title, .page-title, .larp-section h2, .larp-characters h2, .larp-editions h2 {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: .6rem .8rem;
-}
+/* Section titles: a small hollow square, like the logo's frame */
+.block__title, .larp-section h2 { align-items: center; display: flex; flex-wrap: wrap; gap: .5rem .8rem; }
 .block__title::before, .larp-section h2::before {
-    border: 2px solid var(--color-accent);
-    box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 70%, transparent);
+    border: 2px solid var(--color-text);
+    box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 3px var(--color-muted);
     content: "";
     flex: none;
-    height: .55em;
-    transform: rotate(45deg);
-    width: .55em;
+    height: .5em;
+    width: .5em;
 }
 .center .block__title { justify-content: center; }
 
-/* Header */
-.site-brand { font-size: 1.1rem; font-weight: 800; letter-spacing: .02em; }
-.site-brand__name { text-shadow: 0 0 18px color-mix(in srgb, var(--color-primary) 30%, transparent); }
-.menu__link[aria-current="page"] { box-shadow: inset 0 -2px var(--color-primary), 0 6px 14px -8px var(--color-primary); color: var(--color-primary); }
-.submenu__list { background: color-mix(in srgb, var(--color-surface) 96%, transparent); border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border)); }
-.nav-toggle { border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border)); color: var(--color-primary); }
+/* Header: emblem + traced lettering (partials/_brand.html.twig) */
+.site-brand { gap: .8rem; }
+.site-brand__logo { height: 48px; width: 48px; }
+.lt-brand__text { display: flex; flex-direction: column; gap: .2rem; line-height: 1; }
+.lt-brand__wordmark { display: block; height: 22px; width: auto; }
+.lt-brand__tagline { color: var(--color-muted); font-family: var(--font-ui); font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.menu__link[aria-current="page"] { box-shadow: inset 0 -2px var(--color-text); color: var(--color-text); }
+.submenu__list { background: var(--color-bg); border-color: var(--color-text); }
+.nav-toggle { border-color: var(--color-text); color: var(--color-text); }
 
-/* Buttons: angled corners like a terminal frame */
-.button {
-    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-    font-size: 1.05rem;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-.button--primary { box-shadow: var(--glow); }
-.button--primary:hover { background: color-mix(in srgb, var(--color-primary) 80%, white); }
-.button--ghost {
-    /* Square corners: a clip-path would cut the outline at the corners. */
-    background: color-mix(in srgb, var(--color-bg) 45%, transparent);
-    border: 1.5px solid color-mix(in srgb, var(--color-text) 65%, transparent);
-    clip-path: none;
-    color: var(--color-text);
-}
-.button--ghost:hover { border-color: var(--color-neon-cyan); box-shadow: 0 0 14px -4px var(--color-neon-cyan); color: var(--color-neon-cyan); }
+/* Buttons: square, bone on ink (primary) or outlined (ghost) */
+.button { font-size: 1.15rem; font-weight: 700; padding-inline: 1.6rem; }
+.button--primary { background: var(--color-text); color: var(--color-on-primary); }
+.button--primary:hover { background: var(--color-bg); box-shadow: inset 0 0 0 2px var(--color-text); color: var(--color-text); }
+.button--ghost { border: 2px solid var(--color-text); color: var(--color-text); }
+.button--ghost:hover { background: var(--color-text); border-color: var(--color-text); color: var(--color-on-primary); }
 
-/* Cards & panels: HUD corner brackets that light up on hover */
-.larp-card, .character-card, .match-card, .teaser, .matcher__block, .countdown__unit, .cta {
-    --corner: color-mix(in srgb, var(--color-primary) 55%, transparent);
-    position: relative;
+/* Cards and panels: the double frame; it lights up on hover */
+.larp-card, .character-card, .match-card, .teaser, .countdown__unit, .matcher__block {
+    border: 1px solid var(--color-border);
+    box-shadow: var(--frame);
 }
-.larp-card::after, .character-card::after, .match-card::after, .teaser::after, .countdown__unit::after {
-    background:
-        linear-gradient(var(--corner) 0 0) top left / 16px 2px,
-        linear-gradient(var(--corner) 0 0) top left / 2px 16px,
-        linear-gradient(var(--corner) 0 0) bottom right / 16px 2px,
-        linear-gradient(var(--corner) 0 0) bottom right / 2px 16px;
-    background-repeat: no-repeat;
-    content: "";
-    inset: -1px;
-    pointer-events: none;
-    position: absolute;
-}
-.larp-card:hover, .character-card:hover, .match-card:hover { --corner: var(--color-primary); border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border)); box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--color-primary) 35%, transparent); }
-.larp-card, .character-card, .match-card { background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface)); }
-.larp-card__title, .character-card h3, .match-card__body h3 { font-weight: 600; }
+.larp-card, .character-card, .match-card { background: var(--color-surface); margin: 5px; }
+.card-grid { gap: 1.75rem; }
+.larp-card:hover, .character-card:hover, .match-card:hover { border-color: var(--color-text); box-shadow: var(--frame-active); }
+.larp-card__title, .character-card h3, .match-card__body h3 { font-size: 1.6rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; }
 
-/* Covers without an image: the theme's night-forest placeholder */
+/* Covers without an image: the dryad's branches, faint */
 .cover--placeholder, .character-card__portrait {
     background: url("../images/card-placeholder.svg") center / cover, var(--color-surface-2);
-    color: color-mix(in srgb, var(--color-accent) 55%, transparent);
-    text-shadow: 0 0 22px color-mix(in srgb, var(--color-accent) 60%, transparent);
+    color: rgb(236 230 216 / .18);
+    font-family: var(--font-heading);
+    font-size: 5.5rem;
 }
 
-/* Badges */
-.badge { border-radius: 2px; letter-spacing: .06em; text-transform: uppercase; }
-a.badge--open { box-shadow: 0 0 14px color-mix(in srgb, var(--color-primary) 60%, transparent); }
-.badge--taken { color: var(--color-accent); }
+/* Badges: small square labels */
+.badge { border-radius: 0; font-size: .85rem; font-weight: 600; letter-spacing: .1em; padding: .15rem .6rem; }
+a.badge--open, .badge--open { background: var(--color-text); border-color: var(--color-text); color: var(--color-on-primary); }
+.badge--available { color: var(--color-accent); }
 
 /* Hero */
-.hero__title {
-    font-weight: 800;
-    text-shadow:
-        -1.5px 0 color-mix(in srgb, var(--color-neon-cyan) 55%, transparent),
-        1.5px 0 color-mix(in srgb, var(--color-neon-magenta) 45%, transparent),
-        0 4px 30px rgb(0 0 0 / .7);
-}
-.hero__subtitle { color: color-mix(in srgb, var(--color-text) 88%, var(--color-primary)); }
+.hero__title { font-size: clamp(3rem, 11vw, 6.5rem); font-weight: 700; line-height: .95; letter-spacing: .01em; max-width: 12ch; }
+.hero__subtitle { color: var(--color-text); max-width: 46ch; opacity: .85; }
+.hero__facts svg { color: var(--color-accent); }
 
-/* Matcher teaser scale and CTA */
-.teaser { background: linear-gradient(120deg, var(--color-surface-2), var(--color-surface)); }
-.teaser__scale span { border-radius: 2px; font-weight: 700; }
-.cta { clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px); }
-.cta__title { font-weight: 800; }
-.button--on-cta { background: var(--color-on-primary); color: var(--color-primary); }
+/* Matcher teaser and call to action */
+.teaser__scale span { border: 1px solid var(--color-border); border-radius: 0; font-family: var(--font-ui); font-weight: 700; }
+.cta { border-radius: 0; box-shadow: 0 0 0 4px var(--color-bg), 0 0 0 5px var(--color-text); }
+.cta__title { font-weight: 700; }
 
-/* Countdown: glowing digital numbers */
-.countdown__value { color: var(--color-primary); text-shadow: 0 0 16px color-mix(in srgb, var(--color-primary) 55%, transparent); }
+/* Countdown */
+.countdown__value { font-size: clamp(2.4rem, 8vw, 3.6rem); }
+.countdown__label { letter-spacing: .15em; }
 
-/* Percentage bars: gameplay = moss → neon, triggers = rust → warning red */
-.tag-bar__fill { background: linear-gradient(90deg, var(--color-primary), var(--color-neon-cyan)); }
-.tag-bar--trigger .tag-bar__fill { background: linear-gradient(90deg, var(--color-rust), var(--color-danger)); }
-.tag-bar__track, .match-bar { border-radius: 0; }
+/* Percentage bars: gameplay in bone, triggers in the warning colour */
+.tag-bar__track, .match-bar { border-radius: 0; height: .4rem; }
+.tag-bar__fill { background: var(--color-text); }
+.tag-bar--trigger .tag-bar__fill { background: var(--color-danger); }
+.chip { border-radius: 0; font-size: 1rem; font-weight: 600; letter-spacing: .04em; }
 
 /* Social links */
-.social-links__link { border-radius: 2px; font-family: var(--font-ui); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.social-links__link:hover { border-color: var(--color-neon-cyan); box-shadow: 0 0 14px -4px var(--color-neon-cyan); color: var(--color-neon-cyan); }
+.social-links__link { border: 1px solid var(--color-text); border-radius: 0; font-weight: 600; letter-spacing: .1em; }
+.social-links__link:hover { background: var(--color-text); border-color: var(--color-text); color: var(--color-on-primary); }
 
-/* Footer: a thin rule in the three colours of the three worlds */
-.site-footer { background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--color-surface) 70%, transparent)); border-top: 0; position: relative; }
-.site-footer::before {
-    background: linear-gradient(90deg, transparent, var(--color-accent), var(--color-primary), var(--color-neon-cyan), transparent);
-    content: "";
-    height: 1px;
-    inset: 0 0 auto 0;
-    opacity: .7;
-    position: absolute;
+/* Footer: the full logo above the links (base layout shows images/logo-full.svg) */
+.site-footer__logo { height: auto; margin-bottom: .5rem; opacity: .9; width: 110px; }
+
+/* Placeholder covers: the letter becomes a small monogram, so it doesn't sit on the dryad */
+.cover--placeholder { align-items: flex-end; justify-content: flex-start; padding: .4rem 1rem; }
+.cover--placeholder span { color: rgb(236 230 216 / .35); font-size: 3rem; line-height: 1; }
+
+/* Phones: the text spans the full width, so darken the hero from the middle down
+   and move the dryad to the right, keeping the headline and subtitle readable. */
+@media (max-width: 760px) {
+    .hero__image { object-position: 72% center; }
+    .hero__overlay {
+        background:
+            linear-gradient(180deg, rgb(8 8 8 / .35) 0%, rgb(8 8 8 / .7) 40%, rgb(8 8 8 / .9) 70%, var(--color-bg) 100%);
+    }
 }

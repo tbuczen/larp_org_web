@@ -1,0 +1,10 @@
+{#
+    Las Tajemnic brand: the dryad emblem and the logo's own lettering (traced from
+    the official logo), with the full name for screen readers and search engines.
+#}
+<img class="site-brand__logo" src="{{ asset(theme_asset('images/logo.svg')) }}" alt="" width="48" height="48">
+<span class="lt-brand__text">
+    <span class="lt-brand__tagline" aria-hidden="true">Stowarzyszenie Larpowe</span>
+    <img class="lt-brand__wordmark" src="{{ asset(theme_asset('images/logo-wordmark.svg')) }}" alt="" width="127" height="22">
+    <span class="visually-hidden">{{ settings.organizationName }}</span>
+</span>

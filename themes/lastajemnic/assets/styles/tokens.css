@@ -1,51 +1,48 @@
 /*
- * Las Tajemnic — design tokens. A night forest where three worlds meet:
- *   --color-primary  "radioactive moss"  – post-apo (Vault 47) + forest; buttons, links
- *   --color-accent   rune amber          – fantasy (Pradawne Zwoje, Czasy Pogardy)
- *   --color-neon-*   cyan / magenta      – futuristic (Cybercrush); used only in effects
+ * Las Tajemnic — design tokens. Taken from the logo: a woodcut in ink and bone.
+ *   ink  (--color-bg …)   the black of the emblem
+ *   bone (--color-text, --color-primary)  the light of the branches and lettering
+ *   moss (--color-accent) the only colour: a muted forest green, used sparingly
  * Change the look of the whole site here first.
  */
 :root {
-    --color-bg: #060b09;
-    --color-surface: #0d1612;
-    --color-surface-2: #13211b;
-    --color-border: #22372d;
-    --color-text: #e4ede6;
-    --color-muted: #94a99c;
-    --color-primary: #a6e35f;
-    --color-accent: #f2b64c;
-    --color-danger: #ff7262;
-    --color-on-primary: #08110b;
-    --color-link: #b9ec7c;
-
-    --color-neon-cyan: #3ee6f0;
-    --color-neon-magenta: #ff4fa8;
-    --color-rust: #c4622d;
+    --color-bg: #080808;
+    --color-surface: #111110;
+    --color-surface-2: #1a1918;
+    --color-border: #2f2d2a;
+    --color-text: #ece6d8;
+    --color-muted: #a39d91;
+    --color-primary: #ece6d8;
+    --color-on-primary: #0a0a0a;
+    --color-accent: #9fb38a;
+    --color-link: #ece6d8;
+    --color-danger: #e0715f;
 
     --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --font-heading: "Cinzel", Georgia, "Times New Roman", serif;
-    --font-ui: "Rajdhani", "Inter", system-ui, sans-serif;
-    --font-brand: "Cinzel", Georgia, serif;
-    --heading-weight: 800;
-    --heading-tracking: .01em;
+    --font-heading: "Saira Extra Condensed", "Arial Narrow", sans-serif;
+    --font-ui: "Saira Extra Condensed", "Arial Narrow", sans-serif;
+    --font-brand: "Saira Extra Condensed", "Arial Narrow", sans-serif;
+    --heading-weight: 700;
+    --heading-tracking: .02em;
 
-    --radius: 4px;
-    --radius-small: 3px;
+    --radius: 0;
+    --radius-small: 0;
     --button-radius: 0;
-    --button-tracking: .06em;
-    --header-height: 68px;
+    --button-tracking: .08em;
+    --header-height: 72px;
 
-    --shadow: 0 18px 40px rgb(0 0 0 / .45);
-    --glow: 0 0 18px color-mix(in srgb, var(--color-primary) 45%, transparent);
-    --header-bg: color-mix(in srgb, var(--color-bg) 78%, transparent);
-    --header-border: color-mix(in srgb, var(--color-primary) 18%, transparent);
+    /* The logo's double frame: an outer hairline around a solid block. */
+    --frame: 0 0 0 4px var(--color-bg), 0 0 0 5px var(--color-border);
+    --frame-active: 0 0 0 4px var(--color-bg), 0 0 0 5px var(--color-text);
+
+    --shadow: 0 18px 40px rgb(0 0 0 / .55);
+    --header-bg: color-mix(in srgb, var(--color-bg) 86%, transparent);
+    --header-border: var(--color-border);
     --hero-overlay:
-        linear-gradient(90deg, rgb(6 11 9 / .85) 0%, rgb(6 11 9 / .35) 55%, rgb(6 11 9 / 0) 100%),
-        linear-gradient(180deg, rgb(6 11 9 / 0) 55%, var(--color-bg) 100%);
+        linear-gradient(90deg, rgb(8 8 8 / .92) 0%, rgb(8 8 8 / .55) 38%, rgb(8 8 8 / 0) 70%),
+        linear-gradient(180deg, rgb(8 8 8 / 0) 60%, var(--color-bg) 100%);
     --page-background:
-        radial-gradient(ellipse 80% 50% at 85% -10%, color-mix(in srgb, var(--color-neon-cyan) 9%, transparent), transparent 60%),
-        radial-gradient(ellipse 70% 45% at 0% 30%, color-mix(in srgb, var(--color-primary) 7%, transparent), transparent 60%),
-        radial-gradient(ellipse 60% 40% at 100% 90%, color-mix(in srgb, var(--color-rust) 8%, transparent), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 85% 0%, rgb(236 230 216 / .05), transparent 70%),
         var(--color-bg);
-    --cta-bg: linear-gradient(120deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 55%, var(--color-neon-cyan)));
+    --cta-bg: var(--color-text);
 }

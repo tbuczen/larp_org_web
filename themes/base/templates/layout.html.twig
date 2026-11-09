@@ -14,11 +14,7 @@
     <header class="site-header" data-controller="site-nav">
         <div class="site-header__inner">
             <a class="site-brand" href="{{ path('app_home') }}">
-                {% block brand %}
-                    {% set logo = theme_asset('images/logo.svg') %}
-                    {% if logo %}<img class="site-brand__logo" src="{{ asset(logo) }}" alt="" width="40" height="40">{% endif %}
-                    <span class="site-brand__name">{{ settings.organizationName }}</span>
-                {% endblock %}
+                {% block brand %}{% include 'partials/_brand.html.twig' %}{% endblock %}
             </a>
 
             <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"
@@ -53,6 +49,10 @@
 
     <footer class="site-footer">
         <div class="container site-footer__inner">
+            {% set footer_logo = theme_asset('images/logo-full.svg') %}
+            {% if footer_logo %}
+                <img class="site-footer__logo" src="{{ asset(footer_logo) }}" alt="{{ settings.organizationName }}" loading="lazy">
+            {% endif %}
             {% set footer_links = menu('footer') %}
             {% if footer_links is not empty %}
                 <nav aria-label="{{ 'nav.footer'|trans }}">{% include 'partials/_menu.html.twig' with {links: footer_links, variant: 'footer'} %}</nav>
