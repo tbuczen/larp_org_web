@@ -268,7 +268,7 @@ final class GalleryTest extends WebTestCase
     {
         $this->em()->clear();
 
-        return array_values($this->em()->getRepository(Photo::class)->findBy(['gallery' => $galleryId], ['position' => 'ASC', 'id' => 'ASC']));
+        return $this->em()->getRepository(Photo::class)->findBy(['gallery' => $galleryId], ['position' => 'ASC', 'id' => 'ASC']);
     }
 
     /** A JPEG of the given size (a 1×1 PNG when GD is missing). */
