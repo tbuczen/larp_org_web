@@ -14,6 +14,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class GalleryTest extends WebTestCase
@@ -40,7 +42,9 @@ final class GalleryTest extends WebTestCase
         $form['Gallery[slug]'] = 'pradawne-zwoje-dzien-pierwszy';
         $form['Gallery[edition]'] = (string) $edition->getId();
         $form['Gallery[photographer]'] = 'Anna Kowalska';
-        $form['Gallery[published]']->tick();
+        $published = $form['Gallery[published]'];
+        self::assertInstanceOf(ChoiceFormField::class, $published);
+        $published->tick();
         $this->client->submit($form);
 
         // Straight to the photos screen; picking the edition filled in its LARP.
@@ -68,7 +72,9 @@ final class GalleryTest extends WebTestCase
             self::assertSame([2560, 1707], [$first->getWidth(), $first->getHeight()], 'shrunk to 2560 px');
             self::assertNotNull($first->getThumbnail());
             self::assertFileExists($this->dir().'/'.$first->getThumbnail());
-            self::assertLessThanOrEqual(720, (int) getimagesize($this->dir().'/'.$first->getThumbnail())[0]);
+            $thumbSize = getimagesize($this->dir().'/'.$first->getThumbnail());
+            self::assertIsArray($thumbSize);
+            self::assertLessThanOrEqual(720, $thumbSize[0]);
         }
 
         // Save: new order (narada, oboz), captions and credits, delete "bitwa".
@@ -126,14 +132,18 @@ final class GalleryTest extends WebTestCase
         $form['Gallery[slug]'] = 'vault-47-zdjecia';
         $form['Gallery[larp]'] = (string) $this->larp('vault-47')->getId();
         $form['Gallery[externalUrl]'] = 'http://photos.app.goo.gl/AbC123';
-        $form['Gallery[published]']->tick();
+        $published = $form['Gallery[published]'];
+        self::assertInstanceOf(ChoiceFormField::class, $published);
+        $published->tick();
         $crawler = $this->client->submit($form);
         self::assertResponseStatusCodeSame(422);
         self::assertStringContainsString('https://', $crawler->filter('.invalid-feedback')->text());
 
         $form = $crawler->filter('form[name="Gallery"]')->form();
         $form['Gallery[externalUrl]'] = 'https://photos.app.goo.gl/AbC123';
-        $form['Gallery[coverImage][file]']->upload($this->image('okladka', 1200, 800)->getPathname());
+        $cover = $form['Gallery[coverImage][file]'];
+        self::assertInstanceOf(FileFormField::class, $cover);
+        $cover->upload($this->image('okladka', 1200, 800)->getPathname());
         $this->client->submit($form);
         self::assertResponseRedirects('', null, 'link galleries go back to the list, not to the photos screen');
         self::assertStringNotContainsString('/photos', (string) $this->client->getResponse()->headers->get('Location'));
@@ -258,7 +268,7 @@ final class GalleryTest extends WebTestCase
     {
         $this->em()->clear();
 
-        return $this->em()->getRepository(Photo::class)->findBy(['gallery' => $galleryId], ['position' => 'ASC', 'id' => 'ASC']);
+        return array_values($this->em()->getRepository(Photo::class)->findBy(['gallery' => $galleryId], ['position' => 'ASC', 'id' => 'ASC']));
     }
 
     /** A JPEG of the given size (a 1×1 PNG when GD is missing). */

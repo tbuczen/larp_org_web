@@ -317,6 +317,7 @@ class Gallery implements SluggableInterface, \Stringable
         return \count($this->photos);
     }
 
+    /** @phpstan-impure (changes as photos are added) */
     public function getCover(): ?Photo
     {
         return $this->photos->slice(0, 1)[0] ?? null;
