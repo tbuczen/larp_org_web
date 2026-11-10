@@ -188,7 +188,7 @@ class LarpController extends AbstractController
 
         return new Response($ics, Response::HTTP_OK, [
             'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $larp->getSlug().'-'.$edition?->getSlug().'.ics'),
+            'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $larp->getSlug().'-'.$edition->getSlug().'.ics'),
         ]);
     }
 
