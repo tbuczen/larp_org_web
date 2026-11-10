@@ -71,7 +71,7 @@ class LarpFixtures extends Fixture
                 ['network' => 'facebook', 'url' => 'https://www.facebook.com/groups/287396224278365/', 'label' => 'Grupa graczy'],
             ]);
         $this->edition($zwoje, '1. edycja', '2024-08-08', '2024-08-11', 'Czyżowice', RecruitmentStatus::Closed);
-        $this->edition($zwoje, '2. edycja', '2025-08-07', '2025-08-10', 'Czyżowice', RecruitmentStatus::Closed);
+        $zwojePast = $this->edition($zwoje, '2. edycja', '2025-08-07', '2025-08-10', 'Czyżowice', RecruitmentStatus::Closed);
         $zwojeEdition = $this->edition($zwoje, '3. edycja', '2026-08-06', '2026-08-09', 'Czyżowice', RecruitmentStatus::Open)
             ->setRegistrationUrl('https://fb.me/e/69mffUNUK')
             ->setFacebookEventUrl('https://fb.me/e/hlDppZ9HB');
@@ -125,6 +125,19 @@ class LarpFixtures extends Fixture
                 ['Przetrwanie' => 50, 'Silne emocje / dramat' => 30, 'Napięcie / akcja' => 20],
                 ['Trauma / PTSD' => 60, 'Śmierć bliskiej osoby' => 50, 'Smoki' => 40]],
             ['Tajna postać', CharacterCasting::Any, 'Ukryta — nie powinna być widoczna publicznie.', [], [], CharacterAvailability::Hidden],
+        ]);
+
+        // A past edition with its own characters, using the same (shared) tags.
+        $this->characters($manager, $zwojePast, [
+            ['Jarl Sigrun', CharacterCasting::Female, 'Władczyni twierdzy przed Ulfgarem; jej decyzje wciąż ciążą nad klanem.',
+                ['Polityka / intryga' => 60, 'Trudne wybory / dylematy moralne' => 40],
+                ['Zdrada' => 50, 'Wojna' => 50], CharacterAvailability::Taken],
+            ['Łowca smoków Bjorn', CharacterCasting::Male, 'Wrócił z gór z łuską, której nikt nie chciał oglądać.',
+                ['Konflikt / walka' => 50, 'Przetrwanie' => 30, 'Magia' => 20],
+                ['Smoki' => 70, 'Śmierć' => 30], CharacterAvailability::Taken],
+            ['Skald Eydis', CharacterCasting::Any, 'Pieśniarka, która pamięta każdą sagę — i każde kłamstwo.',
+                ['Relacje i więzi' => 40, 'Komedia' => 30, 'Tajemnica / śledztwo' => 30],
+                ['Manipulacja' => 30], CharacterAvailability::Taken],
         ]);
 
         $this->characters($manager, $cyberEdition, [

@@ -71,14 +71,14 @@ final class LarpSocialAndEventTest extends WebTestCase
         $this->em()->flush();
 
         $crawler = $this->client->request('GET', '/larp/pradawne-zwoje');
-        $link = $crawler->filter('.larp-actions a[href="/larp/pradawne-zwoje/kalendarz.ics"]');
+        $link = $crawler->filter('.larp-actions a[href="/larp/pradawne-zwoje/'.$edition->getSlug().'/kalendarz.ics"]');
         self::assertCount(1, $link);
         self::assertNotNull($link->attr('download'));
 
         $this->client->request('GET', '/larp/pradawne-zwoje/kalendarz.ics');
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('Content-Type', 'text/calendar; charset=utf-8');
-        self::assertStringContainsString('attachment; filename=pradawne-zwoje.ics', (string) $this->client->getResponse()->headers->get('Content-Disposition'));
+        self::assertStringContainsString('attachment; filename=pradawne-zwoje-'.$edition->getSlug().'.ics', (string) $this->client->getResponse()->headers->get('Content-Disposition'));
         $ics = (string) $this->client->getResponse()->getContent();
         self::assertStringContainsString('DTSTART;VALUE=DATE:'.$start->format('Ymd'), $ics);
         self::assertStringContainsString('SUMMARY:Pradawne Zwoje — '.$edition->getName(), $ics);

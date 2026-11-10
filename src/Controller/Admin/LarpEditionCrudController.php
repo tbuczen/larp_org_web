@@ -39,6 +39,11 @@ class LarpEditionCrudController extends AbstractCrudController
         yield TextField::new('name', 'edition.name')
             ->setHelp('edition.name_help')
             ->setColumns(4);
+        yield TextField::new('slug', 'edition.slug')
+            ->setRequired(false)
+            ->setHelp('edition.slug_help')
+            ->setColumns(4);
+        yield FormField::addRow();
         yield DateField::new('startDate', 'edition.start_date')->setColumns(4);
         yield DateField::new('endDate', 'edition.end_date')->setColumns(4);
         yield FormField::addRow();

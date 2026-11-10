@@ -189,7 +189,7 @@ final class AdminLarpTest extends WebTestCase
         self::assertContains('Vault 47', $names);
         self::assertNotContains('Wyprawa Rycerska Talabeclandu', $names, 'initiatives have no characters');
         $zwoje = $crawler->filter('.larp-picker__item')->reduce(static fn ($i): bool => str_contains($i->text(), 'Pradawne Zwoje'));
-        self::assertStringContainsString('7 postaci', $zwoje->text());
+        self::assertStringContainsString('10 postaci', $zwoje->text(), 'all editions');
 
         $this->client->click($crawler->filter('.larp-picker__item')->reduce(static fn ($i): bool => str_contains($i->text(), 'Cybercrush'))->selectLink('Dodaj postać')->link());
         self::assertResponseIsSuccessful();

@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Gallery;
 use App\Entity\Larp;
+use App\Entity\LarpEdition;
 use App\Enum\LarpStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -31,6 +32,13 @@ class GalleryRepository extends ServiceEntityRepository
 
         /* @var list<Gallery> */
         return $qb->getQuery()->getResult();
+    }
+
+    /** @return list<Gallery> published galleries of one edition */
+    public function findVisibleForEdition(LarpEdition $edition): array
+    {
+        /* @var list<Gallery> */
+        return $this->visible()->andWhere('g.edition = :edition')->setParameter('edition', $edition)->getQuery()->getResult();
     }
 
     public function findVisibleBySlug(string $slug): ?Gallery

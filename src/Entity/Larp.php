@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -144,6 +145,36 @@ class Larp implements SluggableInterface, \Stringable
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /** Two editions of one LARP can't share an address (also before their slugs are generated). */
+    #[Assert\Callback]
+    public function validateEditionSlugs(ExecutionContextInterface $context): void
+    {
+        $slugger = new AsciiSlugger();
+        $seen = [];
+        foreach ($this->editions as $i => $edition) {
+            $slug = $edition->getSlug() ?? $slugger->slug($edition->getName())->lower()->toString();
+            if (isset($seen[$slug])) {
+                $context->buildViolation('edition.duplicate_slug')
+                    ->setParameter('%slug%', $slug)
+                    ->atPath('editions['.$i.'].slug')
+                    ->addViolation();
+            }
+            $seen[$slug] = true;
+        }
+    }
+
+    /** The edition with this address, if any. */
+    public function getEditionBySlug(string $slug): ?LarpEdition
+    {
+        foreach ($this->editions as $edition) {
+            if ($edition->getSlug() === $slug) {
+                return $edition;
+            }
+        }
+
+        return null;
     }
 
     #[Assert\Callback]

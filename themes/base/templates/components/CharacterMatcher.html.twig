@@ -115,7 +115,7 @@
                     </div>
                     <div class="match-card__body">
                         <h3>
-                            <a href="{{ path('app_character_show', {slug: character.larp.slug, characterSlug: character.slug}) }}">{{ character.name }}</a>
+                            <a href="{{ path('app_edition_character', {slug: character.larp.slug, edition: character.edition.slug, characterSlug: character.slug}) }}">{{ character.name }}</a>
                             {% if larpSlug is null %}<small>{{ character.larp.name }}</small>{% endif %}
                         </h3>
                         <p class="character-card__meta">

@@ -4,9 +4,13 @@
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 
 {% block content %}
-    <nav class="breadcrumbs"><a href="{{ path('app_larp_show', {slug: larp.slug}) }}">← {{ larp.name }}</a></nav>
+    <nav class="breadcrumbs">
+        <a href="{{ path('app_larp_show', {slug: larp.slug}) }}">{{ larp.name }}</a> /
+        <a href="{{ path('app_edition_show', {slug: larp.slug, edition: edition.slug}) }}">{{ edition.name }}</a>
+    </nav>
     <h1 class="page-title">{{ 'matcher.title'|trans }} <small>{{ larp.name }} · {{ edition.name }}</small></h1>
     <p class="lead">{{ 'matcher.intro'|trans }}</p>
 
-    <twig:CharacterMatcher larpSlug="{{ larp.slug }}" />
+    {% if not isCurrent %}<p class="notice">{{ 'matcher.past_edition'|trans({edition: edition.name}) }}</p>{% endif %}
+    <twig:CharacterMatcher larpSlug="{{ larp.slug }}" editionSlug="{{ edition.slug }}" />
 {% endblock %}

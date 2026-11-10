@@ -158,3 +158,10 @@ a.badge--open, .badge--open { background: var(--color-text); border-color: var(-
 
 /* The logo images are bone on ink; on a LARP with light colours (--logo-invert: 1) they flip to ink on bone */
 .lt-brand__wordmark, .site-brand__logo, .site-footer__logo { filter: invert(var(--logo-invert, 0)); }
+
+/* Edition cards and switcher: frames and square tabs */
+.edition-card { box-shadow: var(--frame); margin: 5px; }
+.edition-card:hover, .edition-card--current { border-color: var(--color-text); box-shadow: var(--frame-active); }
+.edition-card__title { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; }
+.edition-nav__link { font-family: var(--font-ui); font-size: 1.05rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.larp-hero__edition { font-family: var(--font-ui); }

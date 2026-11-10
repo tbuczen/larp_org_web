@@ -13,6 +13,10 @@ home:
     all_larps: All LARPs
 
 larp:
+    current_edition: Current
+    edition_empty: "This edition's characters and galleries will appear here."
+    character_count: '{count, plural, one {# character} other {# characters}}'
+    gallery_count: '{count, plural, one {# gallery} other {# galleries}}'
     facebook_event: Facebook event
     add_to_calendar: Add to calendar
     follow_larp: Follow this LARP
@@ -32,6 +36,7 @@ larp:
     editions: Editions
 
 character:
+    browse_all: '{count, plural, one {Browse the character} other {Browse # characters}}'
     title: Characters
     see_all: '{count, plural, one {Find your character (# character)} other {Find your character (# characters)}}'
     none: Characters have not been published yet.
@@ -43,6 +48,7 @@ character:
     no_triggers: No triggers listed.
 
 matcher:
+    past_edition: '{edition} has already taken place — you can browse its characters, but sign-ups are closed.'
     title: Find your character
     intro: 'Rate what you enjoy, tick the triggers you want to avoid, and characters are sorted from the best match.'
     preferences: Your preferences

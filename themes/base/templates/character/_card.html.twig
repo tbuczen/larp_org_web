@@ -1,6 +1,6 @@
 {# Character card. Shows the top gameplay tags and all trigger names. #}
 <article class="character-card{{ character.taken ? ' is-taken' : '' }}">
-    <a class="character-card__portrait" href="{{ path('app_character_show', {slug: character.larp.slug, characterSlug: character.slug}) }}" tabindex="-1" aria-hidden="true">
+    <a class="character-card__portrait" href="{{ path('app_edition_character', {slug: character.larp.slug, edition: character.edition.slug, characterSlug: character.slug}) }}" tabindex="-1" aria-hidden="true">
         {% if character.portrait %}
             <img src="{{ asset('uploads/characters/' ~ character.portrait) }}" alt="" loading="lazy">
         {% else %}
@@ -8,7 +8,7 @@
         {% endif %}
     </a>
     <div class="character-card__body">
-        <h3><a href="{{ path('app_character_show', {slug: character.larp.slug, characterSlug: character.slug}) }}">{{ character.name }}</a></h3>
+        <h3><a href="{{ path('app_edition_character', {slug: character.larp.slug, edition: character.edition.slug, characterSlug: character.slug}) }}">{{ character.name }}</a></h3>
         <p class="character-card__meta">
             {{ character.casting|trans }}
             {% if character.taken %}<span class="badge badge--taken">{{ character.availability|trans }}</span>{% endif %}

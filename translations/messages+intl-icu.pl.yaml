@@ -13,6 +13,10 @@ home:
     all_larps: Wszystkie larpy
 
 larp:
+    current_edition: Aktualna
+    edition_empty: 'Postacie i galerie tej edycji pojawią się tutaj.'
+    character_count: '{count, plural, one {# postać} few {# postacie} other {# postaci}}'
+    gallery_count: '{count, plural, one {# galeria} few {# galerie} other {# galerii}}'
     facebook_event: Wydarzenie na Facebooku
     add_to_calendar: Dodaj do kalendarza
     follow_larp: Śledź larpa
@@ -32,6 +36,7 @@ larp:
     editions: Edycje
 
 character:
+    browse_all: '{count, plural, one {Przeglądaj postać} few {Przeglądaj # postacie} other {Przeglądaj # postaci}}'
     title: Postacie
     see_all: '{count, plural, one {Znajdź swoją postać (# postać)} few {Znajdź swoją postać (# postacie)} other {Znajdź swoją postać (# postaci)}}'
     none: Postacie nie zostały jeszcze opublikowane.
@@ -43,6 +48,7 @@ character:
     no_triggers: Brak zgłoszonych triggerów.
 
 matcher:
+    past_edition: '{edition} już się odbyła — możesz przejrzeć jej postacie, ale zapisy są zamknięte.'
     title: Znajdź swoją postać
     intro: 'Oceń, co lubisz w grze, zaznacz triggery, których chcesz uniknąć — postacie ułożą się od najlepiej dopasowanych.'
     preferences: Twoje preferencje

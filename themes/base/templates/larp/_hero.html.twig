@@ -1,0 +1,66 @@
+{#
+    Top of a LARP page: cover, name, the shown edition's facts, recruitment,
+    Facebook event / calendar, social links. Used by larp/show.html.twig (current
+    edition) and larp/edition.html.twig (edition_page: true).
+    Variables: larp, edition (may be null), is_current (the edition is the LARP's
+    current one: recruitment is shown only then), edition_page.
+#}
+<header class="larp-hero">
+    <div class="larp-hero__media">{% include 'partials/_cover.html.twig' with {eager: true} %}</div>
+    <div class="larp-hero__text">
+        {% if larp.format or larp.setting %}
+            <p class="eyebrow">{{ [larp.format, larp.setting]|filter(v => v)|join(' · ') }}</p>
+        {% endif %}
+        {% if edition_page ?? false %}
+        <h1>{{ larp.name }} <span class="larp-hero__edition">{{ edition.name }}</span></h1>
+    {% else %}
+        <h1>{{ larp.name }}</h1>
+    {% endif %}
+        {% if larp.teaser %}<p class="lead">{{ larp.teaser }}</p>{% endif %}
+
+        {% if edition and not larp.initiative %}
+            <dl class="facts">
+                {% if edition|edition_dates %}<div><dt>{{ 'larp.when'|trans }}</dt><dd>{{ edition|edition_dates }}</dd></div>{% endif %}
+                {% if edition.location %}
+                    <div><dt>{{ 'larp.where'|trans }}</dt><dd>
+                        {% if edition.locationUrl %}<a href="{{ edition.locationUrl }}" target="_blank" rel="noopener">{{ edition.location }}</a>{% else %}{{ edition.location }}{% endif %}
+                    </dd></div>
+                {% endif %}
+                {% if not (edition_page ?? false) %}
+                <div><dt>{{ 'larp.edition'|trans }}</dt><dd><a href="{{ path('app_edition_show', {slug: larp.slug, edition: edition.slug}) }}">{{ edition.name }}</a></dd></div>
+            {% endif %}
+                {% if larp.playerCount %}<div><dt>{{ 'larp.players'|trans }}</dt><dd>{{ larp.playerCount }}</dd></div>{% endif %}
+                {% if larp.price %}<div><dt>{{ 'larp.price'|trans }}</dt><dd>{{ larp.price }}</dd></div>{% endif %}
+            </dl>
+            {% if larp.status.value == 'current' and is_current %}{% include 'partials/_recruitment.html.twig' %}{% endif %}
+        {% endif %}
+
+        {# Facebook event of the shown edition, and an .ics file to add it to a calendar. #}
+        {% set event_url = edition and not larp.initiative ? edition.facebookEventUrl : null %}
+        {% set calendar = edition and not larp.initiative and edition.upcoming %}
+        {% if event_url or calendar %}
+            <div class="button-row larp-actions">
+                {% if event_url %}
+                    <a class="button button--primary" href="{{ event_url }}" target="_blank" rel="noopener">
+                        <twig:ux:icon name="simple-icons:facebook" aria-hidden="true" /> {{ 'larp.facebook_event'|trans }}
+                    </a>
+                {% endif %}
+                {% if calendar %}
+                    <a class="button button--ghost" href="{{ path('app_edition_calendar', {slug: larp.slug, edition: edition.slug}) }}" download>
+                        <twig:ux:icon name="lucide:calendar-plus" aria-hidden="true" /> {{ 'larp.add_to_calendar'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {# The LARP's own social links, or else the organization's. #}
+        {% set own_links = larp.socialButtons %}
+        {% set social = own_links is not empty ? own_links : settings.socialButtons %}
+        {% if social is not empty %}
+            <div class="larp-social">
+                <p class="larp-social__label">{{ (own_links is not empty ? 'larp.follow_larp' : 'larp.follow_us')|trans }}</p>
+                <twig:SocialLinks :links="social" variant="social-links--compact" label="{{ (own_links is not empty ? 'larp.follow_larp' : 'larp.follow_us')|trans }}" />
+            </div>
+        {% endif %}
+    </div>
+</header>

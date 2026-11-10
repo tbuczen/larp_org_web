@@ -15,11 +15,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * One run of a LARP: its dates, place, recruitment and characters.
+ * One run of a LARP: its dates, place, recruitment, characters and galleries.
+ * Each edition has its own page at /larp/{larp}/{edition slug}; tags belong to
+ * the LARP, so all its editions share them.
  */
 #[ORM\Entity(repositoryClass: LarpEditionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class LarpEdition implements \Stringable
+#[ORM\UniqueConstraint(fields: ['larp', 'slug'])]
+class LarpEdition implements SluggableInterface, \Stringable
 {
     use TimestampableTrait;
 
@@ -31,6 +34,15 @@ class LarpEdition implements \Stringable
     #[ORM\ManyToOne(inversedBy: 'editions')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Larp $larp = null;
+
+    /** Words that are other pages under /larp/{larp}/ and can't be edition addresses. */
+    public const RESERVED_SLUGS = ['postacie', 'postac', 'kalendarz-ics', 'galerie'];
+
+    /** In the address: /larp/{larp}/{slug}. Filled from the name when empty (e.g. "3-edycja"). */
+    #[ORM\Column(length: 120, nullable: true)]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message: 'slug.invalid')]
+    #[Assert\Length(max: 120)]
+    private ?string $slug = null;
 
     /** E.g. "3. edycja" or "2026". */
     #[ORM\Column(length: 120)]
@@ -76,6 +88,31 @@ class LarpEdition implements \Stringable
     public function __toString(): string
     {
         return trim(($this->larp?->getName() ?? '').' — '.$this->name, ' —');
+    }
+
+    #[Assert\Callback]
+    public function validateSlug(ExecutionContextInterface $context): void
+    {
+        if (\in_array($this->slug, self::RESERVED_SLUGS, true)) {
+            $context->buildViolation('edition.reserved_slug')->atPath('slug')->addViolation();
+        }
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = null === $slug || '' === trim($slug) ? null : trim($slug);
+
+        return $this;
+    }
+
+    public function getSlugSource(): string
+    {
+        return $this->name;
     }
 
     #[Assert\Callback]

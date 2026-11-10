@@ -39,6 +39,10 @@ final class CharacterMatcher
     #[LiveProp]
     public ?string $larpSlug = null;
 
+    /** With larpSlug: this edition instead of the current one (also past editions). */
+    #[LiveProp]
+    public ?string $editionSlug = null;
+
     /** @var array<int|string, int|string> gameplay tag id => rating (-2..2) */
     #[LiveProp(writable: true, url: new UrlMapping(as: 'ocena'))]
     public array $ratings = [];
@@ -257,7 +261,7 @@ final class CharacterMatcher
 
         $editions = [];
         foreach ($larps as $larp) {
-            $edition = $larp->getCurrentEdition();
+            $edition = null !== $this->editionSlug ? $larp->getEditionBySlug($this->editionSlug) : $larp->getCurrentEdition();
             if (null !== $edition && !$larp->isInitiative()) {
                 $editions[] = $edition;
             }

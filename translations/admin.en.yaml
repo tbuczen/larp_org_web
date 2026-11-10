@@ -124,6 +124,8 @@ larp:
     editions_help: 'Each edition has its own dates, place, recruitment and characters.'
 
 edition:
+    slug: Address (slug)
+    slug_help: "The edition page's address: /larp/…/address. Empty = from the name, e.g. \"3-edycja\"."
     facebook_event_url: Facebook event
     facebook_event_url_help: "This edition's event address, e.g. https://fb.me/e/… or https://www.facebook.com/events/…"
     label: Edition

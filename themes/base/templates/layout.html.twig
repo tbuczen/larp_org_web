@@ -29,8 +29,8 @@
                 {% if links is empty %}
                     {# No menu built yet in the admin: show the built-in pages. #}
                     <ul class="menu">
-                        <li class="menu__item"><a class="menu__link" href="{{ path('app_larp_index') }}" {% if app.current_route in ['app_larp_index', 'app_larp_show'] %}aria-current="page"{% endif %}>{{ 'nav.larps'|trans }}</a></li>
-                        <li class="menu__item"><a class="menu__link" href="{{ path('app_characters') }}" {% if app.current_route in ['app_characters', 'app_larp_characters', 'app_character_show'] %}aria-current="page"{% endif %}>{{ 'nav.characters'|trans }}</a></li>
+                        <li class="menu__item"><a class="menu__link" href="{{ path('app_larp_index') }}" {% if app.current_route in ['app_larp_index', 'app_larp_show', 'app_edition_show'] %}aria-current="page"{% endif %}>{{ 'nav.larps'|trans }}</a></li>
+                        <li class="menu__item"><a class="menu__link" href="{{ path('app_characters') }}" {% if app.current_route in ['app_characters', 'app_larp_characters', 'app_edition_characters', 'app_edition_character'] %}aria-current="page"{% endif %}>{{ 'nav.characters'|trans }}</a></li>
                     </ul>
                 {% else %}
                     {% include 'partials/_menu.html.twig' with {links: links} %}

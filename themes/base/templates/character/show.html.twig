@@ -6,7 +6,8 @@
 {% block content %}
     <nav class="breadcrumbs">
         <a href="{{ path('app_larp_show', {slug: larp.slug}) }}">{{ larp.name }}</a> /
-        <a href="{{ path('app_larp_characters', {slug: larp.slug}) }}">{{ 'character.title'|trans }}</a>
+        <a href="{{ path('app_edition_show', {slug: larp.slug, edition: edition.slug}) }}">{{ edition.name }}</a> /
+        <a href="{{ path('app_edition_characters', {slug: larp.slug, edition: edition.slug}) }}">{{ 'character.title'|trans }}</a>
     </nav>
 
     <article class="character-page">

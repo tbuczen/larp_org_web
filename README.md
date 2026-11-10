@@ -83,8 +83,13 @@ is required; tag cells look like `Polityka / intryga 50%; Magia 30%`. *Pobierz s
 a ready-to-fill file. Code: `src/Import/`, `src/Tagging/TagResolver.php`.
 In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
 
-Public pages: `/larpy`, `/larp/{slug}`, `/larp/{slug}/postac/{character}`, and the character matcher
-at `/postacie` (all current LARPs) and `/larp/{slug}/postacie` (one LARP).
+Public pages: `/larpy`, `/larp/{slug}` (the LARP with its current edition and cards for all
+editions), `/larp/{slug}/{edition}` (one edition: dates, characters, galleries; past ones too),
+`/larp/{slug}/{edition}/postac/{character}`, and the character matcher at `/postacie` (all current
+LARPs), `/larp/{slug}/postacie` (current edition) and `/larp/{slug}/{edition}/postacie`. Edition
+addresses come from their names ("3. edycja" → `3-edycja`) and can be changed in the edition form.
+Characters and galleries belong to an edition; tags belong to the LARP (or are shared by all
+LARPs), so every edition uses the same lists.
 
 ### Character matcher
 

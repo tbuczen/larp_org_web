@@ -1,0 +1,62 @@
+{#
+    One edition of a LARP: its facts (dates, place, recruitment when it is the
+    current one, Facebook event), its characters and its galleries, and links to
+    the other editions. The LARP's tags are shared by all its editions.
+#}
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ larp.name }} — {{ edition.name }} · {{ settings.organizationName }}{% endblock %}
+{% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
+
+{% block content %}
+    <nav class="breadcrumbs"><a href="{{ path('app_larp_show', {slug: larp.slug}) }}">← {{ larp.name }}</a></nav>
+
+    <article class="larp-page larp-page--edition">
+        {% include 'larp/_hero.html.twig' with {is_current: isCurrent, edition_page: true} %}
+
+        {% if larp.editionCount > 1 %}
+            <nav class="edition-nav" aria-label="{{ 'larp.editions'|trans }}">
+                <ul>
+                    {% for e in larp.sortedEditions|reverse %}
+                        <li>
+                            <a class="edition-nav__link" href="{{ path('app_edition_show', {slug: larp.slug, edition: e.slug}) }}"{% if e is same as(edition) %} aria-current="page"{% endif %}>
+                                {{ e.name }}{% if e.startDate %} <small>{{ e.startDate|date('Y') }}</small>{% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        {% endif %}
+
+        {% if characters is not empty %}
+            <section class="larp-characters">
+                <div class="section-head">
+                    <h2>{{ 'character.title'|trans }}</h2>
+                    {% if characters|length > 1 %}
+                        <a href="{{ path('app_edition_characters', {slug: larp.slug, edition: edition.slug}) }}">{{ (isCurrent ? 'character.see_all' : 'character.browse_all')|trans({count: characters|length}) }}</a>
+                    {% endif %}
+                </div>
+                <div class="card-grid card-grid--small">
+                    {% for character in characters %}
+                        {% include 'character/_card.html.twig' %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% if galleries is not empty %}
+            <section class="larp-galleries">
+                <div class="section-head"><h2>{{ 'gallery.larp_title'|trans }}</h2></div>
+                <div class="card-grid card-grid--small gallery-cards">
+                    {% for gallery in galleries %}
+                        {% include 'gallery/_card.html.twig' with {show_larp: false} %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% if characters is empty and galleries is empty %}
+            <p class="text-muted edition-empty">{{ 'larp.edition_empty'|trans }}</p>
+        {% endif %}
+    </article>
+{% endblock %}

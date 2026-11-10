@@ -7,19 +7,32 @@ namespace App\Controller;
 use App\Calendar\IcsCalendar;
 use App\Entity\Character;
 use App\Entity\Larp;
+use App\Entity\LarpEdition;
 use App\Repository\CharacterRepository;
 use App\Repository\GalleryRepository;
 use App\Repository\LarpRepository;
 use App\Repository\SiteSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * Public LARP pages:
+ *   /larp/{slug}                         the LARP, showing its current edition
+ *   /larp/{slug}/{edition}               one edition: its dates, characters, galleries
+ *   /larp/{slug}/{edition}/postacie      character matcher for that edition
+ *   /larp/{slug}/{edition}/postac/{x}    a character of that edition
+ * Short forms without the edition (/larp/{slug}/postacie, …) mean the current edition.
+ */
 class LarpController extends AbstractController
 {
+    /** An edition address: a slug that isn't one of the other pages under /larp/{slug}/. */
+    private const EDITION = '(?!(?:postacie|postac|galerie)$)[a-z0-9]+(?:-[a-z0-9]+)*';
+
     public function __construct(
         private readonly LarpRepository $larps,
         private readonly CharacterRepository $characters,
@@ -49,6 +62,7 @@ class LarpController extends AbstractController
             'edition' => $edition,
             'characters' => null === $edition ? [] : $this->characters->findVisibleForEdition($edition),
             'galleries' => $this->galleries->findVisible($larp),
+            'characterCounts' => $this->characters->countVisibleByEdition($larp),
         ]);
     }
 
@@ -57,20 +71,8 @@ class LarpController extends AbstractController
     public function calendar(string $slug): Response
     {
         $larp = $this->findLarp($slug);
-        $edition = $larp->isInitiative() ? null : $larp->getCurrentEdition();
-        $ics = null === $edition ? null : IcsCalendar::forEdition(
-            $edition,
-            $this->generateUrl('app_larp_show', ['slug' => $larp->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->settings->get()->getOrganizationName(),
-        );
-        if (null === $ics) {
-            throw new NotFoundHttpException();
-        }
 
-        return new Response($ics, Response::HTTP_OK, [
-            'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $slug.'.ics'),
-        ]);
+        return $this->ics($larp, $larp->isInitiative() ? null : $larp->getCurrentEdition());
     }
 
     /** Character matcher across all currently organized LARPs. */
@@ -87,8 +89,81 @@ class LarpController extends AbstractController
     public function characters(string $slug): Response
     {
         $larp = $this->findLarp($slug);
-        $edition = $larp->getCurrentEdition();
-        if (null === $edition || $larp->isInitiative()) {
+
+        return $this->matcher($larp, $larp->isInitiative() ? null : $larp->getCurrentEdition());
+    }
+
+    /** Old character address without the edition: forwards to the newest edition that has it. */
+    #[Route('/larp/{slug}/postac/{characterSlug}', name: 'app_character_show')]
+    public function character(string $slug, string $characterSlug): RedirectResponse
+    {
+        $larp = $this->findLarp($slug);
+        foreach (array_reverse($larp->getSortedEditions()) as $edition) {
+            $character = $this->characters->findVisibleBySlug($edition, $characterSlug);
+            if ($character instanceof Character) {
+                return $this->redirectToRoute('app_edition_character', [
+                    'slug' => $larp->getSlug(),
+                    'edition' => $edition->getSlug(),
+                    'characterSlug' => $character->getSlug(),
+                ], Response::HTTP_MOVED_PERMANENTLY);
+            }
+        }
+
+        throw new NotFoundHttpException();
+    }
+
+    // ------------------------------------------------------------- editions
+
+    #[Route('/larp/{slug}/{edition}', name: 'app_edition_show', requirements: ['edition' => self::EDITION], priority: -10)]
+    public function edition(string $slug, string $edition): Response
+    {
+        $larp = $this->findLarp($slug);
+        $run = $this->findEdition($larp, $edition);
+
+        return $this->render('larp/edition.html.twig', [
+            'settings' => $this->settings->get(),
+            'larp' => $larp,
+            'edition' => $run,
+            'isCurrent' => $run === $larp->getCurrentEdition(),
+            'characters' => $this->characters->findVisibleForEdition($run),
+            'galleries' => $this->galleries->findVisibleForEdition($run),
+        ]);
+    }
+
+    #[Route('/larp/{slug}/{edition}/postacie', name: 'app_edition_characters', requirements: ['edition' => self::EDITION], priority: -10)]
+    public function editionCharacters(string $slug, string $edition): Response
+    {
+        $larp = $this->findLarp($slug);
+
+        return $this->matcher($larp, $this->findEdition($larp, $edition));
+    }
+
+    #[Route('/larp/{slug}/{edition}/postac/{characterSlug}', name: 'app_edition_character', requirements: ['edition' => self::EDITION], priority: -10)]
+    public function editionCharacter(string $slug, string $edition, string $characterSlug): Response
+    {
+        $larp = $this->findLarp($slug);
+        $run = $this->findEdition($larp, $edition);
+        $character = $this->characters->findVisibleBySlug($run, $characterSlug) ?? throw new NotFoundHttpException();
+
+        return $this->render('character/show.html.twig', [
+            'settings' => $this->settings->get(),
+            'larp' => $larp,
+            'edition' => $run,
+            'character' => $character,
+        ]);
+    }
+
+    #[Route('/larp/{slug}/{edition}/kalendarz.ics', name: 'app_edition_calendar', requirements: ['edition' => self::EDITION], priority: -10)]
+    public function editionCalendar(string $slug, string $edition): Response
+    {
+        $larp = $this->findLarp($slug);
+
+        return $this->ics($larp, $this->findEdition($larp, $edition));
+    }
+
+    private function matcher(Larp $larp, ?LarpEdition $edition): Response
+    {
+        if (null === $edition) {
             throw new NotFoundHttpException();
         }
 
@@ -96,36 +171,38 @@ class LarpController extends AbstractController
             'settings' => $this->settings->get(),
             'larp' => $larp,
             'edition' => $edition,
+            'isCurrent' => $edition === $larp->getCurrentEdition(),
         ]);
     }
 
-    #[Route('/larp/{slug}/postac/{characterSlug}', name: 'app_character_show')]
-    public function character(string $slug, string $characterSlug): Response
+    private function ics(Larp $larp, ?LarpEdition $edition): Response
     {
-        $larp = $this->findLarp($slug);
-
-        // Newest edition first, so a reused character name points at the current run.
-        $character = null;
-        foreach (array_reverse($larp->getSortedEditions()) as $edition) {
-            $character = $this->characters->findVisibleBySlug($edition, $characterSlug);
-            if ($character instanceof Character) {
-                break;
-            }
-        }
-        if (null === $character) {
+        $ics = null === $edition ? null : IcsCalendar::forEdition(
+            $edition,
+            $this->generateUrl('app_edition_show', ['slug' => $larp->getSlug(), 'edition' => $edition->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->settings->get()->getOrganizationName(),
+        );
+        if (null === $ics) {
             throw new NotFoundHttpException();
         }
 
-        return $this->render('character/show.html.twig', [
-            'settings' => $this->settings->get(),
-            'larp' => $larp,
-            'edition' => $character->getEdition(),
-            'character' => $character,
+        return new Response($ics, Response::HTTP_OK, [
+            'Content-Type' => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $larp->getSlug().'-'.$edition?->getSlug().'.ics'),
         ]);
     }
 
     private function findLarp(string $slug): Larp
     {
         return $this->larps->findPublishedBySlug($slug) ?? throw new NotFoundHttpException();
+    }
+
+    private function findEdition(Larp $larp, string $slug): LarpEdition
+    {
+        if ($larp->isInitiative()) {
+            throw new NotFoundHttpException();
+        }
+
+        return $larp->getEditionBySlug($slug) ?? throw new NotFoundHttpException();
     }
 }

@@ -49,9 +49,13 @@ final class PublicLarpPagesTest extends WebTestCase
     public function testCharacterPageShowsTagsWithPercentages(): void
     {
         $client = self::createClient();
-        $crawler = $client->request('GET', '/larp/pradawne-zwoje/postac/kaplanka-mary');
+        // The old address without the edition forwards to the edition's character page.
+        $client->request('GET', '/larp/pradawne-zwoje/postac/kaplanka-mary');
+        self::assertResponseRedirects('/larp/pradawne-zwoje/3-edycja/postac/kaplanka-mary', 301);
+        $crawler = $client->followRedirect();
 
         self::assertResponseIsSuccessful();
+        self::assertSame(['Pradawne Zwoje', '3. edycja', 'Postacie'], $crawler->filter('.breadcrumbs a')->each(static fn ($a): string => $a->text()));
         $gameplay = $crawler->filter('.tag-bar--gameplay');
         self::assertCount(3, $gameplay);
         self::assertStringContainsString('Duchowość / religia', $gameplay->first()->text());
@@ -66,6 +70,10 @@ final class PublicLarpPagesTest extends WebTestCase
         yield 'hidden character' => ['/larp/pradawne-zwoje/postac/tajna-postac'];
         yield 'characters of an initiative' => ['/larp/wyprawa-rycerska-talabeclandu/postacie'];
         yield 'unknown LARP' => ['/larp/nie-ma-takiego'];
+        yield 'unknown edition' => ['/larp/pradawne-zwoje/9-edycja'];
+        yield 'character of another edition' => ['/larp/pradawne-zwoje/2-edycja/postac/kaplanka-mary'];
+        yield 'edition of an initiative' => ['/larp/wyprawa-rycerska-talabeclandu/1-edycja'];
+        yield 'edition of a draft' => ['/larp/projekt-w-przygotowaniu/1-edycja'];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('notFoundUrls')]

@@ -5,59 +5,7 @@
 
 {% block content %}
     <article class="larp-page">
-        <header class="larp-hero">
-            <div class="larp-hero__media">{% include 'partials/_cover.html.twig' with {eager: true} %}</div>
-            <div class="larp-hero__text">
-                {% if larp.format or larp.setting %}
-                    <p class="eyebrow">{{ [larp.format, larp.setting]|filter(v => v)|join(' · ') }}</p>
-                {% endif %}
-                <h1>{{ larp.name }}</h1>
-                {% if larp.teaser %}<p class="lead">{{ larp.teaser }}</p>{% endif %}
-
-                {% if edition and not larp.initiative %}
-                    <dl class="facts">
-                        {% if edition|edition_dates %}<div><dt>{{ 'larp.when'|trans }}</dt><dd>{{ edition|edition_dates }}</dd></div>{% endif %}
-                        {% if edition.location %}
-                            <div><dt>{{ 'larp.where'|trans }}</dt><dd>
-                                {% if edition.locationUrl %}<a href="{{ edition.locationUrl }}" target="_blank" rel="noopener">{{ edition.location }}</a>{% else %}{{ edition.location }}{% endif %}
-                            </dd></div>
-                        {% endif %}
-                        <div><dt>{{ 'larp.edition'|trans }}</dt><dd>{{ edition.name }}</dd></div>
-                        {% if larp.playerCount %}<div><dt>{{ 'larp.players'|trans }}</dt><dd>{{ larp.playerCount }}</dd></div>{% endif %}
-                        {% if larp.price %}<div><dt>{{ 'larp.price'|trans }}</dt><dd>{{ larp.price }}</dd></div>{% endif %}
-                    </dl>
-                    {% if larp.status.value == 'current' %}{% include 'partials/_recruitment.html.twig' %}{% endif %}
-                {% endif %}
-
-                {# Facebook event of the shown edition, and an .ics file to add it to a calendar. #}
-                {% set event_url = edition and not larp.initiative ? edition.facebookEventUrl : null %}
-                {% set calendar = edition and not larp.initiative and larp.status.value == 'current' and edition.upcoming %}
-                {% if event_url or calendar %}
-                    <div class="button-row larp-actions">
-                        {% if event_url %}
-                            <a class="button button--primary" href="{{ event_url }}" target="_blank" rel="noopener">
-                                <twig:ux:icon name="simple-icons:facebook" aria-hidden="true" /> {{ 'larp.facebook_event'|trans }}
-                            </a>
-                        {% endif %}
-                        {% if calendar %}
-                            <a class="button button--ghost" href="{{ path('app_larp_calendar', {slug: larp.slug}) }}" download>
-                                <twig:ux:icon name="lucide:calendar-plus" aria-hidden="true" /> {{ 'larp.add_to_calendar'|trans }}
-                            </a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-
-                {# The LARP's own social links, or else the organization's. #}
-                {% set own_links = larp.socialButtons %}
-                {% set social = own_links is not empty ? own_links : settings.socialButtons %}
-                {% if social is not empty %}
-                    <div class="larp-social">
-                        <p class="larp-social__label">{{ (own_links is not empty ? 'larp.follow_larp' : 'larp.follow_us')|trans }}</p>
-                        <twig:SocialLinks :links="social" variant="social-links--compact" label="{{ (own_links is not empty ? 'larp.follow_larp' : 'larp.follow_us')|trans }}" />
-                    </div>
-                {% endif %}
-            </div>
-        </header>
+        {% include 'larp/_hero.html.twig' with {is_current: true} %}
 
         {% if larp.description %}
             <section class="prose">{{ larp.description|raw }}</section>
@@ -67,7 +15,7 @@
             <section class="larp-characters">
                 <div class="section-head">
                     <h2>{{ 'character.title'|trans }}</h2>
-                    <a href="{{ path('app_larp_characters', {slug: larp.slug}) }}">{{ 'character.see_all'|trans({count: characters|length}) }}</a>
+                    <a href="{{ path('app_edition_characters', {slug: larp.slug, edition: edition.slug}) }}">{{ 'character.see_all'|trans({count: characters|length}) }}</a>
                 </div>
                 <div class="card-grid card-grid--small">
                     {% for character in characters|slice(0, 6) %}
@@ -90,14 +38,19 @@
             </section>
         {% endif %}
 
-        {% if larp.editionCount > 1 %}
+        {% if larp.editionCount > 1 and not larp.initiative %}
             <section class="larp-editions">
                 <h2>{{ 'larp.editions'|trans }}</h2>
-                <ul>
+                <div class="card-grid card-grid--small edition-cards">
                     {% for e in larp.sortedEditions|reverse %}
-                        <li><strong>{{ e.name }}</strong>{% if e|edition_dates %} · {{ e|edition_dates }}{% endif %}{% if e.location %} · {{ e.location }}{% endif %}</li>
+                        {% include 'larp/_edition_card.html.twig' with {
+                            edition_item: e,
+                            character_count: characterCounts[e.id] ?? 0,
+                            edition_galleries: galleries|filter(g => g.edition is same as(e)),
+                            current: e is same as(edition),
+                        } %}
                     {% endfor %}
-                </ul>
+                </div>
             </section>
         {% endif %}
     </article>
