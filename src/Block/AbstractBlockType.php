@@ -55,4 +55,23 @@ abstract class AbstractBlockType implements BlockTypeInterface
             'file_constraints' => [new Image(maxSize: '8M')],
         ]);
     }
+
+    /**
+     * Adds an upload field for several images (stored as a list of file names);
+     * new uploads are added to the ones already there.
+     *
+     * @param FormBuilderInterface<array<string, mixed>|null> $builder
+     */
+    protected function addImages(FormBuilderInterface $builder, string $name, string $label, ?string $help = null): void
+    {
+        $builder->add($name, FileUploadType::class, [
+            'label' => $label,
+            'help' => $help,
+            'required' => false,
+            'multiple' => true,
+            'upload_dir' => $this->projectDir.'/'.self::UPLOAD_DIR.'/',
+            'upload_filename' => '[slug]-[contenthash].[extension]',
+            'file_constraints' => [new Image(maxSize: '8M')],
+        ]);
+    }
 }

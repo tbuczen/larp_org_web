@@ -18,8 +18,10 @@ h1, h2, h3 { letter-spacing: var(--heading-tracking); }
 .eyebrow::before { background: currentColor; content: ""; height: 1px; width: 2.5rem; }
 
 /* Section titles: a small hollow square, like the logo's frame */
-.block__title, .larp-section h2 { align-items: center; display: flex; flex-wrap: wrap; gap: .5rem .8rem; }
+.block__title, .larp-section h2 { align-items: flex-start; display: flex; gap: .8rem; }
 .block__title::before, .larp-section h2::before {
+    /* level with the first line, also when a long title wraps */
+    margin-top: .32em;
     border: 2px solid var(--color-text);
     box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 3px var(--color-muted);
     content: "";
@@ -109,3 +111,29 @@ a.badge--open, .badge--open { background: var(--color-text); border-color: var(-
             linear-gradient(180deg, rgb(8 8 8 / .35) 0%, rgb(8 8 8 / .7) 40%, rgb(8 8 8 / .9) 70%, var(--color-bg) 100%);
     }
 }
+
+/* Galleries: photos printed in ink — they come into colour under the cursor */
+.gallery__open img { filter: grayscale(.85) contrast(1.08) brightness(.88); }
+.gallery__open:hover img, .gallery__open:focus-visible img { filter: none; }
+@media (hover: none) { .gallery__open img { filter: grayscale(.35) contrast(1.05); } }
+.gallery__open { outline-offset: -3px; }
+.gallery__caption {
+    background: linear-gradient(0deg, rgb(8 8 8 / .9), transparent);
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.lightbox { background: rgb(8 8 8 / .97); }
+.lightbox__button { background: var(--color-bg); border-color: var(--color-text); border-radius: 0; }
+.lightbox__button:hover { background: var(--color-text); color: var(--color-on-primary); }
+
+/* Parallax banner: toned photo, centred eyebrow with lines on both sides */
+.pbanner__image { filter: grayscale(.5) contrast(1.05); }
+.pbanner--center .pbanner__overlay { background: radial-gradient(ellipse at center, rgb(8 8 8 / .55), rgb(8 8 8 / .8)); }
+.pbanner--left .pbanner__overlay { background: linear-gradient(90deg, rgb(8 8 8 / .85), rgb(8 8 8 / .25)); }
+.pbanner--center .eyebrow { justify-content: center; }
+.pbanner--center .eyebrow::after { background: currentColor; content: ""; height: 1px; width: 2.5rem; }
+.pbanner__title { font-weight: 700; line-height: 1; }
+.block--parallax-banner { border-block: 1px solid var(--color-border); }

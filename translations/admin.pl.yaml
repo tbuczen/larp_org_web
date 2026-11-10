@@ -220,6 +220,29 @@ block:
     width: Szerokość
     width_narrow: Wąska (wygodna do czytania)
     width_wide: Szeroka
+    gallery:
+        label: Galeria zdjęć
+        description: 'Zdjęcia z larpów w ruchu: płynące pasy, paralaksa albo siatka. Kliknięcie otwiera podgląd.'
+        intro: Wstęp
+        images: Zdjęcia
+        images_help: 'Możesz wybrać wiele plików naraz; nowe dochodzą do już dodanych. Najlepiej 1200–2000 px, do 8 MB.'
+        captions: Podpisy
+        captions_help: 'Jeden podpis na linię, w kolejności zdjęć. Pusta linia = bez podpisu.'
+        layout: Układ
+        layout_help: 'Ruch wyłącza się sam u osób, które w systemie ograniczyły animacje.'
+        layout_drift: 'Płynące pasy — dwa rzędy sunące w przeciwne strony'
+        layout_scroll: 'Pasy przewijane — przesuwają się w bok razem z przewijaniem strony'
+        layout_parallax: 'Paralaksa — kolumny jadą z różną prędkością'
+        layout_grid: 'Siatka — zdjęcia odsłaniają się po kolei'
+    parallax_banner:
+        label: Baner z paralaksą
+        description: 'Zdjęcie na całą szerokość, przesuwające się wolniej niż strona, z cytatem albo hasłem.'
+        image_help: 'Poziome zdjęcie, min. 1920 px szerokości; jego górna i dolna część będą przycinane w ruchu.'
+        eyebrow: Nadtytuł
+        text: Tekst
+        align: Wyrównanie tekstu
+        align_left: Do lewej
+        align_center: Do środka
     hero:
         label: Baner główny
         description: 'Duże zdjęcie z hasłem i przyciskami — zwykle na górze strony.'

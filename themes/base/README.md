@@ -13,7 +13,7 @@ then choose it in **Admin → Ustawienia strony → Wygląd**.
 
 ```
 themes/<name>/
-  theme.yaml          name, description, extends (parent theme), styles, scripts
+  theme.yaml          name, description, extends (parent theme), styles, scripts, preload
   README.md           what this theme is and which files to edit
   templates/          Twig overrides (same path as in the parent theme)
   assets/styles/      CSS files listed in theme.yaml, loaded after the parent's
@@ -26,6 +26,8 @@ themes/<name>/
   To change one template, copy it from here into your theme under the same path.
 - **CSS/JS**: every theme in the chain contributes, parent first. A child theme usually
   only needs `tokens.css` (+ optionally `components.css` and `effects.css`).
+- **Fonts used in the header** can be listed under `preload:` in theme.yaml (paths in
+  `assets/`); they're preloaded so the menu doesn't shift when the font arrives.
 - **Special images** (found by name, first theme in the chain that has them wins):
   `images/logo.svg` (header logo), `images/favicon.svg`, `images/hero.svg`
   (hero background when a block has no image and features no LARP with a cover).
@@ -67,7 +69,7 @@ themes/<name>/
 | `partials/_social.html.twig` | Facebook / Instagram / Discord buttons |
 | `partials/_recruitment.html.twig`, `partials/_cover.html.twig` | recruitment badge, LARP cover or placeholder |
 | `page/show.html.twig` | a block-based page (also the front page) |
-| `blocks/<key>.html.twig` | one page block each: `hero`, `larp_showcase`, `rich_text`, `image_text`, `matcher_teaser`, `social_links`, `cta`, `countdown`, `embed` |
+| `blocks/<key>.html.twig` | one page block each: `hero`, `larp_showcase`, `rich_text`, `image_text`, `gallery`, `parallax_banner`, `matcher_teaser`, `social_links`, `cta`, `countdown`, `embed` |
 | `larp/index.html.twig`, `larp/show.html.twig`, `larp/_card.html.twig` | LARP list, LARP page, LARP card |
 | `larp/characters.html.twig`, `character/matcher.html.twig`, `components/CharacterMatcher.html.twig` | character matcher pages and the live component |
 | `character/show.html.twig`, `character/_card.html.twig`, `character/_bars.html.twig` | character page, card, percentage bars |
@@ -80,9 +82,25 @@ block type's own variables (see `src/Block/Type/*.php`, method `getContext()`).
 
 - `theme()` – the active theme (`theme().name`, `theme().label`)
 - `theme_asset('images/hero.svg')` – logical asset path from the theme chain, or null
-- `theme_stylesheets()`, `theme_scripts()` – used by `base.html.twig`
+- `theme_stylesheets()`, `theme_scripts()`, `theme_preloads()` – used by `base.html.twig`
 - `menu('main')` – list of links (`label`, `url`, `active`, `newTab`, `children`)
 - `render_block(block)`, `edition|edition_dates` ("6–9.VIII.2026")
+
+## Motion (scroll effects, galleries)
+
+Shared Stimulus controllers in `assets/controllers/` do the work; themes only style it:
+
+- `scroll-fx` (`data-controller="scroll-fx"`) sets `--p` (0 → 1 while the element
+  crosses the screen), `--pc` (−1 → 1, 0 in the middle) and `--exit` (0 → 1 as it
+  leaves the top) on the element, and adds `fx-ready` / `is-inview` classes. Used by
+  the hero (picture sinks, text lifts away), `parallax_banner` and `gallery`.
+  Example: `.thing { transform: translateY(calc(var(--pc, 0) * 40px)); }`
+- `lightbox` — full-screen photo viewer for the gallery block.
+- Gallery layouts: `drift` (endless strips), `scroll` (strips move with the page),
+  `parallax` (columns at different speeds), `grid` (photos unveil in turn).
+
+With reduced motion the controllers do nothing and the CSS shows still pictures;
+moving strips become swipeable rows.
 
 ## Adding a new block type
 

@@ -9,6 +9,9 @@ html {
     -webkit-text-size-adjust: 100%;
     background: var(--color-bg);
     scroll-behavior: smooth;
+    /* Always reserve the scrollbar's space, so the centred header doesn't jump
+       sideways between short pages (no scrollbar) and long ones. */
+    scrollbar-gutter: stable;
 }
 
 body {
@@ -64,6 +67,8 @@ p { margin: 0 0 1em; }
     border-bottom: 1px solid var(--header-border, transparent);
     position: sticky;
     top: 0;
+    /* Its own layer in page transitions: the header stays put while the page fades. */
+    view-transition-name: site-header;
     z-index: 50;
 }
 

@@ -33,6 +33,13 @@ final class ThemeExtension
     }
 
     /** @return list<string> */
+    #[AsTwigFunction('theme_preloads')]
+    public function preloads(): array
+    {
+        return $this->themes->getPreloads();
+    }
+
+    /** @return list<string> */
     #[AsTwigFunction('theme_scripts')]
     public function scripts(): array
     {

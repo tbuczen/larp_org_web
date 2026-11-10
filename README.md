@@ -110,7 +110,9 @@ Uploaded images go to `public/uploads/` (not committed; back it up together with
   `php bin/console app:theme:create my-org` and read `themes/base/README.md` (templates,
   tokens and rules, written so an AI assistant can work from it too).
 - **Pages** (*Admin → Strony i układ*) are built from blocks: hero, LARP cards, text,
-  image + text, matcher invitation, social/contact, call to action, countdown, video/map.
+  image + text, photo gallery (drifting strips, parallax or grid, with a full-screen viewer),
+  parallax photo banner, matcher invitation, social/contact, call to action, countdown,
+  video/map.
   The page marked *Strona główna* is the front page; others are served at `/{slug}`.
   On a page's *Układ* screen blocks are added, dragged into order (or moved with arrows on a
   phone), hidden, duplicated and edited. A new block type is one class in

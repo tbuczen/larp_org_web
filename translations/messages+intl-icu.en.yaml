@@ -70,6 +70,12 @@ matcher:
         poor: Probably not for you
 
 block:
+    gallery:
+        open: 'Enlarge photo {n}'
+        close: Close
+        prev: Previous photo
+        next: Next photo
+        viewer: Photo viewer
     hero:
         see_larp: Discover the LARP
     matcher_teaser:

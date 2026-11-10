@@ -209,3 +209,7 @@
 .import-badge--skip { background: #6b7280; color: #fff; }
 .import-badge--error { background: #dc2626; color: #fff; }
 .import-actions { margin-top: 1rem; }
+
+/* Block settings: EasyAdmin styles the JSON settings column as an "array" field
+   and hides the labels inside it; show the settings fields' own labels. */
+.form-group.field-block-settings .form-widget .form-group label.form-control-label { display: block; }

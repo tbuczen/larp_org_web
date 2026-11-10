@@ -10,5 +10,8 @@ styles:
     - components.css
     - effects.css
 
+# Fonts (paths in assets/) to preload, e.g. the heading font used in the menu.
+preload: []
+
 # JS modules in assets/scripts/ (plain ES modules, no imports from npm).
 scripts: []

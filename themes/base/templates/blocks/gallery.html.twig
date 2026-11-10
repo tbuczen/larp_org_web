@@ -1,0 +1,86 @@
+{#
+    Photo gallery. Layouts (settings.layout): drift | scroll | parallax | grid.
+    Context from GalleryBlock: photos (index, file, caption), layout, rows (photos
+    dealt into 2 rows, or 3 columns for parallax).
+    Moving strips repeat their photos (copies hidden from screen readers) so they
+    are always wider than the screen. Clicking a photo opens the viewer
+    (controllers/lightbox_controller.js); scroll-linked motion comes from
+    controllers/scroll_fx_controller.js through the --p / --pc CSS variables.
+#}
+{% if photos is not empty %}
+    {% set moving = layout in ['drift', 'scroll'] %}
+    {% set viewer_photos = photos|map(p => {src: asset('uploads/blocks/' ~ p.file), caption: p.caption}) %}
+    <section class="block block--gallery gallery gallery--{{ layout }}" id="block-{{ block.id }}"
+             data-controller="lightbox scroll-fx"
+             data-lightbox-photos-value="{{ viewer_photos|json_encode }}">
+        {% if settings.title or settings.intro %}
+            <div class="container gallery__head">
+                {% if settings.title %}<h2 class="block__title">{{ settings.title }}</h2>{% endif %}
+                {% if settings.intro %}<p class="gallery__intro">{{ settings.intro|nl2br }}</p>{% endif %}
+            </div>
+        {% endif %}
+
+        {% macro item(photo, clone = false) %}
+            <li class="gallery__item{{ clone ? ' gallery__item--clone' }}" style="--i: {{ photo.index }}"{% if clone %} aria-hidden="true"{% endif %}>
+                <button class="gallery__open" type="button" data-action="lightbox#open" data-lightbox-index-param="{{ photo.index }}"
+                        {% if clone %}tabindex="-1"{% else %}aria-label="{{ 'block.gallery.open'|trans({n: photo.index + 1}) }}"{% endif %}>
+                    <img src="{{ asset('uploads/blocks/' ~ photo.file) }}" alt="{{ clone ? '' : photo.caption }}" loading="lazy" decoding="async">
+                </button>
+                {% if photo.caption and not clone %}<span class="gallery__caption">{{ photo.caption }}</span>{% endif %}
+            </li>
+        {% endmacro %}
+
+        {% if moving %}
+            <div class="gallery__rows">
+                {% for row in rows %}
+                    {# Copies per half: enough photos to fill a wide screen. Drift needs two equal halves to loop. #}
+                    {% set copies = max(1, (10 / row|length)|round(0, 'ceil')) %}
+                    {% set halves = layout == 'drift' ? 2 : 1 %}
+                    <div class="gallery__row gallery__row--{{ loop.index is odd ? 'a' : 'b' }}">
+                        <ul class="gallery__track" style="--duration: {{ (row|length * copies * 7)|round }}s">
+                            {% for n in 1..(copies * halves) %}
+                                {% for photo in row %}{{ _self.item(photo, n > 1) }}{% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        {% elseif layout == 'parallax' %}
+            <div class="container gallery__columns">
+                {% for column in rows %}
+                    {# With few photos every column shows all of them: only the first column is read out. #}
+                    {% set repeated = loop.index > 1 and column|length == photos|length %}
+                    <ul class="gallery__column" style="--speed: {{ [-50, 70, -110][loop.index0] }}">
+                        {% for photo in column %}{{ _self.item(photo, repeated) }}{% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="container">
+                <ul class="gallery__grid">
+                    {% for photo in photos %}{{ _self.item(photo) }}{% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <dialog class="lightbox" data-lightbox-target="dialog" aria-label="{{ 'block.gallery.viewer'|trans }}"
+                data-action="click->lightbox#backdrop keydown->lightbox#key">
+            <figure class="lightbox__figure">
+                <img class="lightbox__image" data-lightbox-target="image" alt="">
+                <figcaption class="lightbox__caption" data-lightbox-target="caption"></figcaption>
+            </figure>
+            <p class="lightbox__counter" data-lightbox-target="counter" aria-live="polite"></p>
+            <button class="lightbox__button lightbox__button--close" type="button" data-action="lightbox#close">
+                <twig:ux:icon name="lucide:x" aria-hidden="true" /><span class="visually-hidden">{{ 'block.gallery.close'|trans }}</span>
+            </button>
+            {% if photos|length > 1 %}
+                <button class="lightbox__button lightbox__button--prev" type="button" data-action="lightbox#prev">
+                    <twig:ux:icon name="lucide:chevron-left" aria-hidden="true" /><span class="visually-hidden">{{ 'block.gallery.prev'|trans }}</span>
+                </button>
+                <button class="lightbox__button lightbox__button--next" type="button" data-action="lightbox#next">
+                    <twig:ux:icon name="lucide:chevron-right" aria-hidden="true" /><span class="visually-hidden">{{ 'block.gallery.next'|trans }}</span>
+                </button>
+            {% endif %}
+        </dialog>
+    </section>
+{% endif %}

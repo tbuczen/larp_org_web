@@ -58,6 +58,7 @@ final class ThemeManager implements ResetInterface
                 path: $path,
                 styles: array_values(array_map('strval', (array) ($config['styles'] ?? ['tokens.css', 'base.css', 'components.css', 'effects.css']))),
                 scripts: array_values(array_map('strval', (array) ($config['scripts'] ?? []))),
+                preload: array_values(array_map('strval', (array) ($config['preload'] ?? []))),
             );
         }
         ksort($this->themes);
@@ -116,6 +117,21 @@ final class ThemeManager implements ResetInterface
             foreach ($theme->styles as $file) {
                 if ($theme->hasAsset('styles/'.$file)) {
                     $paths[] = $theme->assetPath('styles/'.$file);
+                }
+            }
+        }
+
+        return $paths;
+    }
+
+    /** @return list<string> logical asset paths of the fonts to preload, base theme first */
+    public function getPreloads(): array
+    {
+        $paths = [];
+        foreach (array_reverse($this->getChain()) as $theme) {
+            foreach ($theme->preload as $file) {
+                if ($theme->hasAsset($file)) {
+                    $paths[] = $theme->assetPath($file);
                 }
             }
         }

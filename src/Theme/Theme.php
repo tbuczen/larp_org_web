@@ -12,6 +12,7 @@ final readonly class Theme
     /**
      * @param list<string> $styles  CSS files in assets/styles/, loaded in this order
      * @param list<string> $scripts JS modules in assets/scripts/, loaded as <script type="module">
+     * @param list<string> $preload fonts (paths in assets/) to preload, so text doesn't reflow when they arrive
      */
     public function __construct(
         public string $name,
@@ -21,6 +22,7 @@ final readonly class Theme
         public string $path,
         public array $styles,
         public array $scripts,
+        public array $preload = [],
     ) {
     }
 

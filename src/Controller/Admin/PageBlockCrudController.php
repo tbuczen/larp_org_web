@@ -78,6 +78,9 @@ class PageBlockCrudController extends AbstractCrudController
             yield Field::new('settings', false)
                 ->setFormType(BlockSettingsType::class)
                 ->setFormTypeOption('block_type', $type)
+                // Hook for admin.css, which brings back the labels that EasyAdmin's
+                // "field-array" styling (its guess for a JSON column) hides.
+                ->addCssClass('field-block-settings')
                 ->onlyOnForms();
         }
         yield TextField::new('adminLabel', 'block.admin_label')

@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class AdminPagesAndMenusTest extends WebTestCase
 {
@@ -37,7 +38,7 @@ final class AdminPagesAndMenusTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertCount(7, $crawler->filter('.block-list > .block-item'));
-        self::assertCount(9, $crawler->filter('.block-types button'));
+        self::assertCount(11, $crawler->filter('.block-types button'));
         self::assertSelectorExists('[data-sortable-url][data-csrf-token]');
     }
 
@@ -184,6 +185,116 @@ final class AdminPagesAndMenusTest extends WebTestCase
         $crawler = $this->client->request('GET', '/');
         self::assertSelectorExists('html[data-theme="base"]');
         self::assertCount(0, $crawler->filter('link[href*="themes/lastajemnic"]'));
+    }
+
+    public function testGalleryUploadsSeveralPhotosAndKeepsAddingToThem(): void
+    {
+        $page = (new Page())->setTitle('Galeria')->setSlug('galeria-test');
+        $this->em()->persist($page);
+        $this->em()->flush();
+        $stored = [];
+
+        try {
+            $crawler = $this->client->request('GET', '/admin/page/'.$page->getId().'/layout');
+            $this->client->submit($crawler->filter('form[action$="/blocks/add/gallery"]')->form());
+            $crawler = $this->client->followRedirect();
+
+            $form = $crawler->filter('form[name="PageBlock"]')->form();
+            $form['PageBlock[settings][title]'] = 'Z naszych larpów';
+            $form['PageBlock[settings][captions]'] = "Obozowisko\n\nPatrol";
+            $form['PageBlock[settings][layout]'] = 'drift';
+            $this->client->request('POST', (string) $form->getUri(), $form->getPhpValues(), [
+                'PageBlock' => ['settings' => ['images' => ['file' => [$this->png('a'), $this->png('b')]]]],
+            ]);
+            self::assertResponseRedirects();
+
+            $block = $this->em()->getRepository(PageBlock::class)->findOneBy(['type' => 'gallery']);
+            self::assertNotNull($block);
+            $id = $block->getId();
+            $stored = $this->galleryBlock($id)->getSettings()['images'];
+            self::assertCount(2, $stored);
+
+            // A second upload adds to the photos already there.
+            $crawler = $this->client->request('GET', '/admin/page-block/'.$id.'/edit');
+            $form = $crawler->filter('form[name="PageBlock"]')->form();
+            $this->client->request('POST', (string) $form->getUri(), $form->getPhpValues(), [
+                'PageBlock' => ['settings' => ['images' => ['file' => [$this->png('c')]]]],
+            ]);
+            self::assertResponseRedirects();
+            $stored = $this->galleryBlock($id)->getSettings()['images'];
+            self::assertCount(3, $stored);
+            foreach ($stored as $file) {
+                self::assertFileExists(self::uploadDir().'/'.$file);
+            }
+
+            $crawler = $this->client->request('GET', '/galeria-test');
+            self::assertResponseIsSuccessful();
+            self::assertSelectorExists('.block--gallery.gallery--drift[data-controller~="lightbox"][data-controller~="scroll-fx"]');
+            self::assertCount(2, $crawler->filter('.gallery__row'));
+            // 3 photos per row, the rest are copies that fill the strip, hidden from screen readers.
+            $row = $crawler->filter('.gallery__row')->first();
+            self::assertCount(3, $row->filter('.gallery__item:not(.gallery__item--clone)'));
+            self::assertCount(0, $row->filter('.gallery__item--clone:not([aria-hidden="true"])'));
+            self::assertGreaterThan(3, $row->filter('.gallery__item--clone')->count());
+            self::assertSame('Obozowisko', $row->filter('.gallery__item:not(.gallery__item--clone) .gallery__caption')->first()->text());
+
+            /** @var list<array{src: string, caption: string}> $photos */
+            $photos = json_decode((string) $crawler->filter('.block--gallery')->attr('data-lightbox-photos-value'), true);
+            self::assertCount(3, $photos);
+            self::assertSame(['Obozowisko', '', 'Patrol'], array_column($photos, 'caption'));
+            self::assertStringContainsString('/uploads/blocks/'.$stored[0], $photos[0]['src']);
+
+            // Other layouts render too.
+            foreach (['scroll' => '.gallery__row', 'parallax' => '.gallery__column', 'grid' => '.gallery__grid'] as $layout => $selector) {
+                $block = $this->galleryBlock($id);
+                $block->setSettings(['layout' => $layout] + $block->getSettings());
+                $this->em()->flush();
+                $this->client->request('GET', '/galeria-test');
+                self::assertSelectorExists('.gallery--'.$layout.' '.$selector, $layout);
+            }
+        } finally {
+            foreach ($stored as $file) {
+                @unlink(self::uploadDir().'/'.$file);
+            }
+        }
+    }
+
+    public function testParallaxBannerFallsBackToTheThemeIllustration(): void
+    {
+        $page = (new Page())->setTitle('Baner')->setSlug('baner-test');
+        $page->addBlock(new PageBlock('parallax_banner', ['title' => 'Każda historia zaczyna się w lesie', 'eyebrow' => 'Las Tajemnic', 'height' => 'large', 'align' => 'center']));
+        $this->em()->persist($page);
+        $this->em()->flush();
+
+        $this->client->request('GET', '/baner-test');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('.block--parallax-banner.pbanner--center.pbanner--large[data-controller="scroll-fx"]');
+        self::assertSelectorExists('.pbanner__image[src*="themes/lastajemnic/assets/images/hero"]');
+        self::assertSelectorTextContains('.pbanner__title', 'Każda historia zaczyna się w lesie');
+    }
+
+    private function galleryBlock(?int $id): PageBlock
+    {
+        $this->em()->clear();
+        $block = $this->em()->find(PageBlock::class, $id);
+        self::assertInstanceOf(PageBlock::class, $block);
+
+        return $block;
+    }
+
+    private static function uploadDir(): string
+    {
+        return \dirname(__DIR__, 2).'/public/uploads/blocks';
+    }
+
+    /** A tiny valid PNG to upload. */
+    private function png(string $name): UploadedFile
+    {
+        $path = sys_get_temp_dir().'/'.$name.'-'.uniqid().'.png';
+        // 1×1 px PNG
+        file_put_contents($path, (string) base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkqP9fDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', true));
+
+        return new UploadedFile($path, $name.'.png', 'image/png', null, true);
     }
 
     private function em(): EntityManagerInterface

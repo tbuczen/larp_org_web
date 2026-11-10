@@ -23,7 +23,8 @@ final class ThemeManagerTest extends TestCase
         $fs->dumpFile($this->dir.'/base/assets/styles/base.css', '');
         $fs->dumpFile($this->dir.'/base/assets/images/hero.svg', '');
         $fs->mkdir($this->dir.'/base/templates');
-        $fs->dumpFile($this->dir.'/org/theme.yaml', "name: Org\nextends: base\nstyles: [tokens.css, missing.css]\nscripts: [fx.js]\n");
+        $fs->dumpFile($this->dir.'/org/theme.yaml', "name: Org\nextends: base\nstyles: [tokens.css, missing.css]\nscripts: [fx.js]\npreload: [fonts/head.woff2, fonts/gone.woff2]\n");
+        $fs->dumpFile($this->dir.'/org/assets/fonts/head.woff2', '');
         $fs->dumpFile($this->dir.'/org/assets/styles/tokens.css', '');
         $fs->dumpFile($this->dir.'/org/assets/scripts/fx.js', '');
         $fs->dumpFile($this->dir.'/org/assets/images/hero.svg', '');
@@ -47,6 +48,7 @@ final class ThemeManagerTest extends TestCase
             'themes/org/assets/styles/tokens.css',
         ], $themes->getStylesheets(), 'parent first; missing files skipped');
         self::assertSame(['themes/org/assets/scripts/fx.js'], $themes->getScripts());
+        self::assertSame(['themes/org/assets/fonts/head.woff2'], $themes->getPreloads(), 'missing fonts skipped');
         self::assertSame('themes/org/assets/images/hero.svg', $themes->findAsset('images/hero.svg'), 'child wins');
         self::assertSame([$this->dir.'/org/templates', $this->dir.'/base/templates'], $themes->getTemplateDirs());
     }

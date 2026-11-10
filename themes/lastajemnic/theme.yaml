@@ -11,6 +11,13 @@ styles:
     - components.css
     - effects.css
 
+# Fonts used above the fold (menu, headings): preloaded so the header doesn't
+# shift when they arrive.
+preload:
+    - fonts/saira-extra-condensed-latin-600-normal.woff2
+    - fonts/saira-extra-condensed-latin-700-normal.woff2
+    - fonts/inter-latin-400-normal.woff2
+
 # Small progressive enhancements (spores in the hero, reveal on scroll).
 scripts:
     - effects.js

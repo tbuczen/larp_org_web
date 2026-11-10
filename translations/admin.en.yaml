@@ -220,6 +220,29 @@ block:
     width: Width
     width_narrow: Narrow (comfortable to read)
     width_wide: Wide
+    gallery:
+        label: Photo gallery
+        description: 'LARP photos in motion: drifting strips, parallax or a grid. Click opens a viewer.'
+        intro: Introduction
+        images: Photos
+        images_help: 'You can pick many files at once; new ones are added to those already there. Ideally 1200–2000 px, up to 8 MB.'
+        captions: Captions
+        captions_help: 'One caption per line, in the order of the photos. Empty line = no caption.'
+        layout: Layout
+        layout_help: 'Motion switches off by itself for visitors who reduced animations in their system.'
+        layout_drift: 'Drifting strips — two rows gliding in opposite directions'
+        layout_scroll: 'Scrolling strips — slide sideways as the page scrolls'
+        layout_parallax: 'Parallax — columns move at different speeds'
+        layout_grid: 'Grid — photos unveil one by one'
+    parallax_banner:
+        label: Parallax banner
+        description: 'Full-width photo moving slower than the page, with a quote or headline.'
+        image_help: 'Landscape photo, at least 1920 px wide; its top and bottom get cropped as it moves.'
+        eyebrow: Eyebrow
+        text: Text
+        align: Text alignment
+        align_left: Left
+        align_center: Centre
     hero:
         label: Hero banner
         description: 'Large image with a headline and buttons — usually at the top.'

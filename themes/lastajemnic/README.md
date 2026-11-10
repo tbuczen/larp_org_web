@@ -19,8 +19,14 @@ branches, cut like a black-and-white woodcut, inside a square frame, above squar
 - **Type:** headings, buttons and menus use *Saira Extra Condensed*, in uppercase
   with wide tracking, close to the squared logo lettering and with full Polish
   glyphs. Body text uses *Inter*.
-- **Texture:** paper grain over the hero, slow fog, a few drifting bone and moss
-  motes. All of it stops when the visitor prefers reduced motion.
+- **Texture:** paper grain over the hero and banners, slow fog, a few drifting bone
+  and moss motes.
+- **Motion:** the hero title rises word by word; on desktop a "lantern" follows the
+  cursor and lights up the dryad's branches; a thin bone line under the header shows
+  reading progress; section markers turn into place, images unveil and cards follow
+  one another as sections scroll in. Gallery photos are printed in ink (desaturated)
+  and come into colour under the cursor.
+  All of it stops when the visitor prefers reduced motion.
 
 The look works for all the group's genres (fantasy, futuristic, post-apo): it's
 the forest's look, not any one world's. Per-LARP colours (#16) are where each
@@ -33,8 +39,8 @@ game gets its own accent.
 | `assets/styles/tokens.css` | palette, fonts, frame — start here |
 | `assets/styles/fonts.css` | `@font-face` for the self-hosted fonts in `assets/fonts/` (SIL OFL, see `LICENSE.md`) |
 | `assets/styles/components.css` | brand, buttons, framed cards, headings, badges, tag bars, footer |
-| `assets/styles/effects.css` | paper grain, motes, reveal-on-scroll |
-| `assets/scripts/effects.js` | adds motes to heroes; reveal on scroll |
+| `assets/styles/effects.css` | paper grain, motes, lantern, title rise, reveal-on-scroll, header progress line |
+| `assets/scripts/effects.js` | motes, word-by-word hero title, lantern, reveal on scroll, scroll progress |
 | `templates/partials/_brand.html.twig` | header brand: emblem + tagline + wordmark (overrides base) |
 | `assets/images/logo.svg`, `favicon.svg` | emblem only (dryad in frame, bone on ink) — header, favicon |
 | `assets/images/logo-full.svg` | emblem + lettering, for dark backgrounds — footer |

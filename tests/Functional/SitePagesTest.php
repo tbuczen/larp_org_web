@@ -30,6 +30,8 @@ final class SitePagesTest extends WebTestCase
         self::assertIsInt($theme);
         self::assertLessThan($theme, $base);
         self::assertSelectorExists('script[src*="themes/lastajemnic/assets/scripts/effects"]');
+        self::assertSelectorExists('link[rel="preload"][as="font"][crossorigin][href*="saira-extra-condensed-latin-600"]');
+        self::assertSelectorExists('.block--hero[data-controller="scroll-fx"]');
     }
 
     public function testContentPagesBySlug(): void

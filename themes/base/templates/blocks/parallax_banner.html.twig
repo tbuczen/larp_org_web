@@ -1,0 +1,26 @@
+{#
+    Full-width photo moving slower than the page, with optional text over it.
+    The motion comes from controllers/scroll_fx_controller.js (--pc CSS variable);
+    without JavaScript or with reduced motion it's a still photo.
+#}
+{% set image = settings.image
+    ? asset('uploads/blocks/' ~ settings.image)
+    : (theme_asset('images/hero.svg') ? asset(theme_asset('images/hero.svg')) : null) %}
+<section class="block block--parallax-banner pbanner pbanner--{{ settings.height }} pbanner--{{ settings.align }}" id="block-{{ block.id }}" data-controller="scroll-fx">
+    {% if image %}
+        <div class="pbanner__media" aria-hidden="true">
+            <img class="pbanner__image" src="{{ image }}" alt="" loading="lazy" decoding="async">
+        </div>
+    {% endif %}
+    <div class="pbanner__overlay" aria-hidden="true"></div>
+    {% if settings.eyebrow or settings.title or settings.text %}
+        <div class="container pbanner__content">
+            {% if settings.eyebrow %}<p class="eyebrow">{{ settings.eyebrow }}</p>{% endif %}
+            {% if settings.title %}<h2 class="pbanner__title">{{ settings.title }}</h2>{% endif %}
+            {% if settings.text %}<p class="pbanner__text">{{ settings.text|nl2br }}</p>{% endif %}
+            {% if settings.button_label and settings.button_url %}
+                <p><a class="button button--primary" href="{{ settings.button_url }}">{{ settings.button_label }}</a></p>
+            {% endif %}
+        </div>
+    {% endif %}
+</section>

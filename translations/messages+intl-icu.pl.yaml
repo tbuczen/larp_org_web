@@ -70,6 +70,12 @@ matcher:
         poor: Raczej nie dla Ciebie
 
 block:
+    gallery:
+        open: 'Powiększ zdjęcie {n}'
+        close: Zamknij
+        prev: Poprzednie zdjęcie
+        next: Następne zdjęcie
+        viewer: Podgląd zdjęć
     hero:
         see_larp: Poznaj larpa
     matcher_teaser:

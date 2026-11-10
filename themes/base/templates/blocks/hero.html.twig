@@ -6,7 +6,7 @@
     ? asset('uploads/blocks/' ~ settings.image)
     : (larp and larp.coverImage ? asset('uploads/larps/' ~ larp.coverImage) : (theme_asset('images/hero.svg') ? asset(theme_asset('images/hero.svg')) : null)) %}
 {% set title = settings.title ?: (larp ? larp.name : null) %}
-<section class="block block--hero hero hero--{{ settings.height }}" id="block-{{ block.id }}">
+<section class="block block--hero hero hero--{{ settings.height }}" id="block-{{ block.id }}" data-controller="scroll-fx">
     {% if image %}
         <img class="hero__image" src="{{ image }}" alt="" fetchpriority="high">
     {% endif %}

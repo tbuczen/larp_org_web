@@ -12,8 +12,13 @@
             {% if settings.tagline is defined and settings.tagline %}<meta name="description" content="{{ settings.tagline }}">{% endif %}
         {% endblock %}
         <meta name="theme-color" content="#111318">
+        {# Turbo morphs between pages with a cross-fade; the header keeps its place (view-transition-name in base.css). #}
+        <meta name="view-transition" content="same-origin">
         <link rel="icon" href="{{ asset(theme_asset('images/favicon.svg') ?? 'favicon.svg') }}" type="image/svg+xml">
         {% block stylesheets %}
+            {% for path in theme_preloads() %}
+                <link rel="preload" href="{{ asset(path) }}" as="font" type="font/woff2" crossorigin>
+            {% endfor %}
             {% for path in theme_stylesheets() %}
                 <link rel="stylesheet" href="{{ asset(path) }}">
             {% endfor %}
