@@ -50,5 +50,10 @@ class LarpEditionCrudController extends AbstractCrudController
             ->setRequired(false)
             ->setHelp('edition.registration_url_help')
             ->setColumns(8);
+        yield FormField::addRow();
+        yield UrlField::new('facebookEventUrl', 'edition.facebook_event_url')
+            ->setRequired(false)
+            ->setHelp('edition.facebook_event_url_help')
+            ->setColumns(12);
     }
 }

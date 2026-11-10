@@ -15,7 +15,14 @@
                 {% if edition.location %}<span>{{ edition.location }}</span>{% endif %}
                 {% if edition.name %}<span>{{ edition.name }}</span>{% endif %}
             </p>
-            {% include 'partials/_recruitment.html.twig' %}
+            <div class="larp-card__status">
+                {% include 'partials/_recruitment.html.twig' %}
+                {% if edition.facebookEventUrl %}
+                    <a class="larp-card__event" href="{{ edition.facebookEventUrl }}" target="_blank" rel="noopener" title="{{ 'larp.facebook_event'|trans }}">
+                        <twig:ux:icon name="simple-icons:facebook" aria-hidden="true" /><span class="visually-hidden">{{ 'larp.facebook_event'|trans }}: {{ larp.name }}</span>
+                    </a>
+                {% endif %}
+            </div>
         {% elseif not larp.initiative and larp.editionCount > 0 %}
             <p class="larp-card__when">
                 {{ 'larp.edition_count'|trans({count: larp.editionCount}) }}{% if larp.yearRange %} · {{ larp.yearRange }}{% endif %}

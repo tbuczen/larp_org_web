@@ -58,6 +58,11 @@ class LarpEdition implements \Stringable
     #[Assert\Url(requireTld: true)]
     private ?string $registrationUrl = null;
 
+    /** The edition's Facebook event (facebook.com/events/… or fb.me/e/…). */
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex('#^https://((www|m|web)\.)?(facebook\.com/events/|fb\.me/e/)[^\s]+$#', message: 'edition.facebook_event_invalid')]
+    private ?string $facebookEventUrl = null;
+
     /** @var Collection<int, Character> */
     #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'edition', cascade: ['remove'])]
     #[ORM\OrderBy(['position' => 'ASC', 'name' => 'ASC'])]
@@ -173,6 +178,27 @@ class LarpEdition implements \Stringable
         $this->recruitment = $recruitment;
 
         return $this;
+    }
+
+    public function getFacebookEventUrl(): ?string
+    {
+        return $this->facebookEventUrl;
+    }
+
+    public function setFacebookEventUrl(?string $facebookEventUrl): static
+    {
+        $this->facebookEventUrl = null === $facebookEventUrl || '' === trim($facebookEventUrl) ? null : trim($facebookEventUrl);
+
+        return $this;
+    }
+
+    /** Whether it has dates and hasn't ended yet (so "add to calendar" makes sense). */
+    public function isUpcoming(?\DateTimeImmutable $today = null): bool
+    {
+        $today ??= new \DateTimeImmutable('today');
+        $last = $this->endDate ?? $this->startDate;
+
+        return null !== $last && $last >= $today;
     }
 
     public function getRegistrationUrl(): ?string

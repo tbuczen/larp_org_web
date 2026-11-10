@@ -1,0 +1,29 @@
+{#
+    Compact rows for a LARP's social links: [network] [address] [own label] [delete],
+    instead of EasyAdmin's accordion. Keeps the classes EasyAdmin's JavaScript uses
+    to add and remove rows (see character_tags_theme.html.twig).
+#}
+{% block _Larp_socialLinks_entry_row %}
+    <div class="field-collection-item social-link-item {{ not form.vars.valid ? 'is-invalid' }}">
+        <div class="social-link-item__network">
+            {{ form_widget(form.network, {attr: {'aria-label': 'social.network'|trans({}, 'admin')}}) }}
+        </div>
+        <div class="social-link-item__url">
+            {{ form_widget(form.url, {attr: {'aria-label': 'social.url'|trans({}, 'admin')}}) }}
+            {{ form_errors(form.url) }}
+        </div>
+        <div class="social-link-item__label">
+            {{ form_widget(form.label, {attr: {'aria-label': 'social.label'|trans({}, 'admin')}}) }}
+        </div>
+        {% if form_parent(form).vars.allow_delete|default(false) and not disabled %}
+            <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
+                    title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                <twig:ea:Icon name="internal:delete" />
+            </button>
+        {% endif %}
+        {{ form_errors(form.network) }}
+        {{ form_errors(form) }}
+        <span class="accordion-button d-none" hidden></span>
+        <span class="accordion-collapse d-none" hidden></span>
+    </div>
+{% endblock %}

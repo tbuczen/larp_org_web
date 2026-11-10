@@ -7,12 +7,15 @@ namespace App\Entity;
 use App\Enum\LarpStatus;
 use App\Enum\ProjectType;
 use App\Repository\LarpRepository;
+use App\Social\SocialLink;
+use App\Social\SocialNetwork;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * A LARP project (or another initiative, e.g. a LARP group). Dates, places,
@@ -76,6 +79,15 @@ class Larp implements SluggableInterface, \Stringable
     #[ORM\Column(length: 120, nullable: true)]
     private ?string $price = null;
 
+    /**
+     * The LARP's own social links as rows {network, url, label}; see SocialNetwork.
+     * Stored as JSON so more networks need no schema change.
+     *
+     * @var list<array{network: string, url: string, label?: ?string}>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $socialLinks = null;
+
     #[ORM\Column]
     private bool $featured = false;
 
@@ -101,6 +113,22 @@ class Larp implements SluggableInterface, \Stringable
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    #[Assert\Callback]
+    public function validateSocialLinks(ExecutionContextInterface $context): void
+    {
+        foreach ($this->getSocialLinks() as $i => $row) {
+            $network = SocialNetwork::tryFrom($row['network']);
+            if (null === $network) {
+                $context->buildViolation('social.network_unknown')->atPath('socialLinks['.$i.'][network]')->addViolation();
+            } elseif (!$network->accepts($row['url'])) {
+                $context->buildViolation([] === $network->hosts() ? 'social.url_https' : 'social.url_wrong_site')
+                    ->setParameter('%network%', $network->label())
+                    ->atPath('socialLinks['.$i.'][url]')
+                    ->addViolation();
+            }
+        }
     }
 
     public function getName(): string
@@ -260,6 +288,50 @@ class Larp implements SluggableInterface, \Stringable
         $this->price = $price;
 
         return $this;
+    }
+
+    /**
+     * Raw rows, as edited in the admin.
+     *
+     * @return list<array{network: string, url: string, label?: ?string}>
+     */
+    public function getSocialLinks(): array
+    {
+        return $this->socialLinks ?? [];
+    }
+
+    /**
+     * Rows without an address are dropped; addresses and labels are trimmed.
+     *
+     * @param iterable<mixed> $rows
+     */
+    public function setSocialLinks(iterable $rows): static
+    {
+        $clean = [];
+        foreach ($rows as $row) {
+            if (!\is_array($row)) {
+                continue;
+            }
+            $url = trim((string) ($row['url'] ?? ''));
+            if ('' === $url) {
+                continue;
+            }
+            $label = trim((string) ($row['label'] ?? ''));
+            $clean[] = ['network' => (string) ($row['network'] ?? ''), 'url' => $url, 'label' => '' === $label ? null : $label];
+        }
+        $this->socialLinks = [] === $clean ? null : $clean;
+
+        return $this;
+    }
+
+    /**
+     * This LARP's social buttons.
+     *
+     * @return list<SocialLink>
+     */
+    public function getSocialButtons(): array
+    {
+        return SocialLink::fromRows($this->getSocialLinks());
     }
 
     public function isFeatured(): bool

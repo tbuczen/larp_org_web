@@ -13,6 +13,10 @@ home:
     all_larps: Wszystkie larpy
 
 larp:
+    facebook_event: Wydarzenie na Facebooku
+    add_to_calendar: Dodaj do kalendarza
+    follow_larp: Śledź larpa
+    follow_us: Śledź nas
     index_title: Nasze larpy
     section:
         current: Aktualnie organizowane larpy

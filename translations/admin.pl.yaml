@@ -69,6 +69,8 @@ common:
     position_help: 'Mniejsza liczba = wyżej na liście.'
 
 larp:
+    social_links: Linki do social mediów
+    social_links_help: 'Profile tego larpa: strona albo grupa na Facebooku, Instagram, serwer Discord, YouTube… Puste = na stronie larpa pokażą się profile stowarzyszenia. Wydarzenie na Facebooku dodaje się w edycji.'
     label: Larp
     label_plural: Larpy
     characters: Postacie
@@ -77,6 +79,7 @@ larp:
         basics: Podstawowe
         description: Opis
         media: Grafika
+        links: Social media
         editions: Edycje
     name: Nazwa
     slug: Adres (slug)
@@ -101,6 +104,8 @@ larp:
     editions_help: 'Każda edycja ma własne daty, miejsce, rekrutację i postacie.'
 
 edition:
+    facebook_event_url: Wydarzenie na Facebooku
+    facebook_event_url_help: 'Adres wydarzenia tej edycji, np. https://fb.me/e/… albo https://www.facebook.com/events/…'
     label: Edycja
     label_plural: Edycje
     name: Nazwa edycji
@@ -453,3 +458,8 @@ gallery:
     save: Zapisz zdjęcia
     saved: Zapisano zdjęcia.
     saved_removed: 'Zapisano zdjęcia, usunięto: %count%.'
+social:
+    network: Serwis
+    url: Adres
+    label: Własny podpis
+    label_placeholder: 'np. Grupa graczy (opcjonalnie)'

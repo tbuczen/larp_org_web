@@ -27,6 +27,34 @@
                     </dl>
                     {% if larp.status.value == 'current' %}{% include 'partials/_recruitment.html.twig' %}{% endif %}
                 {% endif %}
+
+                {# Facebook event of the shown edition, and an .ics file to add it to a calendar. #}
+                {% set event_url = edition and not larp.initiative ? edition.facebookEventUrl : null %}
+                {% set calendar = edition and not larp.initiative and larp.status.value == 'current' and edition.upcoming %}
+                {% if event_url or calendar %}
+                    <div class="button-row larp-actions">
+                        {% if event_url %}
+                            <a class="button button--primary" href="{{ event_url }}" target="_blank" rel="noopener">
+                                <twig:ux:icon name="simple-icons:facebook" aria-hidden="true" /> {{ 'larp.facebook_event'|trans }}
+                            </a>
+                        {% endif %}
+                        {% if calendar %}
+                            <a class="button button--ghost" href="{{ path('app_larp_calendar', {slug: larp.slug}) }}" download>
+                                <twig:ux:icon name="lucide:calendar-plus" aria-hidden="true" /> {{ 'larp.add_to_calendar'|trans }}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {# The LARP's own social links, or else the organization's. #}
+                {% set own_links = larp.socialButtons %}
+                {% set social = own_links is not empty ? own_links : settings.socialButtons %}
+                {% if social is not empty %}
+                    <div class="larp-social">
+                        <p class="larp-social__label">{{ (own_links is not empty ? 'larp.follow_larp' : 'larp.follow_us')|trans }}</p>
+                        <twig:SocialLinks :links="social" variant="social-links--compact" label="{{ (own_links is not empty ? 'larp.follow_larp' : 'larp.follow_us')|trans }}" />
+                    </div>
+                {% endif %}
             </div>
         </header>
 

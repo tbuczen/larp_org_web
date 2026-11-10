@@ -13,6 +13,10 @@ home:
     all_larps: All LARPs
 
 larp:
+    facebook_event: Facebook event
+    add_to_calendar: Add to calendar
+    follow_larp: Follow this LARP
+    follow_us: Follow us
     index_title: Our LARPs
     section:
         current: Currently organized LARPs

@@ -1,21 +1,5 @@
 {#
-    Social media buttons. Pass either site (SiteSettings) or links ({label: url}).
-    Icons: assets/icons/simple-icons/*.svg (add more with bin/console ux:icons:import).
+    Social media buttons. Pass site (SiteSettings) for the organization's links,
+    or social_links (a list of App\Social\SocialLink). Renders the SocialLinks component.
 #}
-{% set networks = [
-    {label: 'Facebook', icon: 'simple-icons:facebook', url: site.facebookUrl ?? null},
-    {label: 'Instagram', icon: 'simple-icons:instagram', url: site.instagramUrl ?? null},
-    {label: 'Discord', icon: 'simple-icons:discord', url: site.discordUrl ?? null},
-]|filter(n => n.url) %}
-{% if networks is not empty %}
-    <ul class="social-links" aria-label="{{ 'nav.social'|trans }}">
-        {% for network in networks %}
-            <li>
-                <a class="social-links__link" href="{{ network.url }}" target="_blank" rel="noopener">
-                    <twig:ux:icon name="{{ network.icon }}" aria-hidden="true" />
-                    <span>{{ network.label }}</span>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+<twig:SocialLinks :links="social_links ?? (site.socialButtons ?? [])" />

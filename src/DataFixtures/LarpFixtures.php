@@ -58,19 +58,26 @@ class LarpFixtures extends Fixture
 
         // Current LARPs
         $cybercrush = $this->larp($manager, 'Cybercrush', LarpStatus::Current, 'Larp chamber', 'Shadowrun',
-            'Larp chamber inspirowany uniwersum Shadowrun.', 1);
+            'Larp chamber inspirowany uniwersum Shadowrun.', 1)
+            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/profile.php?id=61586144905657']]);
         $cyberEdition = $this->edition($cybercrush, '1. edycja', '2026-07-17', '2026-07-18', 'Dąbrowa Górnicza', RecruitmentStatus::Closed);
 
         $zwoje = $this->larp($manager, 'Pradawne Zwoje', LarpStatus::Current, 'Larp terenowy', 'Skyrim',
-            'Larp terenowy w świecie Skyrim.', 2)->setFeatured(true);
+            'Larp terenowy w świecie Skyrim.', 2)->setFeatured(true)
+            ->setSocialLinks([
+                ['network' => 'facebook', 'url' => 'https://www.facebook.com/pradawnezwoje'],
+                ['network' => 'facebook', 'url' => 'https://www.facebook.com/groups/287396224278365/', 'label' => 'Grupa graczy'],
+            ]);
         $this->edition($zwoje, '1. edycja', '2024-08-08', '2024-08-11', 'Czyżowice', RecruitmentStatus::Closed);
         $this->edition($zwoje, '2. edycja', '2025-08-07', '2025-08-10', 'Czyżowice', RecruitmentStatus::Closed);
         $zwojeEdition = $this->edition($zwoje, '3. edycja', '2026-08-06', '2026-08-09', 'Czyżowice', RecruitmentStatus::Open)
-            ->setRegistrationUrl('https://fb.me/e/69mffUNUK');
+            ->setRegistrationUrl('https://fb.me/e/69mffUNUK')
+            ->setFacebookEventUrl('https://fb.me/e/hlDppZ9HB');
 
         // Previous LARPs
         $vault = $this->larp($manager, 'Vault 47', LarpStatus::Past, 'Larp terenowy', 'Fallout',
-            'Larp w świecie Fallouta, przedstawiający historię mieszkańców Krypty 47, którzy dzięki mocy GECKa stworzyli niepowtarzalne miejsce, ściągając na siebie uwagę całego rejonu.', 3);
+            'Larp w świecie Fallouta, przedstawiający historię mieszkańców Krypty 47, którzy dzięki mocy GECKa stworzyli niepowtarzalne miejsce, ściągając na siebie uwagę całego rejonu.', 3)
+            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/larpvault47']]);
         foreach (['2023', '2024', '2025'] as $i => $year) {
             $this->edition($vault, ($i + 1).'. edycja', $year.'-06-01', null, null, RecruitmentStatus::Closed);
         }
@@ -82,7 +89,8 @@ class LarpFixtures extends Fixture
         // Other initiatives
         $this->larp($manager, 'Wyprawa Rycerska Talabeclandu', LarpStatus::Current, 'Grupa larpowa', 'Warhammer Fantasy',
             'Wyjazdy na larpy terenowe i bitewne w świecie Warhammer Fantasy.', 5)
-            ->setProjectType(ProjectType::Initiative);
+            ->setProjectType(ProjectType::Initiative)
+            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/WyprawaRycerskaTalabeclandu']]);
 
         // A draft that must stay hidden on the public site.
         $this->larp($manager, 'Projekt w przygotowaniu', LarpStatus::Draft, null, null, 'Szkic — niewidoczny publicznie.', 9);

@@ -11,3 +11,7 @@ tag.shadows_shared: 'A shared tag "%tag%" already exists — use it instead of a
 character.tag_wrong_larp: 'The tag "%tag%" belongs to another LARP.'
 gallery.edition_of_other_larp: 'This edition belongs to another LARP.'
 gallery.url_https: 'Enter the full album address starting with https://'
+social.network_unknown: 'Choose a network from the list.'
+social.url_https: 'The address must start with https://'
+social.url_wrong_site: "This doesn't look like a %network% address (it must start with https://)."
+edition.facebook_event_invalid: 'Enter a Facebook event address: https://www.facebook.com/events/… or https://fb.me/e/…'

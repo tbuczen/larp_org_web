@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Calendar\IcsCalendar;
 use App\Entity\Character;
 use App\Entity\Larp;
 use App\Repository\CharacterRepository;
@@ -11,9 +12,11 @@ use App\Repository\GalleryRepository;
 use App\Repository\LarpRepository;
 use App\Repository\SiteSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LarpController extends AbstractController
 {
@@ -46,6 +49,27 @@ class LarpController extends AbstractController
             'edition' => $edition,
             'characters' => null === $edition ? [] : $this->characters->findVisibleForEdition($edition),
             'galleries' => $this->galleries->findVisible($larp),
+        ]);
+    }
+
+    /** The current edition as an .ics file ("add to calendar"). */
+    #[Route('/larp/{slug}/kalendarz.ics', name: 'app_larp_calendar')]
+    public function calendar(string $slug): Response
+    {
+        $larp = $this->findLarp($slug);
+        $edition = $larp->isInitiative() ? null : $larp->getCurrentEdition();
+        $ics = null === $edition ? null : IcsCalendar::forEdition(
+            $edition,
+            $this->generateUrl('app_larp_show', ['slug' => $larp->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->settings->get()->getOrganizationName(),
+        );
+        if (null === $ics) {
+            throw new NotFoundHttpException();
+        }
+
+        return new Response($ics, Response::HTTP_OK, [
+            'Content-Type' => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $slug.'.ics'),
         ]);
     }
 

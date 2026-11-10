@@ -100,6 +100,20 @@ match% = round((score + 2) / 4 × 100)    no gameplay tags → 50%
 Triggers never change the score: matching characters get a ⚠ warning, or are hidden with
 "Ukryj postacie z moimi triggerami". Choices live in the URL (shareable) and are remembered in
 localStorage for the next visit.
+### Social links and Facebook events
+
+Site settings hold the organization's Facebook, Instagram and Discord. Each LARP can have its
+own links (*Larp → Social media*): any number of rows {network, address, optional own label,
+e.g. "Grupa graczy"}, stored as JSON so new networks are one enum case in
+`src/Social/SocialNetwork.php` (Facebook, Instagram, Discord, YouTube, TikTok, website).
+Addresses must be https and on the chosen network's site. The LARP page shows the LARP's links
+("Śledź larpa"), or the organization's when it has none; buttons render with the
+`<twig:SocialLinks :links="…"/>` component.
+
+Each edition can have a Facebook event (`facebook.com/events/…` or `fb.me/e/…`): the LARP
+page gets a "Wydarzenie na Facebooku" button and LARP cards a small Facebook icon. Upcoming
+editions also offer "Dodaj do kalendarza", an `.ics` file at `/larp/{slug}/kalendarz.ics`.
+
 ### Photo galleries
 
 *Admin → Galerie zdjęć*. A gallery usually **links to an album elsewhere** (Google Photos,

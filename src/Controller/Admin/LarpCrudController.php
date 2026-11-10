@@ -7,6 +7,7 @@ namespace App\Controller\Admin;
 use App\Entity\Larp;
 use App\Entity\LarpEdition;
 use App\Enum\TagType;
+use App\Form\SocialLinkType;
 use App\Import\CharacterCsvImporter;
 use App\Import\CsvImportException;
 use App\Import\CsvReader;
@@ -82,7 +83,8 @@ class LarpCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('larp.label')
             ->setEntityLabelInPlural('larp.label_plural')
             ->setDefaultSort(['status' => 'ASC', 'position' => 'ASC', 'name' => 'ASC'])
-            ->setSearchFields(['name', 'format', 'setting', 'teaser']);
+            ->setSearchFields(['name', 'format', 'setting', 'teaser'])
+            ->addFormTheme('admin/form/social_links_theme.html.twig');
     }
 
     public function configureActions(Actions $actions): Actions
@@ -468,6 +470,16 @@ class LarpCrudController extends AbstractCrudController
         yield TextField::new('coverImageAlt', 'larp.cover_image_alt')
             ->setRequired(false)
             ->setHelp('larp.cover_image_alt_help')
+            ->onlyOnForms();
+
+        yield FormField::addTab('larp.tab.links', 'fa fa-share-nodes');
+        yield CollectionField::new('socialLinks', 'larp.social_links')
+            ->setEntryType(SocialLinkType::class)
+            ->setHelp('larp.social_links_help')
+            ->allowAdd()
+            ->allowDelete()
+            ->setEntryIsComplex(false)
+            ->setFormTypeOption('error_bubbling', false)
             ->onlyOnForms();
 
         yield FormField::addTab('larp.tab.editions', 'fa fa-calendar-days');

@@ -69,6 +69,8 @@ common:
     position_help: 'Lower numbers come first.'
 
 larp:
+    social_links: Social media links
+    social_links_help: "This LARP's profiles: Facebook page or group, Instagram, Discord server, YouTube… Empty = the LARP page shows the organization's profiles. The Facebook event is set on the edition."
     label: LARP
     label_plural: LARPs
     characters: Characters
@@ -77,6 +79,7 @@ larp:
         basics: Basics
         description: Description
         media: Images
+        links: Social media
         editions: Editions
     name: Name
     slug: URL slug
@@ -101,6 +104,8 @@ larp:
     editions_help: 'Each edition has its own dates, place, recruitment and characters.'
 
 edition:
+    facebook_event_url: Facebook event
+    facebook_event_url_help: "This edition's event address, e.g. https://fb.me/e/… or https://www.facebook.com/events/…"
     label: Edition
     label_plural: Editions
     name: Edition name
@@ -453,3 +458,8 @@ gallery:
     save: Save photos
     saved: Photos saved.
     saved_removed: 'Photos saved, %count% deleted.'
+social:
+    network: Network
+    url: Address
+    label: Own label
+    label_placeholder: 'e.g. Players group (optional)'

@@ -1,0 +1,13 @@
+{# Social media buttons (App\Twig\Components\SocialLinks). Icons: assets/icons/simple-icons/. #}
+{% if links is not empty %}
+    <ul {{ attributes.defaults({class: ('social-links ' ~ variant)|trim}) }} aria-label="{{ label ?? 'nav.social'|trans }}">
+        {% for link in links %}
+            <li>
+                <a class="social-links__link social-links__link--{{ link.network.value }}" href="{{ link.url }}" target="_blank" rel="noopener">
+                    <twig:ux:icon name="{{ link.icon }}" aria-hidden="true" />
+                    <span>{{ link.label }}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

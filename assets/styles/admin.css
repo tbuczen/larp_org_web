@@ -248,3 +248,14 @@
 .photo-manager__number { background: rgb(0 0 0 / .55); border-radius: 4px; color: #fff; font-size: .75rem; padding: .1rem .4rem; right: .35rem; top: .35rem; }
 .photo-manager__cover { bottom: .35rem; left: .35rem; }
 .photo-manager__delete { font-size: .85rem; margin: 0; }
+
+/* LARP form: compact social link rows (templates/admin/form/social_links_theme.html.twig) */
+.social-link-item { align-items: flex-start; border: 0 !important; display: grid; gap: .5rem; grid-template-columns: 130px minmax(0, 1fr) minmax(0, .7fr) auto; margin-bottom: .5rem; padding: 0 !important; }
+.social-link-item .field-collection-delete-button { position: static; transform: none; }
+.social-link-item > .invalid-feedback, .social-link-item > ul { grid-column: 1 / -1; }
+.social-link-item .invalid-feedback { display: block; }
+@media (max-width: 700px) {
+    .social-link-item { grid-template-columns: 110px minmax(0, 1fr) auto; }
+    .social-link-item__label { grid-column: 2 / 3; }
+}
+.form-group.field-collection:has(.social-link-item) .ea-form-collection-items { border: 0; }

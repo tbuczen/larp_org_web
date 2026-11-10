@@ -148,3 +148,7 @@ a.badge--open, .badge--open { background: var(--color-text); border-color: var(-
 @media (hover: none) { .gallery-card__media img, .photo-grid__open img { filter: grayscale(.35) contrast(1.05); } }
 .gallery-page__meta { font-family: var(--font-ui); font-size: 1.05rem; letter-spacing: .1em; text-transform: uppercase; }
 .photo-grid__caption { background: linear-gradient(0deg, rgb(8 8 8 / .9), transparent); font-family: var(--font-ui); font-size: 1rem; letter-spacing: .12em; text-transform: uppercase; }
+
+/* Facebook event icon on LARP cards: square, bone outline */
+.larp-card__event { border-color: var(--color-text); border-radius: 0; }
+.larp-card__event:hover { background: var(--color-text); color: var(--color-on-primary); }
