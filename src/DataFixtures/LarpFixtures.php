@@ -70,9 +70,13 @@ class LarpFixtures extends Fixture
                 ['network' => 'facebook', 'url' => 'https://www.facebook.com/pradawnezwoje'],
                 ['network' => 'facebook', 'url' => 'https://www.facebook.com/groups/287396224278365/', 'label' => 'Grupa graczy'],
             ]);
-        $this->edition($zwoje, '1. edycja', '2024-08-08', '2024-08-11', 'Czyżowice', RecruitmentStatus::Closed);
-        $zwojePast = $this->edition($zwoje, '2. edycja', '2025-08-07', '2025-08-10', 'Czyżowice', RecruitmentStatus::Closed);
+        $this->edition($zwoje, '1. edycja', '2024-08-08', '2024-08-11', 'Czyżowice', RecruitmentStatus::Closed)
+            ->setTeaser('Pierwsza zima po powrocie smoków: klany zjeżdżają się na wiec.');
+        $zwojePast = $this->edition($zwoje, '2. edycja', '2025-08-07', '2025-08-10', 'Czyżowice', RecruitmentStatus::Closed)
+            ->setTeaser('Oblężenie twierdzy jarl Sigrun.')
+            ->setDescription('<p>Twierdza w górach odcięta przez śnieżycę, a pod murami obóz łowców smoków. Jarl Sigrun musi zdecydować, komu otworzyć bramy.</p>');
         $zwojeEdition = $this->edition($zwoje, '3. edycja', '2026-08-06', '2026-08-09', 'Czyżowice', RecruitmentStatus::Open)
+            ->setTeaser('Nowy jarl, stare długi — i księga, której nikt nie powinien był otwierać.')
             ->setRegistrationUrl('https://fb.me/e/69mffUNUK')
             ->setFacebookEventUrl('https://fb.me/e/hlDppZ9HB');
 

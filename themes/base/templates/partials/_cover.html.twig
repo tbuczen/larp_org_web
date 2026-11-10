@@ -1,5 +1,12 @@
-{# Cover image of a LARP, or a generated placeholder with its initial. #}
-{% if larp.coverImage %}
+{#
+    Cover image: the edition's own (when an edition is given and has one), else
+    the LARP's, else a placeholder with the initial.
+    Variables: larp, edition (optional), eager (optional).
+#}
+{% set cover_edition = edition ?? null %}
+{% if cover_edition and cover_edition.coverImage %}
+    <img class="cover" src="{{ asset('uploads/editions/' ~ cover_edition.coverImage) }}" alt="{{ cover_edition.coverImageAlt ?? cover_edition.title }}" loading="{{ eager|default(false) ? 'eager' : 'lazy' }}">
+{% elseif larp.coverImage %}
     <img class="cover" src="{{ asset('uploads/larps/' ~ larp.coverImage) }}" alt="{{ larp.coverImageAlt ?? larp.name }}" loading="{{ eager|default(false) ? 'eager' : 'lazy' }}">
 {% else %}
     <div class="cover cover--placeholder" aria-hidden="true"><span>{{ larp.name|first|upper }}</span></div>

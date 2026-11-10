@@ -18,3 +18,4 @@ edition.facebook_event_invalid: 'Podaj adres wydarzenia na Facebooku: https://ww
 larp.color_invalid: 'Podaj kolor w formacie #rrggbb, np. #c9a24a.'
 edition.reserved_slug: 'Ten adres jest zajęty przez inną stronę larpa.'
 edition.duplicate_slug: 'Dwie edycje nie mogą mieć tego samego adresu (%slug%) — zmień nazwę albo adres jednej z nich.'
+edition.duplicate_slug_saved: 'Inna edycja tego larpa ma już ten adres.'

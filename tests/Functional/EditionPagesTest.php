@@ -87,32 +87,68 @@ final class EditionPagesTest extends WebTestCase
         $user = self::getContainer()->get(UserRepository::class)->findOneBy(['email' => AppFixtures::EDITOR_EMAIL]);
         self::assertNotNull($user);
         $this->client->loginUser($user);
-        $larp = $this->larp('vault-47');
+        $edition = $this->larp('vault-47')->getEditionBySlug('1-edycja');
+        self::assertNotNull($edition);
+        $url = '/admin/larp-edition/'.$edition->getId().'/edit';
 
-        $crawler = $this->client->request('GET', '/admin/larp/'.$larp->getId().'/edit');
-        $form = $crawler->filter('form[name="Larp"]')->form();
+        $crawler = $this->client->request('GET', $url);
+        $form = $crawler->filter('form[name="LarpEdition"]')->form();
         $values = $form->getPhpValues();
-        $values['Larp']['editions'][0]['slug'] = 'postacie';
-        $crawler = $this->client->request('POST', (string) $form->getUri(), $values);
+
+        $values['LarpEdition']['slug'] = 'postacie';
+        $crawler = $this->client->request('POST', $url, $values);
         self::assertResponseStatusCodeSame(422);
         self::assertStringContainsString('zajęty', $crawler->filter('.invalid-feedback')->text());
 
-        $values['Larp']['editions'][0]['slug'] = '';
-        $values['Larp']['editions'][1]['slug'] = 'pierwsza-krypta';
-        $values['Larp']['editions'][0]['name'] = '1. edycja';
-        $values['Larp']['editions'][2]['slug'] = '';
-        $values['Larp']['editions'][2]['name'] = '1. edycja';
-        $crawler = $this->client->request('POST', (string) $form->getUri(), $values);
-        self::assertResponseStatusCodeSame(422, 'two editions would get "1-edycja"');
-        self::assertStringContainsString('1-edycja', $crawler->filter('.invalid-feedback')->text());
+        $values['LarpEdition']['slug'] = '2-edycja';
+        $crawler = $this->client->request('POST', $url, $values);
+        self::assertResponseStatusCodeSame(422, 'another edition of Vault 47 has it');
+        self::assertStringContainsString('ma już ten adres', $crawler->filter('.invalid-feedback')->text());
 
-        $values['Larp']['editions'][2]['name'] = 'Finał';
-        $this->client->request('POST', (string) $form->getUri(), $values);
+        $values['LarpEdition']['slug'] = 'pierwsza-krypta';
+        $this->client->request('POST', $url, $values);
         self::assertResponseRedirects();
         $this->client->request('GET', '/larp/vault-47/pierwsza-krypta');
         self::assertResponseIsSuccessful();
+
+        // A new edition gets its address from its name.
+        $larp = $this->larp('vault-47');
+        $crawler = $this->client->request('GET', '/admin/larp-edition/new?'.http_build_query(['filters' => ['larp' => ['comparison' => '=', 'value' => $larp->getId()]]]));
+        $form = $crawler->filter('form[name="LarpEdition"]')->form();
+        $values = $form->getPhpValues();
+        $values['LarpEdition']['name'] = 'Finał';
+        $values['LarpEdition']['recruitment'] = 'not_started';
+        $this->client->request('POST', (string) $form->getUri(), $values);
+        self::assertResponseRedirects();
         $this->client->request('GET', '/larp/vault-47/final');
         self::assertResponseIsSuccessful();
+    }
+
+    public function testEachEditionHasItsOwnImageAndTexts(): void
+    {
+        $crawler = $this->client->request('GET', '/larp/pradawne-zwoje/2-edycja');
+        self::assertSelectorTextContains('.larp-hero .lead', 'Oblężenie twierdzy jarl Sigrun.');
+        self::assertSelectorTextContains('.larp-page .prose', 'odcięta przez śnieżycę');
+        self::assertSame('Oblężenie twierdzy jarl Sigrun.', $crawler->filter('meta[name="description"]')->attr('content'));
+
+        // Without its own texts, an edition shows the LARP's.
+        $this->client->request('GET', '/larp/vault-47/1-edycja');
+        self::assertSelectorTextContains('.larp-hero .lead', 'Larp w świecie Fallouta');
+
+        // An edition image replaces the LARP's on its page, its card and (when current) the LARP page.
+        $edition = $this->larp('pradawne-zwoje')->getEditionBySlug('3-edycja');
+        self::assertNotNull($edition);
+        $edition->setCoverImage('plakat-2026.jpg');
+        $this->em()->flush();
+        $crawler = $this->client->request('GET', '/larp/pradawne-zwoje/3-edycja');
+        self::assertSame('/uploads/editions/plakat-2026.jpg', $crawler->filter('.larp-hero img.cover')->attr('src'));
+        $crawler = $this->client->request('GET', '/larp/pradawne-zwoje');
+        self::assertSame('/uploads/editions/plakat-2026.jpg', $crawler->filter('.larp-hero img.cover')->attr('src'));
+        self::assertSame('/uploads/editions/plakat-2026.jpg', $crawler->filter('.edition-card--current img')->attr('src'));
+        $crawler = $this->client->request('GET', '/larpy');
+        $card = $crawler->filter('.larp-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Pradawne Zwoje'));
+        self::assertSame('/uploads/editions/plakat-2026.jpg', $card->filter('img.cover')->attr('src'));
+        self::assertStringContainsString('Nowy jarl, stare długi', $card->text(), "the current edition's teaser");
     }
 
     private function gallery(string $title, string $edition, string $url): void

@@ -16,7 +16,8 @@
     {% else %}
         <h1>{{ larp.name }}</h1>
     {% endif %}
-        {% if larp.teaser %}<p class="lead">{{ larp.teaser }}</p>{% endif %}
+        {% set teaser = edition ? edition.displayTeaser : larp.teaser %}
+    {% if teaser %}<p class="lead">{{ teaser }}</p>{% endif %}
 
         {% if edition and not larp.initiative %}
             <dl class="facts">

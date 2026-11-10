@@ -82,6 +82,7 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('menu.section.larps');
         yield MenuItem::linkTo(LarpCrudController::class, 'menu.larps', 'fa fa-dragon');
+        yield MenuItem::linkTo(LarpEditionCrudController::class, 'menu.editions', 'fa fa-calendar-days');
         yield MenuItem::linkTo(CharacterCrudController::class, 'menu.characters', 'fa fa-masks-theater');
         yield MenuItem::linkTo(GalleryCrudController::class, 'menu.galleries', 'fa fa-images');
         yield MenuItem::subMenu('menu.tags', 'fa fa-tags')->setSubItems([

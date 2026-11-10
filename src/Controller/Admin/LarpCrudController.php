@@ -22,6 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -111,21 +112,42 @@ class LarpCrudController extends AbstractCrudController
                 ->set('filters', ['larp' => ['comparison' => '=', 'value' => $larp->getId()]])
                 ->generateUrl());
 
+        $editions = Action::new('editions', 'larp.editions', 'fa fa-calendar-days')
+            ->linkToUrl(fn (Larp $larp): string => LarpEditionCrudController::larpListUrl($this->urls, $larp))
+            ->displayIf(static fn (Larp $larp): bool => !$larp->isInitiative());
+        $addEdition = Action::new('addEdition', 'edition.add', 'fa fa-plus')
+            ->linkToUrl(fn (Larp $larp): string => LarpEditionCrudController::larpListUrl($this->urls, $larp, Action::NEW))
+            ->displayIf(static fn (Larp $larp): bool => !$larp->isInitiative());
+
         $view = Action::new('viewOnSite', 'larp.view_on_site', 'fa fa-arrow-up-right-from-square')
             ->linkToRoute('app_larp_show', static fn (Larp $larp): array => ['slug' => $larp->getSlug()])
             ->setHtmlAttributes(['target' => '_blank'])
             ->displayIf(static fn (Larp $larp): bool => $larp->isPublished());
 
         return $actions
+            ->add(Crud::PAGE_INDEX, $editions)
             ->add(Crud::PAGE_INDEX, $characters)
             ->add(Crud::PAGE_INDEX, $addCharacter)
             ->add(Crud::PAGE_INDEX, $import)
             ->add(Crud::PAGE_INDEX, $tags)
             ->add(Crud::PAGE_INDEX, $galleries)
             ->add(Crud::PAGE_INDEX, $view)
+            ->add(Crud::PAGE_EDIT, $editions)
+            ->add(Crud::PAGE_EDIT, $addEdition)
             ->add(Crud::PAGE_EDIT, $characters)
             ->add(Crud::PAGE_EDIT, $tags)
             ->add(Crud::PAGE_EDIT, $view);
+    }
+
+    /** A new LARP goes on to its first edition (initiatives have none). */
+    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    {
+        $larp = $context->getEntity()->getInstance();
+        if (Action::NEW === $action && $larp instanceof Larp && !$larp->isInitiative() && $larp->getEditions()->isEmpty()) {
+            return $this->redirect(LarpEditionCrudController::larpListUrl($this->urls, $larp, Action::NEW));
+        }
+
+        return parent::getRedirectResponseAfterSave($context, $action);
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, object $entityInstance): void
@@ -537,14 +559,6 @@ class LarpCrudController extends AbstractCrudController
             ->setFormTypeOption('error_bubbling', false)
             ->onlyOnForms();
 
-        yield FormField::addTab('larp.tab.editions', 'fa fa-calendar-days');
-        yield CollectionField::new('editions', 'larp.editions')
-            ->useEntryCrudForm(LarpEditionCrudController::class)
-            ->setHelp('larp.editions_help')
-            ->setFormTypeOption('by_reference', false)
-            ->setEntryIsComplex()
-            ->renderExpanded(false)
-            ->onlyOnForms();
         yield IntegerField::new('editionCount', 'larp.editions')->onlyOnIndex();
     }
 }

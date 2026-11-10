@@ -31,6 +31,7 @@
             </p>
         {% endif %}
 
-        {% if larp.teaser %}<p class="larp-card__teaser">{{ larp.teaser }}</p>{% endif %}
+        {% set teaser = larp.status.value == 'current' and edition ? edition.displayTeaser : larp.teaser %}
+        {% if teaser %}<p class="larp-card__teaser">{{ teaser }}</p>{% endif %}
     </div>
 </article>

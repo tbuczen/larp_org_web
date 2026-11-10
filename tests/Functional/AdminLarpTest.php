@@ -56,7 +56,11 @@ final class AdminLarpTest extends WebTestCase
         $larp = $this->larp('pradawne-zwoje');
         $this->client->request('GET', '/admin/larp/'.$larp->getId().'/edit');
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists('[name^="Larp[editions]"]');
+        self::assertSelectorNotExists('[name^="Larp[editions]"]', 'editions have their own screen');
+        self::assertSelectorExists('.page-actions a.action-editions');
+        $this->client->request('GET', '/admin/larp-edition/'.$larp->getCurrentEdition()?->getId().'/edit');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('input[name="LarpEdition[coverImage][file]"]');
 
         $character = $this->character('kaplanka-mary');
         $this->client->request('GET', '/admin/character/'.$character->getId().'/edit');
@@ -84,7 +88,7 @@ final class AdminLarpTest extends WebTestCase
         self::assertSame((string) $edition?->getId(), $this->client->getCrawler()->filter('#Character_edition option[selected]')->attr('value'));
     }
 
-    public function testCreateLarpWithEdition(): void
+    public function testCreateLarpThenItsFirstEdition(): void
     {
         $crawler = $this->client->request('GET', '/admin/larp/new');
         $form = $crawler->filter('form[name="Larp"]')->form();
@@ -92,12 +96,22 @@ final class AdminLarpTest extends WebTestCase
         $values['Larp']['name'] = 'Nowy Larp Testowy';
         $values['Larp']['slug'] = '';
         $values['Larp']['status'] = 'current';
-        $values['Larp']['editions'] = [0 => [
-            'name' => '1. edycja',
-            'startDate' => '2027-05-01',
-            'endDate' => '2027-05-03',
-            'recruitment' => 'open',
-        ]];
+        $this->client->request('POST', $form->getUri(), $values);
+
+        // Straight on to its first edition, with the LARP filled in.
+        self::assertResponseRedirects();
+        self::assertStringContainsString('/admin/larp-edition/new', (string) $this->client->getResponse()->headers->get('Location'));
+        $crawler = $this->client->followRedirect();
+        $larp = $this->larp('nowy-larp-testowy');
+        self::assertSame((string) $larp->getId(), $crawler->filter('#LarpEdition_larp option[selected]')->attr('value'));
+
+        $form = $crawler->filter('form[name="LarpEdition"]')->form();
+        $values = $form->getPhpValues();
+        $values['LarpEdition']['name'] = '1. edycja';
+        $values['LarpEdition']['startDate'] = '2027-05-01';
+        $values['LarpEdition']['endDate'] = '2027-05-03';
+        $values['LarpEdition']['recruitment'] = 'open';
+        $values['LarpEdition']['teaser'] = 'Pierwsza odsłona.';
         $this->client->request('POST', $form->getUri(), $values);
         self::assertResponseRedirects();
 
@@ -108,6 +122,7 @@ final class AdminLarpTest extends WebTestCase
         $this->client->request('GET', '/larp/nowy-larp-testowy');
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('.facts', '1–3.V.2027');
+        self::assertSelectorTextContains('.larp-hero .lead', 'Pierwsza odsłona.');
     }
 
     public function testCoverImageUpload(): void
@@ -139,11 +154,14 @@ final class AdminLarpTest extends WebTestCase
 
     public function testEditionEndBeforeStartIsRejected(): void
     {
-        $crawler = $this->client->request('GET', '/admin/larp/new');
-        $form = $crawler->filter('form[name="Larp"]')->form();
+        $crawler = $this->client->request('GET', '/admin/larp-edition/new');
+        $form = $crawler->filter('form[name="LarpEdition"]')->form();
         $values = $form->getPhpValues();
-        $values['Larp']['name'] = 'Zle daty';
-        $values['Larp']['editions'] = [0 => ['name' => 'x', 'startDate' => '2027-05-03', 'endDate' => '2027-05-01', 'recruitment' => 'open']];
+        $values['LarpEdition']['larp'] = (string) $this->larp('vault-47')->getId();
+        $values['LarpEdition']['name'] = 'x';
+        $values['LarpEdition']['startDate'] = '2027-05-03';
+        $values['LarpEdition']['endDate'] = '2027-05-01';
+        $values['LarpEdition']['recruitment'] = 'open';
         $this->client->request('POST', $form->getUri(), $values);
 
         self::assertResponseStatusCodeSame(422);

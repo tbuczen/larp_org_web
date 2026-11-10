@@ -1,4 +1,5 @@
 menu:
+    editions: Editions
     galleries: Photo galleries
     menus: Navigation menus
     pages: Pages & layout
@@ -121,9 +122,22 @@ larp:
     cover_image_alt: Image description (alt)
     cover_image_alt_help: 'Short description of the image for screen readers and search engines.'
     editions: Editions
-    editions_help: 'Each edition has its own dates, place, recruitment and characters.'
 
 edition:
+    larp: LARP
+    new: New edition
+    add: Add edition
+    list_for: 'Editions: %larp%'
+    new_for: 'New edition: %larp%'
+    tab:
+        basics: Dates and sign-ups
+        description: Description
+        media: Image
+    cover_image: Edition image
+    cover_image_help: "E.g. this edition's poster. Empty = the LARP's image."
+    teaser_help: "One sentence about this edition. Empty = the LARP's teaser."
+    description_help: "What's new in this edition: plot, changes, practical info. Shown on the edition page."
+    fallback_help: "Empty = as in the LARP's details."
     slug: Address (slug)
     slug_help: "The edition page's address: /larp/…/address. Empty = from the name, e.g. \"3-edycja\"."
     facebook_event_url: Facebook event

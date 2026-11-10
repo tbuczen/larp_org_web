@@ -88,8 +88,11 @@ editions), `/larp/{slug}/{edition}` (one edition: dates, characters, galleries; 
 `/larp/{slug}/{edition}/postac/{character}`, and the character matcher at `/postacie` (all current
 LARPs), `/larp/{slug}/postacie` (current edition) and `/larp/{slug}/{edition}/postacie`. Edition
 addresses come from their names ("3. edycja" → `3-edycja`) and can be changed in the edition form.
-Characters and galleries belong to an edition; tags belong to the LARP (or are shared by all
-LARPs), so every edition uses the same lists.
+Each edition is treated as an event of its own (*Admin → Edycje*, or "Edycje" on a LARP): its
+own dates, place, sign-ups, Facebook event, image, teaser, description, player count and price
+(empty texts and image fall back to the LARP's), its own characters and galleries. The LARP is
+what connects them. Tags belong to the LARP (or are shared by all LARPs), so every edition uses
+the same lists. Creating a LARP leads straight to adding its first edition.
 
 ### Character matcher
 

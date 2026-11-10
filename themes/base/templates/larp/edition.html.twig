@@ -1,11 +1,13 @@
 {#
-    One edition of a LARP: its facts (dates, place, recruitment when it is the
-    current one, Facebook event), its characters and its galleries, and links to
+    One edition of a LARP, as an event of its own: its image, teaser and
+    description (falling back to the LARP's), dates, place, recruitment (when it
+    is the current one), Facebook event, characters and galleries, and links to
     the other editions. The LARP's tags are shared by all its editions.
 #}
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ larp.name }} — {{ edition.name }} · {{ settings.organizationName }}{% endblock %}
+{% block title %}{{ edition.title }} · {{ settings.organizationName }}{% endblock %}
+{% block meta %}{% if edition.displayTeaser %}<meta name="description" content="{{ edition.displayTeaser }}">{% endif %}{% endblock %}
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 
 {% block content %}
@@ -13,6 +15,11 @@
 
     <article class="larp-page larp-page--edition">
         {% include 'larp/_hero.html.twig' with {is_current: isCurrent, edition_page: true} %}
+
+        {# This edition's own description; without one, the LARP's. #}
+        {% if edition.description or larp.description %}
+            <section class="prose">{{ (edition.description ?? larp.description)|raw }}</section>
+        {% endif %}
 
         {% if larp.editionCount > 1 %}
             <nav class="edition-nav" aria-label="{{ 'larp.editions'|trans }}">

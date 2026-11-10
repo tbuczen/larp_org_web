@@ -18,3 +18,4 @@ edition.facebook_event_invalid: 'Enter a Facebook event address: https://www.fac
 larp.color_invalid: 'Enter a colour as #rrggbb, e.g. #c9a24a.'
 edition.reserved_slug: 'This address is taken by another LARP page.'
 edition.duplicate_slug: 'Two editions cannot share an address (%slug%) — change the name or address of one.'
+edition.duplicate_slug_saved: 'Another edition of this LARP already has this address.'

@@ -3,12 +3,20 @@
     (if any), name, dates, place, number of characters and galleries.
     Variables: larp, edition_item, character_count, edition_galleries, current.
 #}
-{% set cover = (edition_galleries|first).coverPath ?? null %}
+{# The edition's own image, else a photo from its gallery. #}
+{% set gallery_cover = (edition_galleries|first).coverPath ?? null %}
+{% if edition_item.coverImage %}
+    {% set cover = 'editions/' ~ edition_item.coverImage %}
+{% elseif gallery_cover %}
+    {% set cover = 'galleries/' ~ gallery_cover %}
+{% else %}
+    {% set cover = null %}
+{% endif %}
 {% set href = path('app_edition_show', {slug: larp.slug, edition: edition_item.slug}) %}
 <article class="edition-card{{ current ? ' edition-card--current' }}">
     <a class="edition-card__media" href="{{ href }}" tabindex="-1" aria-hidden="true">
         {% if cover %}
-            <img src="{{ asset('uploads/galleries/' ~ cover) }}" alt="" loading="lazy" decoding="async">
+            <img src="{{ asset('uploads/' ~ cover) }}" alt="" loading="lazy" decoding="async">
         {% else %}
             <span class="cover cover--placeholder"><span>{{ edition_item.name|first|upper }}</span></span>
         {% endif %}
@@ -18,6 +26,7 @@
         <h3 class="edition-card__title"><a href="{{ href }}">{{ edition_item.name }}</a></h3>
         {% set when = [edition_item|edition_dates, edition_item.location]|filter(v => v) %}
         {% if when is not empty %}<p class="edition-card__meta">{{ when|join(' · ') }}</p>{% endif %}
+        {% if edition_item.teaser %}<p class="edition-card__teaser">{{ edition_item.teaser }}</p>{% endif %}
         {% set counts = [
             character_count > 0 ? 'larp.character_count'|trans({count: character_count}) : null,
             edition_galleries is not empty ? 'larp.gallery_count'|trans({count: edition_galleries|length}) : null,

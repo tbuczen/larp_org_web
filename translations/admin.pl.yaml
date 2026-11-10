@@ -1,4 +1,5 @@
 menu:
+    editions: Edycje
     galleries: Galerie zdjęć
     menus: Menu nawigacji
     pages: Strony i układ
@@ -121,9 +122,22 @@ larp:
     cover_image_alt: Opis grafiki (alt)
     cover_image_alt_help: 'Krótki opis zdjęcia dla czytników ekranu i wyszukiwarek.'
     editions: Edycje
-    editions_help: 'Każda edycja ma własne daty, miejsce, rekrutację i postacie.'
 
 edition:
+    larp: Larp
+    new: Nowa edycja
+    add: Dodaj edycję
+    list_for: 'Edycje: %larp%'
+    new_for: 'Nowa edycja: %larp%'
+    tab:
+        basics: Termin i zapisy
+        description: Opis
+        media: Grafika
+    cover_image: Grafika edycji
+    cover_image_help: 'Np. plakat tej edycji. Puste = grafika larpa.'
+    teaser_help: 'Jedno zdanie o tej edycji. Puste = zajawka larpa.'
+    description_help: 'Co nowego w tej edycji: fabuła, zmiany, informacje praktyczne. Pokazywane na stronie edycji.'
+    fallback_help: 'Puste = tak jak w danych larpa.'
     slug: Adres (slug)
     slug_help: 'Adres strony edycji: /larp/…/adres. Puste = z nazwy, np. „3-edycja”.'
     facebook_event_url: Wydarzenie na Facebooku
