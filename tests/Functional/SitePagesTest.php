@@ -60,7 +60,7 @@ final class SitePagesTest extends WebTestCase
 
         $top = $crawler->filter('.site-nav .menu > .menu__item > .menu__link, .site-nav .menu > .menu__item summary')
             ->each(static fn (Crawler $a): string => trim($a->text()));
-        self::assertSame(['Stowarzyszenie', 'Nasze larpy', 'Inne inicjatywy', 'Postacie', 'Kontakt'], $top);
+        self::assertSame(['Stowarzyszenie', 'Nasze larpy', 'Inne inicjatywy', 'Postacie', 'Galerie', 'Kontakt'], $top);
 
         $larps = $crawler->filter('.site-nav details')->first();
         self::assertSame(['Zobacz wszystko', 'Cybercrush', 'Pradawne Zwoje', 'Vault 47', 'Czasy Pogardy'], $larps->filter('.submenu__list a')->each(static fn (Crawler $a): string => $a->text()));

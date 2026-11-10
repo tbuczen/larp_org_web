@@ -1,0 +1,36 @@
+{#
+    One gallery as a card: cover, title, LARP, date. A gallery that is only a link
+    to an album elsewhere (Google Photos, Facebook, ...) opens that album in a new
+    tab; one with photos uploaded here opens its own page.
+#}
+{% set cover = gallery.coverPath %}
+{% set link_only = gallery.linkOnly %}
+{% set href = link_only ? gallery.externalUrl : path('app_gallery_show', {slug: gallery.slug}) %}
+<article class="gallery-card{{ link_only ? ' gallery-card--external' }}">
+    <a class="gallery-card__media" href="{{ href }}" tabindex="-1" aria-hidden="true"{% if link_only %} target="_blank" rel="noopener"{% endif %}>
+        {% if cover %}
+            <img src="{{ asset('uploads/galleries/' ~ cover) }}" alt="" loading="lazy" decoding="async">
+        {% else %}
+            <span class="cover cover--placeholder"><span>{{ gallery.title|first|upper }}</span></span>
+        {% endif %}
+        <span class="gallery-card__count">
+            {% if link_only %}
+                <twig:ux:icon name="lucide:external-link" aria-hidden="true" /> {{ ('gallery.source.' ~ gallery.source)|trans({host: gallery.externalHost}) }}
+            {% else %}
+                <twig:ux:icon name="lucide:images" aria-hidden="true" /> {{ gallery.photoCount }}
+            {% endif %}
+        </span>
+    </a>
+    <div class="gallery-card__body">
+        <h3 class="gallery-card__title">
+            <a href="{{ href }}"{% if link_only %} target="_blank" rel="noopener"{% endif %}>{{ gallery.title }}{% if link_only %}<span class="visually-hidden"> ({{ 'gallery.opens_album'|trans({source: ('gallery.source.' ~ gallery.source)|trans({host: gallery.externalHost})}) }})</span>{% endif %}</a>
+        </h3>
+        {% set meta = [
+            show_larp ?? true ? gallery.larp.name ?? null : null,
+            gallery.edition.name ?? null,
+            gallery.date ? gallery.date|short_date : null,
+        ]|filter(v => v) %}
+        {% if meta is not empty %}<p class="gallery-card__meta">{{ meta|join(' · ') }}</p>{% endif %}
+        {% if gallery.credits %}<p class="gallery-card__credits">{{ 'gallery.photos_by'|trans({names: gallery.credits}) }}</p>{% endif %}
+    </div>
+</article>

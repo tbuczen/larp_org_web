@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Character;
 use App\Entity\Larp;
 use App\Repository\CharacterRepository;
+use App\Repository\GalleryRepository;
 use App\Repository\LarpRepository;
 use App\Repository\SiteSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,7 @@ class LarpController extends AbstractController
         private readonly LarpRepository $larps,
         private readonly CharacterRepository $characters,
         private readonly SiteSettingsRepository $settings,
+        private readonly GalleryRepository $galleries,
     ) {
     }
 
@@ -43,6 +45,7 @@ class LarpController extends AbstractController
             'larp' => $larp,
             'edition' => $edition,
             'characters' => null === $edition ? [] : $this->characters->findVisibleForEdition($edition),
+            'galleries' => $this->galleries->findVisible($larp),
         ]);
     }
 

@@ -137,7 +137,7 @@ final class AdminPagesAndMenusTest extends WebTestCase
         self::assertNotNull($menu);
         $crawler = $this->client->request('GET', '/admin/menu/'.$menu->getId().'/items');
         self::assertResponseIsSuccessful();
-        self::assertCount(5, $crawler->filter('.block-list:not(.block-list--nested) > .block-item'));
+        self::assertCount(6, $crawler->filter('.block-list:not(.block-list--nested) > .block-item'));
         self::assertCount(2, $crawler->filter('.block-list--nested'));
 
         $crawler = $this->client->click($crawler->filter('.page-actions a')->link());

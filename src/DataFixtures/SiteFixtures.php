@@ -74,6 +74,7 @@ class SiteFixtures extends Fixture implements DependentFixtureInterface
             $initiatives->addChild($this->item($found->getName(), MenuTarget::Larp, larp: $found));
         }
         $main->addItem($this->item('Postacie', MenuTarget::Route, route: 'app_characters'));
+        $main->addItem($this->item('Galerie', MenuTarget::Route, route: 'app_gallery_index'));
         $main->addItem($this->item('Kontakt', MenuTarget::Page, page: $contact));
         $this->positions($main);
         $manager->persist($main);

@@ -23,7 +23,7 @@ class Page implements SluggableInterface, \Stringable
     use TimestampableTrait;
 
     /** Slugs that would clash with the site's own URLs. */
-    public const RESERVED_SLUGS = ['admin', 'login', 'logout', 'larpy', 'larp', 'postacie', 'assets', 'uploads', 'bundles', '_profiler', '_wdt'];
+    public const RESERVED_SLUGS = ['admin', 'login', 'logout', 'larpy', 'larp', 'postacie', 'galerie', 'galeria', 'assets', 'uploads', 'bundles', '_profiler', '_wdt'];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

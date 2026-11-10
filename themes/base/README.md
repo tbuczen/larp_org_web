@@ -70,7 +70,9 @@ themes/<name>/
 | `partials/_recruitment.html.twig`, `partials/_cover.html.twig` | recruitment badge, LARP cover or placeholder |
 | `page/show.html.twig` | a block-based page (also the front page) |
 | `blocks/<key>.html.twig` | one page block each: `hero`, `larp_showcase`, `rich_text`, `image_text`, `gallery`, `parallax_banner`, `matcher_teaser`, `social_links`, `cta`, `countdown`, `embed` |
-| `larp/index.html.twig`, `larp/show.html.twig`, `larp/_card.html.twig` | LARP list, LARP page, LARP card |
+| `larp/index.html.twig`, `larp/show.html.twig`, `larp/_card.html.twig` | LARP list, LARP page (with its galleries), LARP card |
+| `gallery/index.html.twig`, `gallery/show.html.twig`, `gallery/_card.html.twig` | gallery list, one gallery (masonry + viewer), gallery card |
+| `partials/_lightbox.html.twig` | the full-screen photo viewer (used by the gallery page and the gallery block) |
 | `larp/characters.html.twig`, `character/matcher.html.twig`, `components/CharacterMatcher.html.twig` | character matcher pages and the live component |
 | `character/show.html.twig`, `character/_card.html.twig`, `character/_bars.html.twig` | character page, card, percentage bars |
 | `site/home.html.twig` | fallback front page before one is built in the admin |
@@ -95,7 +97,7 @@ Shared Stimulus controllers in `assets/controllers/` do the work; themes only st
   leaves the top) on the element, and adds `fx-ready` / `is-inview` classes. Used by
   the hero (picture sinks, text lifts away), `parallax_banner` and `gallery`.
   Example: `.thing { transform: translateY(calc(var(--pc, 0) * 40px)); }`
-- `lightbox` — full-screen photo viewer for the gallery block.
+- `lightbox` — full-screen photo viewer for the gallery block and gallery pages.
 - Gallery layouts: `drift` (endless strips), `scroll` (strips move with the page),
   `parallax` (columns at different speeds), `grid` (photos unveil in turn).
 

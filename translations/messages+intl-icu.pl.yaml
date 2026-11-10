@@ -1,4 +1,5 @@
 nav:
+    galleries: Galerie
     main: Menu główne
     skip: Przejdź do treści
     see_all: Zobacz wszystko
@@ -86,3 +87,17 @@ block:
         hours: godz.
         minutes: min
         seconds: sek.
+gallery:
+    index_title: Galerie zdjęć
+    larp_title: Galerie
+    none: 'Nie ma jeszcze żadnych galerii.'
+    empty: 'W tej galerii nie ma jeszcze zdjęć.'
+    photo_count: '{count, plural, one {# zdjęcie} few {# zdjęcia} other {# zdjęć}}'
+    photos_by: 'Zdjęcia: {names}'
+    photo_by: 'fot. {name}'
+    open_album: 'Cały album: {source}'
+    opens_album: 'otwiera album: {source}'
+    source:
+        google: Google Photos
+        facebook: Facebook
+        other: '{host}'

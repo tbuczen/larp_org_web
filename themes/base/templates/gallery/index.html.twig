@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'gallery.index_title'|trans }} · {{ settings.organizationName }}{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">{{ 'gallery.index_title'|trans }}</h1>
+    {% if galleries is empty %}
+        <p>{{ 'gallery.none'|trans }}</p>
+    {% else %}
+        <div class="card-grid gallery-cards">
+            {% for gallery in galleries %}
+                {% include 'gallery/_card.html.twig' %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

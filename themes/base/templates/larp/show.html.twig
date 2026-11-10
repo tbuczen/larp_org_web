@@ -48,6 +48,19 @@
             </section>
         {% endif %}
 
+        {% if galleries is not empty %}
+            <section class="larp-galleries">
+                <div class="section-head">
+                    <h2>{{ 'gallery.larp_title'|trans }}</h2>
+                </div>
+                <div class="card-grid card-grid--small gallery-cards">
+                    {% for gallery in galleries %}
+                        {% include 'gallery/_card.html.twig' with {show_larp: false} %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
         {% if larp.editionCount > 1 %}
             <section class="larp-editions">
                 <h2>{{ 'larp.editions'|trans }}</h2>

@@ -28,6 +28,7 @@ menu_target:
     url: Adres zewnętrzny
     none: Brak linku (tylko rozwija podmenu)
 menu_route:
+    galleries: Galerie zdjęć
     home: Strona główna
     larps: Lista larpów
     characters: Wybór postaci

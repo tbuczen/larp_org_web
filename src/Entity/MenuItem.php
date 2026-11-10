@@ -24,6 +24,7 @@ class MenuItem implements \Stringable
         'app_home' => 'menu_route.home',
         'app_larp_index' => 'menu_route.larps',
         'app_characters' => 'menu_route.characters',
+        'app_gallery_index' => 'menu_route.galleries',
     ];
 
     #[ORM\Id]

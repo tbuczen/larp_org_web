@@ -101,6 +101,13 @@ class LarpCrudController extends AbstractCrudController
             ->linkToUrl(fn (Larp $larp): string => $this->larpUrl('importCharacters', $larp))
             ->displayIf(static fn (Larp $larp): bool => !$larp->isInitiative() && !$larp->getEditions()->isEmpty());
 
+        $galleries = Action::new('galleries', 'menu.galleries', 'fa fa-images')
+            ->linkToUrl(fn (Larp $larp): string => $this->urls->unsetAll()
+                ->setController(GalleryCrudController::class)
+                ->setAction(Action::INDEX)
+                ->set('filters', ['larp' => ['comparison' => '=', 'value' => $larp->getId()]])
+                ->generateUrl());
+
         $view = Action::new('viewOnSite', 'larp.view_on_site', 'fa fa-arrow-up-right-from-square')
             ->linkToRoute('app_larp_show', static fn (Larp $larp): array => ['slug' => $larp->getSlug()])
             ->setHtmlAttributes(['target' => '_blank'])
@@ -111,6 +118,7 @@ class LarpCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $addCharacter)
             ->add(Crud::PAGE_INDEX, $import)
             ->add(Crud::PAGE_INDEX, $tags)
+            ->add(Crud::PAGE_INDEX, $galleries)
             ->add(Crud::PAGE_INDEX, $view)
             ->add(Crud::PAGE_EDIT, $characters)
             ->add(Crud::PAGE_EDIT, $tags)

@@ -16,4 +16,11 @@ final class AppExtension
     {
         return null === $edition ? null : DateRangeFormatter::format($edition->getStartDate(), $edition->getEndDate());
     }
+
+    /** {{ date|short_date }} → "8.VIII.2026", the same style as edition dates */
+    #[AsTwigFilter('short_date')]
+    public function shortDate(?\DateTimeInterface $date): ?string
+    {
+        return DateRangeFormatter::format($date);
+    }
 }

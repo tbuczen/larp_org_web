@@ -1,4 +1,5 @@
 menu:
+    galleries: Galerie zdjęć
     menus: Menu nawigacji
     pages: Strony i układ
     dashboard: Pulpit
@@ -406,3 +407,49 @@ import:
         duplicate_tag: 'Tag „%tag%” powtarza się.'
         wrong_column: '„%tag%” to tag z drugiej kolumny (rozgrywka/triggery). Sprawdź, czy kolumny się nie przesunęły.'
         unknown_tag: 'Nieznany tag „%tag%”.'
+gallery:
+    add: Dodaj galerię
+    new_title: Nowa galeria
+    label: Galeria
+    label_plural: Galerie zdjęć
+    title: Tytuł
+    cover: Okładka
+    external_url: Link do albumu
+    external_url_help: 'Album na Google Photos, Facebooku albo innej stronie (adres https://…). Galeria z samym linkiem otwiera ten album w nowej karcie.'
+    source: Album
+    cover_image: Zdjęcie na okładkę
+    cover_image_help: 'Pokazywane na karcie galerii. Puste = pierwsze zdjęcie dodane w „Zdjęcia”.'
+    photos_optional: 'Ta galeria prowadzi do albumu na %host% — dodawanie zdjęć tutaj jest opcjonalne. Jeśli je dodasz, strona pokaże je u siebie z przyciskiem do całego albumu.'
+    photos_local: 'Ta galeria nie ma linku do albumu, więc strona pokazuje zdjęcia dodane tutaj.'
+    larp: Larp
+    larp_help: 'Galeria pokaże się na stronie larpa. Puste = galeria niezależna (np. warsztaty, inicjatywa).'
+    edition: Edycja
+    edition_help: 'Opcjonalnie: z której edycji są zdjęcia. Wystarczy wybrać edycję — larp uzupełni się sam.'
+    photographer: Autor zdjęć
+    photographer_help: 'Pokazywane jako „Zdjęcia: …”. Pojedynczym zdjęciom można wpisać innego autora.'
+    event_date: Data wydarzenia
+    event_date_help: 'Puste = data rozpoczęcia wybranej edycji.'
+    description: Opis
+    photo_count: Zdjęcia
+    published: Opublikowana
+    published_help: 'Dopiero opublikowana galeria jest widoczna na stronie.'
+    photos: Zdjęcia
+    photos_title: 'Zdjęcia: %gallery%'
+    back_to_list: Lista galerii
+    edit_details: Dane galerii
+    not_published: 'Galeria nie jest jeszcze opublikowana — zaznacz „Opublikowana” w danych galerii, gdy będzie gotowa.'
+    drop: 'Przeciągnij tu zdjęcia albo kliknij, żeby wybrać'
+    drop_help: 'Dowolnie dużo naraz (JPG, PNG, WebP). Duże zdjęcia są zmniejszane do rozmiaru na stronę jeszcze przed wysłaniem.'
+    upload_done: 'Gotowe — odświeżam…'
+    upload_errors: 'Część zdjęć się nie wysłała'
+    upload_too_big: 'Plik jest za duży (limit serwera: %max% MB).'
+    upload_failed: 'Nie udało się wysłać pliku.'
+    no_photos: 'Ta galeria nie ma jeszcze zdjęć.'
+    photos_help: '{1}1 zdjęcie.|[2,4]%count% zdjęcia.|]4,Inf[%count% zdjęć.'
+    order_help: 'Przeciągnij zdjęcia, żeby zmienić kolejność — pierwsze jest okładką. Zmiany zapisuje przycisk „Zapisz zdjęcia”.'
+    drag: 'Przeciągnij, żeby zmienić kolejność'
+    caption: Podpis
+    delete_photo: Usuń
+    save: Zapisz zdjęcia
+    saved: Zapisano zdjęcia.
+    saved_removed: 'Zapisano zdjęcia, usunięto: %count%.'

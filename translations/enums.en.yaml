@@ -28,6 +28,7 @@ menu_target:
     url: External address
     none: No link (only opens a submenu)
 menu_route:
+    galleries: Photo galleries
     home: Front page
     larps: LARP list
     characters: Character matcher

@@ -63,24 +63,6 @@
             </div>
         {% endif %}
 
-        <dialog class="lightbox" data-lightbox-target="dialog" aria-label="{{ 'block.gallery.viewer'|trans }}"
-                data-action="click->lightbox#backdrop keydown->lightbox#key">
-            <figure class="lightbox__figure">
-                <img class="lightbox__image" data-lightbox-target="image" alt="">
-                <figcaption class="lightbox__caption" data-lightbox-target="caption"></figcaption>
-            </figure>
-            <p class="lightbox__counter" data-lightbox-target="counter" aria-live="polite"></p>
-            <button class="lightbox__button lightbox__button--close" type="button" data-action="lightbox#close">
-                <twig:ux:icon name="lucide:x" aria-hidden="true" /><span class="visually-hidden">{{ 'block.gallery.close'|trans }}</span>
-            </button>
-            {% if photos|length > 1 %}
-                <button class="lightbox__button lightbox__button--prev" type="button" data-action="lightbox#prev">
-                    <twig:ux:icon name="lucide:chevron-left" aria-hidden="true" /><span class="visually-hidden">{{ 'block.gallery.prev'|trans }}</span>
-                </button>
-                <button class="lightbox__button lightbox__button--next" type="button" data-action="lightbox#next">
-                    <twig:ux:icon name="lucide:chevron-right" aria-hidden="true" /><span class="visually-hidden">{{ 'block.gallery.next'|trans }}</span>
-                </button>
-            {% endif %}
-        </dialog>
+        {% include 'partials/_lightbox.html.twig' with {count: photos|length} %}
     </section>
 {% endif %}

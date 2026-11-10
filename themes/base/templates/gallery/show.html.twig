@@ -1,0 +1,57 @@
+{#
+    One gallery with photos uploaded here: a masonry grid (thumbnails, lazy loading,
+    real sizes so nothing jumps) that opens in the full-screen viewer, plus a button
+    to the full album when the gallery also links to one. (Link-only galleries
+    redirect to their album instead, see GalleryController::show().)
+#}
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ gallery.title }} · {{ settings.organizationName }}{% endblock %}
+
+{% block content %}
+    {% set viewer_photos = photos|map(p => {
+        src: asset('uploads/galleries/' ~ p.file),
+        caption: [p.caption, p.photographer ? 'gallery.photo_by'|trans({name: p.photographer}) : null]|filter(v => v)|join(' — '),
+    }) %}
+    <article class="gallery-page" data-controller="lightbox" data-lightbox-photos-value="{{ viewer_photos|json_encode }}">
+        <header class="gallery-page__head">
+            {% if gallery.larp and gallery.larp.published %}
+                <p class="eyebrow"><a href="{{ path('app_larp_show', {slug: gallery.larp.slug}) }}">{{ gallery.larp.name }}</a>{% if gallery.edition %} · {{ gallery.edition.name }}{% endif %}</p>
+            {% endif %}
+            <h1 class="page-title">{{ gallery.title }}</h1>
+            <p class="gallery-page__meta">
+                {% if gallery.date %}<span>{{ gallery.date|short_date }}</span>{% endif %}
+                {% if photos is not empty %}<span>{{ 'gallery.photo_count'|trans({count: photos|length}) }}</span>{% endif %}
+                {% if gallery.credits %}<span>{{ 'gallery.photos_by'|trans({names: gallery.credits}) }}</span>{% endif %}
+            </p>
+            {% if gallery.description %}<div class="prose">{{ gallery.description|raw }}</div>{% endif %}
+            {% if gallery.external %}
+                <p><a class="button button--primary" href="{{ gallery.externalUrl }}" target="_blank" rel="noopener">
+                    {{ 'gallery.open_album'|trans({source: ('gallery.source.' ~ gallery.source)|trans({host: gallery.externalHost})}) }}
+                    <twig:ux:icon name="lucide:external-link" aria-hidden="true" />
+                </a></p>
+            {% endif %}
+        </header>
+
+        {% if photos is empty %}
+            <p>{{ 'gallery.empty'|trans }}</p>
+        {% else %}
+            <ul class="photo-grid">
+                {% for photo in photos %}
+                    <li class="photo-grid__item">
+                        <button class="photo-grid__open" type="button" data-action="lightbox#open" data-lightbox-index-param="{{ loop.index0 }}"
+                                aria-label="{{ 'block.gallery.open'|trans({n: loop.index}) }}">
+                            <img src="{{ asset('uploads/galleries/' ~ photo.thumbnailOrFile) }}"
+                                 {% if photo.thumbnail and photo.width > 0 %}srcset="{{ asset('uploads/galleries/' ~ photo.thumbnail) }} 720w, {{ asset('uploads/galleries/' ~ photo.file) }} {{ photo.width }}w" sizes="(min-width: 1100px) 360px, (min-width: 700px) 33vw, 50vw"{% endif %}
+                                 {% if photo.width > 0 %}width="{{ photo.width }}" height="{{ photo.height }}"{% endif %}
+                                 alt="{{ photo.caption }}" loading="{{ loop.index <= 6 ? 'eager' : 'lazy' }}" decoding="async">
+                        </button>
+                        {% if photo.caption %}<span class="photo-grid__caption">{{ photo.caption }}</span>{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% include 'partials/_lightbox.html.twig' with {count: photos|length} %}
+    </article>
+{% endblock %}

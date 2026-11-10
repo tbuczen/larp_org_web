@@ -1,4 +1,5 @@
 menu:
+    galleries: Photo galleries
     menus: Navigation menus
     pages: Pages & layout
     dashboard: Dashboard
@@ -406,3 +407,49 @@ import:
         duplicate_tag: 'The tag "%tag%" is listed twice.'
         wrong_column: '"%tag%" is a tag of the other column (gameplay/triggers). Check that the columns haven''t shifted.'
         unknown_tag: 'Unknown tag "%tag%".'
+gallery:
+    add: Add gallery
+    new_title: New gallery
+    label: Gallery
+    label_plural: Photo galleries
+    title: Title
+    cover: Cover
+    external_url: Album link
+    external_url_help: 'An album on Google Photos, Facebook or another site (https://… address). A gallery that is only a link opens that album in a new tab.'
+    source: Album
+    cover_image: Cover picture
+    cover_image_help: 'Shown on the gallery card. Empty = the first photo added under "Photos".'
+    photos_optional: 'This gallery links to an album on %host% — adding photos here is optional. If you add some, the site shows them with a button to the whole album.'
+    photos_local: 'This gallery has no album link, so the site shows the photos added here.'
+    larp: LARP
+    larp_help: 'The gallery shows on the LARP page. Empty = a standalone gallery (e.g. a workshop or an initiative).'
+    edition: Edition
+    edition_help: 'Optional: which edition the photos are from. Picking an edition fills in the LARP.'
+    photographer: Photographer
+    photographer_help: 'Shown as "Photos: …". Single photos can name someone else.'
+    event_date: Event date
+    event_date_help: 'Empty = the start date of the chosen edition.'
+    description: Description
+    photo_count: Photos
+    published: Published
+    published_help: 'Only published galleries are visible on the site.'
+    photos: Photos
+    photos_title: 'Photos: %gallery%'
+    back_to_list: Gallery list
+    edit_details: Gallery details
+    not_published: 'This gallery is not published yet — tick "Published" in the gallery details when it is ready.'
+    drop: 'Drop photos here or click to choose'
+    drop_help: 'As many as you like (JPG, PNG, WebP). Large photos are shrunk to web size before they are sent.'
+    upload_done: 'Done — reloading…'
+    upload_errors: 'Some photos were not uploaded'
+    upload_too_big: 'The file is too large (server limit: %max% MB).'
+    upload_failed: 'The file could not be uploaded.'
+    no_photos: 'This gallery has no photos yet.'
+    photos_help: '{1}1 photo.|]1,Inf[%count% photos.'
+    order_help: 'Drag photos to reorder — the first one is the cover. "Save photos" saves the changes.'
+    drag: 'Drag to reorder'
+    caption: Caption
+    delete_photo: Delete
+    save: Save photos
+    saved: Photos saved.
+    saved_removed: 'Photos saved, %count% deleted.'

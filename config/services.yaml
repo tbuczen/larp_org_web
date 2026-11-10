@@ -7,6 +7,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Where gallery photos are stored (served from /uploads/galleries/).
+    app.gallery_dir: '%kernel.project_dir%/public/uploads/galleries'
 
 services:
     # default configuration for services in *this* file
@@ -25,3 +27,8 @@ services:
     App\Block\BlockRenderer:
         arguments:
             $debug: '%kernel.debug%'
+
+when@test:
+    parameters:
+        # Tests never touch real uploads.
+        app.gallery_dir: '%kernel.project_dir%/var/test-uploads/galleries'

@@ -1,0 +1,83 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'gallery.photos_title'|trans({'%gallery%': gallery.title}) }}{% endblock %}
+{% block content_title %}{{ 'gallery.photos_title'|trans({'%gallery%': gallery.title}) }}{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ listUrl }}"><i class="fa fa-arrow-left"></i> {{ 'gallery.back_to_list'|trans }}</a>
+    <a class="btn btn-secondary" href="{{ editUrl }}"><i class="fa fa-pen"></i> {{ 'gallery.edit_details'|trans }}</a>
+    {% if gallery.visible %}
+        <a class="btn btn-secondary" href="{{ path('app_gallery_show', {slug: gallery.slug}) }}" target="_blank"><i class="fa fa-arrow-up-right-from-square"></i> {{ 'larp.view_on_site'|trans }}</a>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    {% set token = csrf_token(csrfId) %}
+
+    {% if not gallery.published %}
+        <div class="alert alert-info">{{ 'gallery.not_published'|trans }}</div>
+    {% endif %}
+    <p class="text-muted">
+        {% if gallery.external %}
+            {{ 'gallery.photos_optional'|trans({'%host%': gallery.externalHost}) }}
+        {% else %}
+            {{ 'gallery.photos_local'|trans }}
+        {% endif %}
+    </p>
+
+    {# Upload: assets/admin.js sends the files one by one (several at a time), shrunk to web size first. #}
+    <section class="photo-upload" data-photo-upload-url="{{ path('admin_gallery_upload_photo', {id: gallery.id}) }}"
+             data-csrf-token="{{ token }}" data-max-bytes="{{ maxBytes }}" data-max-size="{{ maxSize }}"
+             data-label-done="{{ 'gallery.upload_done'|trans }}" data-label-errors="{{ 'gallery.upload_errors'|trans }}">
+        <label class="photo-upload__drop">
+            <i class="fa fa-cloud-arrow-up"></i>
+            <strong>{{ 'gallery.drop'|trans }}</strong>
+            <span class="text-muted">{{ 'gallery.drop_help'|trans }}</span>
+            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple data-photo-upload-input>
+        </label>
+        <div class="photo-upload__progress" hidden>
+            <div class="progress"><div class="progress-bar" role="progressbar" style="width: 0%"></div></div>
+            <p class="photo-upload__status" role="status" aria-live="polite"></p>
+            <ul class="photo-upload__errors text-danger"></ul>
+        </div>
+    </section>
+
+    {% if photos is empty %}
+        <p class="text-muted mt-4">{{ 'gallery.no_photos'|trans }}</p>
+    {% else %}
+        <form method="post" action="{{ path('admin_gallery_save_photos', {id: gallery.id}) }}" class="mt-4">
+            <input type="hidden" name="_token" value="{{ token }}">
+            <div class="photo-manager__bar">
+                <p class="text-muted mb-0">{{ 'gallery.photos_help'|trans({'%count%': photos|length}) }} {{ 'gallery.order_help'|trans }}</p>
+                <button class="btn btn-primary"><i class="fa fa-check"></i> {{ 'gallery.save'|trans }}</button>
+            </div>
+            <ol class="photo-manager" data-photo-sortable>
+                {% for photo in photos %}
+                    <li class="photo-manager__item" data-id="{{ photo.id }}">
+                        <div class="photo-manager__media">
+                            <span class="photo-manager__handle" title="{{ 'gallery.drag'|trans }}"><i class="fa fa-grip-vertical"></i></span>
+                            <span class="photo-manager__number">{{ loop.index }}</span>
+                            {% if loop.first %}<span class="badge badge-success photo-manager__cover">{{ 'gallery.cover'|trans }}</span>{% endif %}
+                            <a href="{{ asset('uploads/galleries/' ~ photo.file) }}" target="_blank">
+                                <img src="{{ asset('uploads/galleries/' ~ photo.thumbnailOrFile) }}" alt="" loading="lazy" width="{{ photo.width }}" height="{{ photo.height }}">
+                            </a>
+                        </div>
+                        <input class="form-control form-control-sm" name="photos[{{ photo.id }}][caption]" value="{{ photo.caption }}"
+                               placeholder="{{ 'gallery.caption'|trans }}" aria-label="{{ 'gallery.caption'|trans }}" maxlength="500">
+                        <input class="form-control form-control-sm" name="photos[{{ photo.id }}][photographer]" value="{{ photo.photographer }}"
+                               placeholder="{{ gallery.photographer ?: 'gallery.photographer'|trans }}" aria-label="{{ 'gallery.photographer'|trans }}" maxlength="160">
+                        <label class="form-check photo-manager__delete">
+                            <input class="form-check-input" type="checkbox" name="photos[{{ photo.id }}][delete]" value="1">
+                            <span class="form-check-label">{{ 'gallery.delete_photo'|trans }}</span>
+                        </label>
+                    </li>
+                {% endfor %}
+            </ol>
+            <div class="photo-manager__bar">
+                <span></span>
+                <button class="btn btn-primary"><i class="fa fa-check"></i> {{ 'gallery.save'|trans }}</button>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

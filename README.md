@@ -12,7 +12,7 @@ The roadmap is tracked in GitHub issues: epic [#2](https://github.com/tbuczen/la
 
 ## Quick start (SQLite)
 
-Requirements: PHP 8.3+ with `intl`, `pdo_sqlite` (or `pdo_mysql`), and Composer.
+Requirements: PHP 8.3+ with `intl`, `pdo_sqlite` (or `pdo_mysql`), `gd` (gallery thumbnails; `exif` recommended, to turn phone photos upright), and Composer.
 
 ```bash
 composer install
@@ -100,7 +100,30 @@ match% = round((score + 2) / 4 × 100)    no gameplay tags → 50%
 Triggers never change the score: matching characters get a ⚠ warning, or are hidden with
 "Ukryj postacie z moimi triggerami". Choices live in the URL (shareable) and are remembered in
 localStorage for the next visit.
+### Photo galleries
+
+*Admin → Galerie zdjęć*. A gallery usually **links to an album elsewhere** (Google Photos,
+Facebook or any other site) and has a cover picture uploaded here; it belongs to a LARP and
+optionally one of its editions (or neither, for a workshop or an initiative), with the
+photographer ("Zdjęcia: …"), a date and a description. On the site its card shows where the
+album is ("Google Photos", "Facebook", or the site's name) and opens it in a new tab;
+`/galeria/{slug}` forwards there too.
+
+Photos can **also** be uploaded here (the gallery's *Zdjęcia* screen) — a selection next to the
+full album, or a whole gallery for groups that keep photos on the site. Drag in any number at
+once: the browser shrinks big ones to web size and sends them one per request, so server upload
+limits don't matter. Photos are dragged into order (the first is the cover unless a cover picture
+is set), get captions and their own photographer credit, and can be deleted. The server caps
+photos at 2560 px and makes 720 px WebP thumbnails with GD (`src/Gallery/`). A gallery with
+photos gets its own page (masonry grid, lazy-loaded thumbnails, full-screen viewer) with a
+button to the full album.
+
+Public pages: `/galerie`, `/galeria/{slug}`; each LARP page lists its published galleries.
+A menu item can link to *Galerie zdjęć*.
+
 Uploaded images go to `public/uploads/` (not committed; back it up together with the database).
+For big galleries, give PHP a reasonable `upload_max_filesize` (e.g. 16M); the uploader adapts to
+whatever the server allows.
 
 ## Themes, pages and menus
 

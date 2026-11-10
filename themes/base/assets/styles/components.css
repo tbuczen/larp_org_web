@@ -201,7 +201,7 @@ a.badge--open { background: var(--color-primary); border-color: var(--color-prim
 .facts { display: grid; gap: .6rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); margin: 1.25rem 0; }
 .facts dt { color: var(--color-muted); font-size: .8rem; text-transform: uppercase; }
 .facts dd { margin: 0; }
-.larp-characters, .larp-editions { margin-top: 3rem; }
+.larp-characters, .larp-galleries, .larp-editions { margin-top: 3rem; }
 
 @media (max-width: 800px) {
     .larp-hero { grid-template-columns: 1fr; }
@@ -485,3 +485,60 @@ html.has-lightbox { overflow: hidden; }
 .hero.fx-ready .hero__content { opacity: calc(1 - var(--exit, 0) * 1.4); transform: translateY(calc(var(--exit, 0) * -60px)); }
 /* Strips fade out at the screen edges */
 .gallery__row { -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+
+/* ---------------------------------------------------------------------------
+   Photo galleries (gallery/*.html.twig)
+   --------------------------------------------------------------------------- */
+.gallery-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); overflow: hidden; position: relative; }
+.gallery-card__media { aspect-ratio: 3 / 2; display: block; overflow: hidden; position: relative; }
+.gallery-card__media img, .gallery-card__media .cover { height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2, .7, .2, 1), filter .5s ease; width: 100%; }
+.gallery-card:hover .gallery-card__media img { transform: scale(1.04); }
+.gallery-card__count {
+    align-items: center;
+    background: rgb(0 0 0 / .65);
+    border-radius: var(--radius-small);
+    bottom: .6rem;
+    color: #fff;
+    display: inline-flex;
+    font-family: var(--font-ui);
+    font-size: .85rem;
+    gap: .35rem;
+    padding: .2rem .55rem;
+    position: absolute;
+    right: .6rem;
+}
+.gallery-card__count svg { height: 1rem; width: 1rem; }
+.gallery-card__body { padding: 1rem 1.1rem 1.2rem; }
+.gallery-card__title { font-size: 1.25rem; margin: 0 0 .25rem; }
+.gallery-card__title a { color: inherit; text-decoration: none; }
+.gallery-card__title a::after { content: ""; inset: 0; position: absolute; } /* whole card clickable */
+.gallery-card__meta, .gallery-card__credits { color: var(--color-muted); font-size: .9rem; margin: 0; }
+.gallery-card__credits { font-style: italic; margin-top: .2rem; }
+.gallery-page .button svg { height: 1em; width: 1em; }
+
+.gallery-page__head { margin-bottom: 2rem; max-width: 70ch; }
+.gallery-page__meta { color: var(--color-muted); display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
+
+/* Masonry: columns keep each photo's own shape; width/height on the <img> keep the layout still while loading */
+.photo-grid { column-gap: .75rem; columns: 3 260px; list-style: none; margin: 0; padding: 0; }
+.photo-grid__item { break-inside: avoid; margin: 0 0 .75rem; position: relative; }
+.photo-grid__open { background: var(--color-surface-2); border: 0; border-radius: var(--radius-small); cursor: zoom-in; display: block; overflow: hidden; padding: 0; width: 100%; }
+.photo-grid__open img { height: auto; transition: transform .7s cubic-bezier(.2, .7, .2, 1), filter .5s ease; width: 100%; }
+.photo-grid__open:hover img, .photo-grid__open:focus-visible img { transform: scale(1.03); }
+.photo-grid__caption {
+    background: linear-gradient(0deg, rgb(0 0 0 / .75), transparent);
+    border-radius: 0 0 var(--radius-small) var(--radius-small);
+    bottom: 0;
+    color: #fff;
+    font-size: .85rem;
+    left: 0;
+    opacity: 0;
+    padding: 1.5rem .75rem .5rem;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    transition: opacity .3s ease;
+}
+.photo-grid__item:hover .photo-grid__caption, .photo-grid__item:focus-within .photo-grid__caption { opacity: 1; }
+@media (hover: none) { .photo-grid__caption { opacity: 1; } }
+@media (max-width: 560px) { .photo-grid { column-gap: .5rem; columns: 2; } .photo-grid__item { margin-bottom: .5rem; } }
