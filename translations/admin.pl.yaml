@@ -387,6 +387,28 @@ larp_tags:
     shared_link: Wspólne tagi
 
 import:
+    columns_title: 'Import postaci — kolumny: %larp%'
+    columns_intro: 'Wskaż, co jest w każdej kolumnie pliku. Nazwy kolumn mogą być dowolne; kolumny, które rozpoznaliśmy, są już ustawione.'
+    columns_help: 'Wymagana jest tylko nazwa postaci (*). Każde pole można wybrać raz; pozostałe kolumny zostaną pominięte. Zapamiętamy Twój wybór dla tych nazw kolumn.'
+    rows_info: '{1}1 wiersz|[2,4]%count% wiersze|]4,Inf[%count% wierszy'
+    has_header: 'Pierwszy wiersz zawiera nazwy kolumn'
+    has_header_help: 'Wyłącz, jeśli plik zaczyna się od razu od pierwszej postaci.'
+    file_column: Kolumna w pliku
+    sample_values: Przykładowe wartości
+    maps_to: To jest…
+    unnamed_column: 'Kolumna %n%'
+    empty_column: (pusta)
+    target:
+        ignore: '— pomiń —'
+        name: Nazwa postaci
+        slug: Adres (slug)
+        teaser: Zajawka
+        description: Opis
+        casting: Obsada
+        availability: Dostępność
+        position: Kolejność
+        gameplay: Tagi rozgrywki (z %)
+        triggers: Triggery (z %)
     action: Import CSV
     title: 'Import postaci: %larp%'
     file: Plik CSV
@@ -399,7 +421,7 @@ import:
     download_template: Pobierz szablon CSV
     cancel: Anuluj
     format_title: Format pliku
-    format_intro: 'Pierwszy wiersz to nagłówki. Wymagana jest tylko kolumna „nazwa”; kolejność kolumn jest dowolna, a brakujące kolumny przy aktualizacji pozostawiają dane bez zmian.'
+    format_intro: 'Nazwy i kolejność kolumn mogą być dowolne — po wysłaniu pliku wskażesz, co jest w której kolumnie (te nazwy rozpoznamy same). Wymagana jest tylko nazwa postaci; brakujące kolumny przy aktualizacji pozostawiają dane bez zmian.'
     column: Kolumna
     values: Wartości
     col:
@@ -420,7 +442,7 @@ import:
     action_update: do aktualizacji
     action_skip: pominięte
     action_error: z błędami
-    ignored_columns: 'Pominięte kolumny (nieznane nagłówki): %columns%'
+    ignored_columns: 'Pominięte kolumny: %columns%'
     new_tags: 'Zostaną dodane nowe tagi tego larpa:'
     line: Wiersz
     what: Co się stanie
@@ -438,6 +460,8 @@ import:
         too_many_rows: 'Za dużo wierszy (maks. %max%).'
         no_rows: 'Plik nie zawiera żadnych postaci.'
         no_name_column: 'Brak kolumny „nazwa”. Nagłówki w pliku: %headers%'
+        name_not_mapped: 'Wskaż kolumnę z nazwą postaci.'
+        duplicate_mapping: 'Każde pole można wybrać tylko dla jednej kolumny.'
     row:
         too_many_columns: 'Więcej kolumn niż w nagłówku. Komórka zawiera „%delimiter%” bez cudzysłowu? Ujmij ją w cudzysłów albo rozdziel tagi przecinkiem lub „|”.'
         name_missing: 'Brak nazwy postaci.'

@@ -10,7 +10,8 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
  * Reads a character CSV as exported by Excel, LibreOffice or Google Sheets:
  * - delimiter ";" "," or tab (detected from the header line)
  * - UTF-8 (with or without BOM) or Windows-1250 (Polish Excel)
- * - headers in Polish or English, any case, with or without diacritics
+ * - headers in Polish or English, any case, with or without diacritics, or any
+ *   names at all with an explicit column mapping; also files without a header row
  */
 final class CsvReader
 {
@@ -30,7 +31,36 @@ final class CsvReader
         'triggers' => ['triggery', 'trigger', 'triggers', 'trigger-tags'],
     ];
 
-    public function read(string $content): CsvTable
+    /**
+     * Reads the file. Columns come from $mapping (column index => internal name,
+     * "" = ignore) when given, else are guessed from the header names. The name
+     * column is required.
+     *
+     * @param array<int, string>|null $mapping
+     *
+     * @throws CsvImportException
+     */
+    public function read(string $content, ?array $mapping = null, bool $hasHeader = true): CsvTable
+    {
+        $table = $this->inspect($content, $hasHeader, $mapping);
+        if (!$table->has('name')) {
+            throw new CsvImportException(null === $mapping ? 'import.error.no_name_column' : 'import.error.name_not_mapped', ['%headers%' => implode(', ', $table->headers)]);
+        }
+
+        return $table;
+    }
+
+    /**
+     * Reads the file without requiring any column: for the column mapping step.
+     * The columns are $mapping, else guessed from header names (and $remembered
+     * choices: header slug => internal name).
+     *
+     * @param array<int, string>|null $mapping
+     * @param array<string, string>   $remembered
+     *
+     * @throws CsvImportException
+     */
+    public function inspect(string $content, bool $hasHeader = true, ?array $mapping = null, array $remembered = []): CsvTable
     {
         if ('' === trim($content)) {
             throw new CsvImportException('import.error.empty');
@@ -50,53 +80,119 @@ final class CsvReader
         fwrite($stream, $content);
         rewind($stream);
 
-        $header = fgetcsv($stream, null, $delimiter, '"', '');
-        if (false === $header) {
-            throw new CsvImportException('import.error.empty');
-        }
-
-        $slugger = new AsciiSlugger();
-        $columns = [];
-        $ignored = [];
-        foreach ($header as $index => $title) {
-            $key = $slugger->slug(trim((string) $title))->lower()->toString();
-            $column = null;
-            foreach (self::COLUMNS as $name => $aliases) {
-                if (\in_array($key, $aliases, true)) {
-                    $column = $name;
-                    break;
-                }
-            }
-            if (null !== $column && !isset($columns[$column])) {
-                $columns[$column] = $index;
-            } elseif ('' !== trim((string) $title)) {
-                $ignored[] = trim((string) $title);
-            }
-        }
-        if (!isset($columns['name'])) {
-            throw new CsvImportException('import.error.no_name_column', ['%headers%' => implode(', ', array_map('strval', $header))]);
-        }
-
         $rows = [];
-        $line = 1;
+        $line = 0;
+        $width = 0;
+        $header = null;
         while (false !== ($cells = fgetcsv($stream, null, $delimiter, '"', ''))) {
             ++$line;
             $cells = array_map(static fn ($c): string => (string) $c, $cells);
+            if ($hasHeader && null === $header) {
+                $header = $cells;
+                continue;
+            }
             if ([] === array_filter($cells, static fn (string $c): bool => '' !== trim($c))) {
                 continue; // empty line
             }
             if (\count($rows) >= self::MAX_ROWS) {
                 throw new CsvImportException('import.error.too_many_rows', ['%max%' => self::MAX_ROWS]);
             }
+            $width = max($width, \count($cells));
             $rows[] = ['line' => $line, 'cells' => $cells];
         }
         fclose($stream);
 
+        if ($hasHeader && null === $header) {
+            throw new CsvImportException('import.error.empty');
+        }
         if ([] === $rows) {
             throw new CsvImportException('import.error.no_rows');
         }
 
-        return new CsvTable($columns, $rows, $delimiter, $encoding, $ignored, \count($header));
+        // Without a header row, columns are "Kolumna 1", "Kolumna 2", …
+        $headers = null !== $header
+            ? array_map(static fn (string $h): string => trim($h), $header)
+            : array_map(static fn (int $i): string => 'Kolumna '.($i + 1), range(0, $width - 1));
+
+        $mapping = null === $mapping ? $this->guess($headers, $remembered) : $this->cleanMapping($mapping, \count($headers));
+
+        $columns = [];
+        $ignored = [];
+        foreach ($headers as $index => $title) {
+            $column = $mapping[$index] ?? '';
+            if ('' !== $column) {
+                $columns[$column] = $index;
+            } elseif ('' !== $title) {
+                $ignored[] = $title;
+            }
+        }
+
+        return new CsvTable($columns, $rows, $delimiter, $encoding, $ignored, null !== $header ? \count($header) : 0, $headers, $hasHeader);
+    }
+
+    /**
+     * Guesses the column of each header from its name (Polish or English, any
+     * case, with or without diacritics), else from $remembered choices. Each
+     * column is used once.
+     *
+     * @param list<string>          $headers
+     * @param array<string, string> $remembered header slug => internal name
+     *
+     * @return array<int, string> index => internal name ("" = ignore)
+     */
+    public function guess(array $headers, array $remembered = []): array
+    {
+        $mapping = [];
+        $used = [];
+        foreach ($headers as $index => $title) {
+            $key = self::headerKey($title);
+            $column = '';
+            foreach (self::COLUMNS as $name => $aliases) {
+                if (\in_array($key, $aliases, true)) {
+                    $column = $name;
+                    break;
+                }
+            }
+            if ('' === $column && isset($remembered[$key], self::COLUMNS[$remembered[$key]])) {
+                $column = $remembered[$key];
+            }
+            if ('' !== $column && isset($used[$column])) {
+                $column = '';
+            }
+            $used[$column] = true;
+            $mapping[$index] = $column;
+        }
+
+        return $mapping;
+    }
+
+    /** Header name as compared with the aliases: lowercase ASCII slug. */
+    public static function headerKey(string $title): string
+    {
+        return (new AsciiSlugger())->slug(trim($title))->lower()->toString();
+    }
+
+    /**
+     * @param array<int, string> $mapping
+     *
+     * @return array<int, string>
+     */
+    private function cleanMapping(array $mapping, int $count): array
+    {
+        $clean = [];
+        $used = [];
+        foreach ($mapping as $index => $column) {
+            if (!\is_int($index) || $index < 0 || $index >= $count || !isset(self::COLUMNS[$column])) {
+                continue;
+            }
+            if (isset($used[$column])) {
+                throw new CsvImportException('import.error.duplicate_mapping', ['%column%' => $column]);
+            }
+            $used[$column] = true;
+            $clean[$index] = $column;
+        }
+
+        return $clean;
     }
 
     /** @return array{0: string, 1: string} content in UTF-8 and the detected source encoding */

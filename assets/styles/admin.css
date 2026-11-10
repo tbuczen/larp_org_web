@@ -276,3 +276,10 @@
 .larp-color-preview__checks li { margin-bottom: .3rem; }
 .larp-color-preview__checks .is-ok { color: #198754; }
 .larp-color-preview__checks .is-low { color: #b54708; font-weight: 600; }
+
+/* Character import: column mapping (templates/admin/character/import_columns.html.twig) */
+.import-columns__table td, .import-columns__table th { vertical-align: middle; }
+.import-columns__samples span { display: block; max-width: 48ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.import-columns__samples span + span { color: var(--text-muted, #6c757d); font-size: .875em; }
+.import-columns__table tr.is-ignored th, .import-columns__table tr.is-ignored td:not(:last-child) { opacity: .6; }
+.import-columns__table select { min-width: 220px; }

@@ -63,4 +63,53 @@ final class CsvReaderTest extends TestCase
 
         (new CsvReader())->read("nazwa;obsada\n;\n");
     }
+
+    public function testAnExplicitMappingReplacesHeaderNames(): void
+    {
+        $table = (new CsvReader())->read("Kto;Opis krótki;Śmieci\nVex;Hakerka;x\n", [0 => 'name', 1 => 'teaser', 2 => '']);
+
+        self::assertSame(['name' => 0, 'teaser' => 1], $table->columns);
+        self::assertSame(['Kto', 'Opis krótki', 'Śmieci'], $table->headers);
+        self::assertSame(['Śmieci'], $table->ignoredHeaders);
+        self::assertSame('Vex', $table->value($table->rows[0]['cells'], 'name'));
+        self::assertSame('teaser', $table->columnAt(1));
+        self::assertSame('', $table->columnAt(2));
+    }
+
+    public function testMappingErrors(): void
+    {
+        try {
+            (new CsvReader())->read("a;b\nx;y\n", [0 => 'teaser']);
+            self::fail('no name column');
+        } catch (CsvImportException $e) {
+            self::assertSame('import.error.name_not_mapped', $e->getMessage());
+        }
+
+        $this->expectExceptionMessage('import.error.duplicate_mapping');
+        (new CsvReader())->read("a;b\nx;y\n", [0 => 'name', 1 => 'name']);
+    }
+
+    public function testGuessUsesKnownNamesThenRememberedOnesEachOnce(): void
+    {
+        $reader = new CsvReader();
+
+        self::assertSame(
+            [0 => 'name', 1 => '', 2 => 'gameplay', 3 => ''],
+            $reader->guess(['Nazwa', 'Kolor oczu', 'Rozgrywka', 'Imię']),
+            'the second name-like column is not used twice',
+        );
+        self::assertSame([0 => 'name', 1 => 'teaser'], $reader->guess(['Postać gracza', 'Krótko'], ['postac-gracza' => 'name', 'krotko' => 'teaser']));
+    }
+
+    public function testFileWithoutHeaderRow(): void
+    {
+        $table = (new CsvReader())->inspect("Vex;K\nBolek;M;extra\n", false);
+
+        self::assertSame(['Kolumna 1', 'Kolumna 2', 'Kolumna 3'], $table->headers);
+        self::assertFalse($table->hasHeader);
+        self::assertCount(2, $table->rows, 'the first line is data');
+        self::assertSame(1, $table->rows[0]['line']);
+        self::assertSame(['Vex', 'Bolek'], $table->samples(0));
+        self::assertSame([], $table->columns, 'nothing to guess from');
+    }
 }

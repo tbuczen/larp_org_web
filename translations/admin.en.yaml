@@ -387,6 +387,28 @@ larp_tags:
     shared_link: Shared tags
 
 import:
+    columns_title: 'Character import — columns: %larp%'
+    columns_intro: 'Say what each column of the file holds. Column names can be anything; columns we recognised are already set.'
+    columns_help: 'Only the character name (*) is required. Each field can be chosen once; other columns are skipped. Your choice is remembered for these column names.'
+    rows_info: '{1}1 row|]1,Inf[%count% rows'
+    has_header: 'The first row holds the column names'
+    has_header_help: 'Switch off if the file starts right away with the first character.'
+    file_column: Column in the file
+    sample_values: Sample values
+    maps_to: This is…
+    unnamed_column: 'Column %n%'
+    empty_column: (empty)
+    target:
+        ignore: '— skip —'
+        name: Character name
+        slug: Address (slug)
+        teaser: Teaser
+        description: Description
+        casting: Casting
+        availability: Availability
+        position: Order
+        gameplay: Gameplay tags (with %)
+        triggers: Triggers (with %)
     action: CSV import
     title: 'Import characters: %larp%'
     file: CSV file
@@ -399,7 +421,7 @@ import:
     download_template: Download CSV template
     cancel: Cancel
     format_title: File format
-    format_intro: 'The first row holds the headers. Only "name" is required; columns can be in any order, and when updating, missing columns leave data unchanged.'
+    format_intro: 'Column names and order can be anything — after uploading you say which column holds what (these names are recognised automatically). Only the character name is required; when updating, missing columns leave the data unchanged.'
     column: Column
     values: Values
     col:
@@ -420,7 +442,7 @@ import:
     action_update: to update
     action_skip: skipped
     action_error: with errors
-    ignored_columns: 'Ignored columns (unknown headers): %columns%'
+    ignored_columns: 'Skipped columns: %columns%'
     new_tags: "These new tags will be added to this LARP:"
     line: Row
     what: What happens
@@ -438,6 +460,8 @@ import:
         too_many_rows: 'Too many rows (max %max%).'
         no_rows: 'The file contains no characters.'
         no_name_column: 'No "name" column. Headers in the file: %headers%'
+        name_not_mapped: 'Choose the column with the character name.'
+        duplicate_mapping: 'Each field can be chosen for one column only.'
     row:
         too_many_columns: 'More columns than the header. Does a cell contain "%delimiter%" without quotes? Quote it, or separate tags with commas or "|".'
         name_missing: 'The character name is missing.'

@@ -52,10 +52,14 @@ final class CharacterCsvImporter
     ) {
     }
 
-    /** @throws CsvImportException when the file as a whole can't be read */
-    public function prepare(string $csv, LarpEdition $edition, bool $updateExisting = true, bool $createTags = true): ImportPlan
+    /**
+     * @param array<int, string>|null $mapping file column index => internal column ("" = ignore); null = guess from headers
+     *
+     * @throws CsvImportException when the file as a whole can't be read
+     */
+    public function prepare(string $csv, LarpEdition $edition, bool $updateExisting = true, bool $createTags = true, ?array $mapping = null, bool $hasHeader = true): ImportPlan
     {
-        $table = $this->reader->read($csv);
+        $table = $this->reader->read($csv, $mapping, $hasHeader);
         if (null === $edition->getLarp()) {
             throw new \LogicException('Edition without LARP.');
         }
@@ -72,7 +76,7 @@ final class CharacterCsvImporter
 
             // More cells than headers almost always means an unquoted delimiter inside a
             // cell (e.g. "Tag 50%; Tag 50%" in a ";" file), which shifts the columns.
-            $extra = \array_slice($cells, $table->headerCount);
+            $extra = $table->headerCount > 0 ? \array_slice($cells, $table->headerCount) : [];
             if ($table->headerCount > 0 && [] !== array_filter($extra, static fn (string $c): bool => '' !== trim($c))) {
                 $row->error('import.row.too_many_columns', ['%delimiter%' => "\t" === $table->delimiter ? 'TAB' : $table->delimiter]);
             }

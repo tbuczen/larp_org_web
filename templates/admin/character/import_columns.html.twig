@@ -1,0 +1,63 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block page_title %}{{ 'import.columns_title'|trans({'%larp%': larp.name}) }}{% endblock %}
+{% block content_title %}{{ 'import.columns_title'|trans({'%larp%': larp.name}) }}{% endblock %}
+
+{% block main %}
+    {% set token = csrf_token(csrfId) %}
+    <p class="text-muted">
+        {{ filename }} · {{ 'import.edition_info'|trans({'%edition%': edition.name}) }} ·
+        {{ 'import.rows_info'|trans({'%count%': table.rows|length}) }}
+    </p>
+    <p>{{ 'import.columns_intro'|trans }}</p>
+
+    {% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
+
+    <form method="post" class="import-columns">
+        <input type="hidden" name="_token" value="{{ token }}">
+
+        <div class="form-check form-switch mb-3">
+            <input type="hidden" name="hasHeader" value="0">
+            <input class="form-check-input" type="checkbox" role="switch" id="import-has-header" name="hasHeader" value="1"
+                   {% if table.hasHeader %}checked{% endif %} onchange="this.form.submit()">
+            <label class="form-check-label" for="import-has-header">{{ 'import.has_header'|trans }}</label>
+            <div class="form-text">{{ 'import.has_header_help'|trans }}</div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table import-columns__table">
+                <thead>
+                    <tr>
+                        <th>{{ 'import.file_column'|trans }}</th>
+                        <th>{{ 'import.sample_values'|trans }}</th>
+                        <th>{{ 'import.maps_to'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, header in table.headers %}
+                        {% set chosen = mapping[index] ?? '' %}
+                        <tr class="{{ chosen ? 'is-mapped' : 'is-ignored' }}">
+                            <th scope="row"><label for="import-column-{{ index }}">{{ header ?: ('import.unnamed_column'|trans({'%n%': index + 1})) }}</label></th>
+                            <td class="import-columns__samples">
+                                {% for sample in table.samples(index) %}<span>{{ sample }}</span>{% else %}<span class="text-muted">{{ 'import.empty_column'|trans }}</span>{% endfor %}
+                            </td>
+                            <td>
+                                <select class="form-select" id="import-column-{{ index }}" name="columns[{{ index }}]">
+                                    <option value="">{{ 'import.target.ignore'|trans }}</option>
+                                    {% for key, label in columns %}
+                                        <option value="{{ key }}"{% if chosen == key %} selected{% endif %}>{{ label|trans }}{% if key == 'name' %} *{% endif %}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <p class="form-text">{{ 'import.columns_help'|trans }}</p>
+        <button class="btn btn-primary" name="step" value="preview"><i class="fa fa-eye"></i> {{ 'import.preview_button'|trans }}</button>
+        <a class="btn btn-link" href="{{ backUrl }}">{{ 'import.upload_again'|trans }}</a>
+    </form>
+{% endblock %}

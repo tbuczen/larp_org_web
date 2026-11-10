@@ -11,6 +11,7 @@ use App\Form\SocialLinkType;
 use App\Import\CharacterCsvImporter;
 use App\Import\CsvImportException;
 use App\Import\CsvReader;
+use App\Import\CsvTable;
 use App\Import\ImportPlan;
 use App\Repository\TagRepository;
 use App\Tagging\TagResolver;
@@ -63,12 +64,15 @@ class LarpCrudController extends AbstractCrudController
     public const CSRF_TAGS = 'larp-tags';
     public const CSRF_IMPORT = 'character-import';
     private const IMPORT_SESSION_KEY = 'character_import';
+    /** Column choices made for header names the importer didn't know: header slug => column. */
+    private const IMPORT_MEMORY_KEY = 'character_import_columns';
 
     public function __construct(
         private readonly AdminUrlGenerator $urls,
         private readonly TagRepository $tagRepository,
         private readonly TagResolver $tagResolver,
         private readonly CharacterCsvImporter $importer,
+        private readonly CsvReader $csvReader,
         private readonly EntityManagerInterface $em,
         private readonly TranslatorInterface $translator,
     ) {
@@ -254,7 +258,7 @@ class LarpCrudController extends AbstractCrudController
 
     // ------------------------------------------------------------ CSV import
 
-    /** Step 1: upload a CSV and see a preview of what it will do. */
+    /** Step 1: upload a CSV (then: columns, preview, confirm). */
     #[AdminRoute('/{id}/characters/import', name: 'import_characters', options: ['methods' => ['GET', 'POST']])]
     public function importCharacters(Larp $larp, Request $request): Response
     {
@@ -278,28 +282,134 @@ class LarpCrudController extends AbstractCrudController
             $createTags = (bool) $form->get('createTags')->getData();
 
             try {
-                $plan = $this->importer->prepare($csv, $edition, $update, $createTags);
+                $table = $this->csvReader->inspect($csv, true, null, $this->rememberedColumns($request));
             } catch (CsvImportException $e) {
                 $form->get('file')->addError(new FormError($this->translator->trans($e->getMessage(), $e->parameters, 'admin')));
 
                 return $this->renderImportForm($larp, $form);
             }
 
-            // Kept until the preview is confirmed; re-checked then, as data may have changed.
-            $token = bin2hex(random_bytes(16));
+            // Kept until the import is confirmed; re-checked at every step, as data may change.
             $request->getSession()->set(self::IMPORT_SESSION_KEY, [
-                'token' => $token, 'larp' => $larp->getId(), 'edition' => $edition->getId(),
+                'token' => bin2hex(random_bytes(16)), 'larp' => $larp->getId(), 'edition' => $edition->getId(),
                 'csv' => base64_encode($csv), 'update' => $update, 'createTags' => $createTags,
-                'filename' => $file->getClientOriginalName(),
+                'filename' => $file->getClientOriginalName(), 'hasHeader' => true, 'mapping' => $this->mappingOf($table),
             ]);
 
-            return $this->renderPreview($larp, $plan, $token, $file->getClientOriginalName());
+            return $this->redirect($this->larpUrl('importColumns', $larp));
         }
 
         return $this->renderImportForm($larp, $form);
     }
 
-    /** Step 2: save the previewed import (all rows or none). */
+    /**
+     * Step 2: say which file column is what (name, teaser, tags…), guessed from the
+     * header names; then the preview. The file needs no particular header names.
+     */
+    #[AdminRoute('/{id}/characters/import/columns', name: 'import_columns', options: ['methods' => ['GET', 'POST']])]
+    public function importColumns(Larp $larp, Request $request): Response
+    {
+        $session = $request->getSession();
+        $stored = $session->get(self::IMPORT_SESSION_KEY);
+        if (!\is_array($stored) || ($stored['larp'] ?? null) !== $larp->getId()) {
+            $this->addFlash('warning', new TranslatableMessage('import.expired', [], 'admin'));
+
+            return $this->redirect($this->larpUrl('importCharacters', $larp));
+        }
+        $edition = $this->em->getRepository(LarpEdition::class)->find($stored['edition']);
+        if (null === $edition || $edition->getLarp() !== $larp) {
+            throw new BadRequestHttpException();
+        }
+        $csv = (string) base64_decode((string) $stored['csv'], true);
+        /** @var array<int, string> $mapping */
+        $mapping = (array) $stored['mapping'];
+        $hasHeader = (bool) $stored['hasHeader'];
+        $error = null;
+
+        if ($request->isMethod('POST')) {
+            $this->checkCsrf(self::CSRF_IMPORT, $request);
+            $postedHeader = $request->request->getBoolean('hasHeader');
+            $mapping = [];
+            foreach ($request->request->all('columns') as $index => $column) {
+                $mapping[(int) $index] = \is_string($column) ? $column : '';
+            }
+
+            if ($postedHeader !== $hasHeader) {
+                // The columns change with the header row: guess again.
+                $hasHeader = $postedHeader;
+                $mapping = $this->mappingOf($this->csvReader->inspect($csv, $hasHeader, null, $this->rememberedColumns($request)));
+                $session->set(self::IMPORT_SESSION_KEY, ['hasHeader' => $hasHeader, 'mapping' => $mapping] + $stored);
+
+                return $this->redirect($this->larpUrl('importColumns', $larp));
+            }
+
+            try {
+                $plan = $this->importer->prepare($csv, $edition, (bool) $stored['update'], (bool) $stored['createTags'], $mapping, $hasHeader);
+                $session->set(self::IMPORT_SESSION_KEY, ['mapping' => $mapping] + $stored);
+                $this->rememberColumns($request, $plan->table);
+
+                return $this->renderPreview($larp, $plan, (string) $stored['token'], (string) $stored['filename']);
+            } catch (CsvImportException $e) {
+                $error = $this->translator->trans($e->getMessage(), $e->parameters, 'admin');
+            }
+        }
+
+        // Headers and samples only: the (possibly invalid) choices are shown from $mapping.
+        $table = $this->csvReader->inspect($csv, $hasHeader);
+        $columns = [];
+        foreach (array_keys(CsvReader::COLUMNS) as $column) {
+            $columns[$column] = 'import.target.'.$column;
+        }
+
+        return $this->render('admin/character/import_columns.html.twig', [
+            'larp' => $larp,
+            'edition' => $edition,
+            'table' => $table,
+            'mapping' => $mapping,
+            'columns' => $columns,
+            'filename' => $stored['filename'],
+            'error' => $error,
+            'csrfId' => self::CSRF_IMPORT,
+            'backUrl' => $this->larpUrl('importCharacters', $larp),
+        ], new Response(null, null !== $error ? 422 : 200));
+    }
+
+    /** @return array<int, string> */
+    private function mappingOf(CsvTable $table): array
+    {
+        $mapping = [];
+        foreach (array_keys($table->headers) as $index) {
+            $mapping[$index] = $table->columnAt($index);
+        }
+
+        return $mapping;
+    }
+
+    /** @return array<string, string> */
+    private function rememberedColumns(Request $request): array
+    {
+        $memory = $request->getSession()->get(self::IMPORT_MEMORY_KEY);
+
+        return \is_array($memory) ? array_filter($memory, 'is_string') : [];
+    }
+
+    /** Remembers the chosen columns by header name, so the next file with the same headers is guessed right. */
+    private function rememberColumns(Request $request, CsvTable $table): void
+    {
+        if (!$table->hasHeader) {
+            return;
+        }
+        $memory = $this->rememberedColumns($request);
+        foreach ($table->headers as $index => $title) {
+            $column = $table->columnAt($index);
+            if ('' !== $column && '' !== trim($title)) {
+                $memory[CsvReader::headerKey($title)] = $column;
+            }
+        }
+        $request->getSession()->set(self::IMPORT_MEMORY_KEY, \array_slice($memory, -100, null, true));
+    }
+
+    /** Step 3: save the previewed import (all rows or none). */
     #[AdminRoute('/{id}/characters/import/confirm', name: 'confirm_import', options: ['methods' => ['POST']])]
     public function confirmImport(Larp $larp, Request $request): Response
     {
@@ -316,7 +426,9 @@ class LarpCrudController extends AbstractCrudController
             throw new BadRequestHttpException();
         }
 
-        $plan = $this->importer->prepare((string) base64_decode((string) $stored['csv'], true), $edition, (bool) $stored['update'], (bool) $stored['createTags']);
+        /** @var array<int, string>|null $mapping */
+        $mapping = isset($stored['mapping']) ? (array) $stored['mapping'] : null;
+        $plan = $this->importer->prepare((string) base64_decode((string) $stored['csv'], true), $edition, (bool) $stored['update'], (bool) $stored['createTags'], $mapping, (bool) ($stored['hasHeader'] ?? true));
         if ($plan->hasErrors()) {
             return $this->renderPreview($larp, $plan, (string) $stored['token'], (string) $stored['filename']);
         }
@@ -419,7 +531,7 @@ class LarpCrudController extends AbstractCrudController
             'filename' => $filename,
             'csrfId' => self::CSRF_IMPORT,
             'confirmUrl' => $this->larpUrl('confirmImport', $larp),
-            'backUrl' => $this->larpUrl('importCharacters', $larp),
+            'backUrl' => $this->larpUrl('importColumns', $larp),
         ], new Response(null, $plan->hasErrors() ? 422 : 200));
     }
 

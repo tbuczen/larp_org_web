@@ -232,12 +232,80 @@ final class LarpTagsAndImportTest extends WebTestCase
         self::assertSelectorTextContains('body', 'kodowanie Windows-1250');
     }
 
-    public function testWrongFileShowsAFormError(): void
+    public function testWithoutANameColumnTheColumnsScreenAsksForIt(): void
     {
         $this->upload('cybercrush', "zajawka;obsada\nx;k\n");
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSelectorTextContains('body', 'Brak kolumny „nazwa”');
+        self::assertSelectorTextContains('.alert-danger', 'Wskaż kolumnę z nazwą postaci.');
+        self::assertSelectorExists('form.import-columns');
+    }
+
+    public function testAnEmptyFileShowsAFormError(): void
+    {
+        $this->uploadFile('cybercrush', "   \n");
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorExists('form[name="form"] .invalid-feedback, form[name="form"] .form-error-message');
+    }
+
+    public function testColumnsWithAnyNamesAreMappedByHand(): void
+    {
+        $csv = "Postać gracza;Krótko;Kto gra;Lubi;Unika;Notatki orga\n"
+            ."Netrunnerka Vex;Hakerka do wynajęcia;K;Hakowanie 70%, Tajemnica / śledztwo 30%;Broń palna 40%;nie pokazywać\n";
+        $crawler = $this->uploadFile('cybercrush', $csv);
+        $crawler = $this->client->followRedirect();
+
+        // Nothing recognised from these names: all columns start as "skip".
+        self::assertSame(['Postać gracza', 'Krótko', 'Kto gra', 'Lubi', 'Unika', 'Notatki orga'], $crawler->filter('.import-columns__table tbody th')->each(static fn (Crawler $c): string => trim($c->text())));
+        self::assertStringContainsString('Netrunnerka Vex', $crawler->filter('.import-columns__samples')->first()->text());
+        self::assertCount(0, $crawler->filter('.import-columns__table select option[selected]'));
+
+        // Choosing the same field twice is refused.
+        $form = $crawler->filter('form.import-columns')->form();
+        $this->choose($form, 'columns[0]', 'name');
+        $this->choose($form, 'columns[1]', 'name');
+        $this->client->submit($form);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('.alert-danger', 'tylko dla jednej kolumny');
+
+        $crawler = $this->upload('cybercrush', $csv, columns: [0 => 'name', 1 => 'teaser', 2 => 'casting', 3 => 'gameplay', 4 => 'triggers']);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.import-count--create', '1');
+        self::assertSelectorTextContains('.import-count--error', '0');
+        self::assertStringContainsString('Notatki orga', $crawler->filter('.alert-info')->text(), 'the skipped column is listed');
+        $this->client->submit($crawler->filter('form[action$="/characters/import/confirm"]')->form());
+
+        $vex = $this->em()->getRepository(Character::class)->findOneBy(['slug' => 'netrunnerka-vex']);
+        self::assertNotNull($vex);
+        self::assertSame('Hakerka do wynajęcia', $vex->getTeaser());
+        self::assertSame(CharacterCasting::Female, $vex->getCasting());
+        self::assertSame(['Hakowanie' => 70, 'Tajemnica / śledztwo' => 30], $this->tagMap($vex->getTagsOfType(TagType::Gameplay)));
+
+        // The choices are remembered for the next file with these column names.
+        $this->uploadFile('cybercrush', $csv);
+        $crawler = $this->client->followRedirect();
+        self::assertSame(['name', 'teaser', 'casting', 'gameplay', 'triggers'], $crawler->filter('.import-columns__table select option[selected]')->each(static fn (Crawler $o): string => (string) $o->attr('value')));
+    }
+
+    public function testFileWithoutAHeaderRow(): void
+    {
+        $this->uploadFile('cybercrush', "Netrunnerka Vex;K\nFixer Bolek;M\n");
+        $crawler = $this->client->followRedirect();
+        $form = $crawler->filter('form.import-columns')->form();
+        $header = $form['hasHeader'];
+        self::assertInstanceOf(ChoiceFormField::class, $header);
+        $header->untick();
+        $this->client->submit($form);
+        $crawler = $this->client->followRedirect();
+
+        self::assertSame(['Kolumna 1', 'Kolumna 2'], $crawler->filter('.import-columns__table tbody th')->each(static fn (Crawler $c): string => trim($c->text())));
+        $form = $crawler->filter('form.import-columns')->form();
+        $this->choose($form, 'columns[0]', 'name');
+        $this->choose($form, 'columns[1]', 'casting');
+        $crawler = $this->client->submit($form);
+        self::assertSelectorTextContains('.import-count--create', '2', 'the first row is a character too');
+        self::assertStringContainsString('Netrunnerka Vex', $crawler->filter('.import-table')->text());
     }
 
     public function testConfirmWithAStaleTokenStartsOver(): void
@@ -274,7 +342,36 @@ final class LarpTagsAndImportTest extends WebTestCase
         self::assertSelectorTextContains('.import-count--error', '0');
     }
 
-    private function upload(string $larpSlug, string $csv, bool $update = true, bool $createTags = true): Crawler
+    /**
+     * Uploads a CSV, then takes the column screen as guessed (or with $columns:
+     * file column index => field) and returns the preview.
+     *
+     * @param array<int, string>|null $columns
+     */
+    private function upload(string $larpSlug, string $csv, bool $update = true, bool $createTags = true, ?array $columns = null): Crawler
+    {
+        $crawler = $this->uploadFile($larpSlug, $csv, $update, $createTags);
+        if (!$this->client->getResponse()->isRedirect()) {
+            return $crawler; // the upload form with an error
+        }
+        $crawler = $this->client->followRedirect();
+        self::assertSelectorExists('form.import-columns');
+        $form = $crawler->filter('form.import-columns')->form();
+        foreach ($columns ?? [] as $index => $field) {
+            $this->choose($form, 'columns['.$index.']', $field);
+        }
+
+        return $this->client->submit($form);
+    }
+
+    private function choose(\Symfony\Component\DomCrawler\Form $form, string $field, string $value): void
+    {
+        $select = $form[$field];
+        self::assertInstanceOf(ChoiceFormField::class, $select);
+        $select->select($value);
+    }
+
+    private function uploadFile(string $larpSlug, string $csv, bool $update = true, bool $createTags = true): Crawler
     {
         $file = tempnam(sys_get_temp_dir(), 'import').'.csv';
         file_put_contents($file, $csv);
