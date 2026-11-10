@@ -182,7 +182,7 @@ final class CsvReader
         $clean = [];
         $used = [];
         foreach ($mapping as $index => $column) {
-            if (!\is_int($index) || $index < 0 || $index >= $count || !isset(self::COLUMNS[$column])) {
+            if ($index < 0 || $index >= $count || !isset(self::COLUMNS[$column])) {
                 continue;
             }
             if (isset($used[$column])) {
