@@ -69,5 +69,9 @@ final class IcsCalendarTest extends TestCase
         self::assertTrue($edition->isUpcoming($today), 'still running');
         self::assertFalse($edition->isUpcoming(new \DateTimeImmutable('2026-08-10')));
         self::assertFalse((new LarpEdition())->isUpcoming($today), 'no dates');
+
+        self::assertFalse($edition->isPast($today), 'still running is not past');
+        self::assertTrue($edition->isPast(new \DateTimeImmutable('2026-08-10')));
+        self::assertFalse((new LarpEdition())->isPast($today), 'without dates it is not past either');
     }
 }

@@ -145,8 +145,8 @@ final class EditionPagesTest extends WebTestCase
         $crawler = $this->client->request('GET', '/larp/pradawne-zwoje');
         self::assertSame('/uploads/editions/plakat-2026.jpg', $crawler->filter('.larp-hero img.cover')->attr('src'));
         self::assertSame('/uploads/editions/plakat-2026.jpg', $crawler->filter('.edition-card--current img')->attr('src'));
-        $crawler = $this->client->request('GET', '/larpy');
-        $card = $crawler->filter('.larp-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Pradawne Zwoje'));
+        $crawler = $this->client->request('GET', '/larpy?minione=1');
+        $card = $crawler->filter('.event-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Pradawne Zwoje') && str_contains($c->text(), '3. edycja'));
         self::assertSame('/uploads/editions/plakat-2026.jpg', $card->filter('img.cover')->attr('src'));
         self::assertStringContainsString('Nowy jarl, stare długi', $card->text(), "the current edition's teaser");
     }

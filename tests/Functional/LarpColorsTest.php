@@ -35,8 +35,8 @@ final class LarpColorsTest extends WebTestCase
             self::assertStringContainsString('--color-primary: #ff3fd2', $style->text());
         }
 
-        $crawler = $this->client->request('GET', '/larpy');
-        $card = $crawler->filter('.larp-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Cybercrush'));
+        $crawler = $this->client->request('GET', '/larpy?minione=1');
+        $card = $crawler->filter('.event-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Cybercrush'));
         self::assertStringContainsString('larp-card--colored', (string) $card->attr('class'));
         self::assertStringContainsString('--color-bg: #07070f', (string) $card->attr('style'));
         self::assertSelectorNotExists('head style', 'pages that are not about one LARP keep the theme');
@@ -51,8 +51,8 @@ final class LarpColorsTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/larp/cybercrush');
         self::assertSelectorNotExists('head style');
-        $crawler = $this->client->request('GET', '/larpy');
-        $card = $crawler->filter('.larp-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Cybercrush'));
+        $crawler = $this->client->request('GET', '/larpy?minione=1');
+        $card = $crawler->filter('.event-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Cybercrush'));
         self::assertNull($card->attr('style'));
     }
 

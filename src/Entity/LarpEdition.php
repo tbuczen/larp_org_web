@@ -359,6 +359,14 @@ class LarpEdition implements SluggableInterface, \Stringable
         return $this;
     }
 
+    /** Whether it has already ended (editions without dates aren't past). */
+    public function isPast(?\DateTimeImmutable $today = null): bool
+    {
+        $last = $this->endDate ?? $this->startDate;
+
+        return null !== $last && $last < ($today ?? new \DateTimeImmutable('today'));
+    }
+
     /** Whether it has dates and hasn't ended yet (so "add to calendar" makes sense). */
     public function isUpcoming(?\DateTimeImmutable $today = null): bool
     {

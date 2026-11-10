@@ -8,20 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class PublicLarpPagesTest extends WebTestCase
 {
-    public function testLarpListHasSectionsAndHidesDrafts(): void
-    {
-        $client = self::createClient();
-        $client->request('GET', '/larpy');
-
-        self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('#current', 'Pradawne Zwoje');
-        self::assertSelectorTextContains('#current', 'Cybercrush');
-        self::assertSelectorTextContains('#past', 'Vault 47');
-        self::assertSelectorTextContains('#past', '3 edycje · 2023–2025');
-        self::assertSelectorTextContains('#initiatives', 'Wyprawa Rycerska Talabeclandu');
-        self::assertSelectorTextNotContains('body', 'Projekt w przygotowaniu');
-    }
-
     public function testLarpPageShowsCurrentEditionAndRecruitment(): void
     {
         $client = self::createClient();

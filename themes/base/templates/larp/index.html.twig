@@ -1,3 +1,8 @@
+{#
+    "Nasze larpy": every edition is its own event. Upcoming editions first
+    (soonest first); past ones only with ?minione=1 (newest first). Initiatives,
+    which have no editions, are listed below.
+#}
 {% extends 'layout.html.twig' %}
 
 {% block title %}{{ 'larp.index_title'|trans }} · {{ settings.organizationName }}{% endblock %}
@@ -5,18 +10,54 @@
 {% block content %}
     <h1 class="page-title">{{ 'larp.index_title'|trans }}</h1>
 
-    {% for key, larps in sections %}
-        {% if larps is not empty %}
-            <section class="larp-section" id="{{ key }}">
-                <h2>{{ ('larp.section.' ~ key)|trans }}</h2>
-                <div class="card-grid">
-                    {% for larp in larps %}
-                        {% include 'larp/_card.html.twig' %}
-                    {% endfor %}
-                </div>
-            </section>
+    <nav class="event-filter" aria-label="{{ 'larp.filter_label'|trans }}">
+        <a class="event-filter__link" href="{{ path('app_larp_index') }}"{% if not showPast %} aria-current="page"{% endif %}>
+            {{ 'larp.filter_upcoming'|trans }} <span class="event-filter__count">{{ events.upcoming|length }}</span>
+        </a>
+        <a class="event-filter__link" href="{{ path('app_larp_index', {minione: 1}) }}"{% if showPast %} aria-current="page"{% endif %}>
+            {{ 'larp.filter_with_past'|trans }} <span class="event-filter__count">{{ events.upcoming|length + events.past|length }}</span>
+        </a>
+    </nav>
+
+    <section class="larp-section" id="upcoming">
+        <h2>{{ 'larp.section.upcoming'|trans }}</h2>
+        {% if events.upcoming is empty %}
+            <div class="event-empty">
+                <p>{{ 'larp.no_upcoming'|trans }}</p>
+                {% if not showPast and events.past is not empty %}
+                    <p><a class="button button--ghost" href="{{ path('app_larp_index', {minione: 1}) }}">{{ 'larp.show_past'|trans({count: events.past|length}) }}</a></p>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="card-grid">
+                {% for edition in events.upcoming %}
+                    {% include 'larp/_event_card.html.twig' with {past: false} %}
+                {% endfor %}
+            </div>
         {% endif %}
-    {% else %}
-        <p>{{ 'larp.none'|trans }}</p>
-    {% endfor %}
+    </section>
+
+    {% if showPast and events.past is not empty %}
+        <section class="larp-section" id="past">
+            <h2>{{ 'larp.section.past_editions'|trans }}</h2>
+            <div class="card-grid">
+                {% for edition in events.past %}
+                    {% include 'larp/_event_card.html.twig' with {past: true} %}
+                {% endfor %}
+            </div>
+        </section>
+    {% elseif events.past is not empty and events.upcoming is not empty %}
+        <p class="event-more"><a href="{{ path('app_larp_index', {minione: 1}) }}#past">{{ 'larp.show_past'|trans({count: events.past|length}) }}</a></p>
+    {% endif %}
+
+    {% if initiatives is not empty %}
+        <section class="larp-section" id="initiatives">
+            <h2>{{ 'larp.section.initiatives'|trans }}</h2>
+            <div class="card-grid">
+                {% for larp in initiatives %}
+                    {% include 'larp/_card.html.twig' %}
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}

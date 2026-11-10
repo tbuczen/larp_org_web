@@ -1,0 +1,35 @@
+{#
+    One edition as an event card (the /larpy list): image, LARP and edition name,
+    dates and place, recruitment (upcoming only), Facebook event, teaser. In the
+    LARP's own colours. Variables: edition, past (bool).
+#}
+{% set larp = edition.larp %}
+{% set href = path('app_edition_show', {slug: larp.slug, edition: edition.slug}) %}
+{% set card_colors = larp_colors(larp) %}
+<article class="larp-card event-card{{ card_colors ? ' larp-card--colored' }}{{ past ? ' event-card--past' }}"{% if card_colors %} style="{{ card_colors }}"{% endif %}>
+    <a class="larp-card__media" href="{{ href }}" tabindex="-1" aria-hidden="true">
+        {% include 'partials/_cover.html.twig' %}
+    </a>
+    <div class="larp-card__body">
+        {% if larp.format or larp.setting %}
+            <p class="larp-card__meta">{{ [larp.format, larp.setting]|filter(v => v)|join(' · ') }}</p>
+        {% endif %}
+        <h3 class="larp-card__title"><a href="{{ href }}">{{ larp.name }}</a></h3>
+        <p class="event-card__edition">{{ edition.name }}</p>
+        {% set when = [edition|edition_dates, edition.location]|filter(v => v) %}
+        {% if when is not empty %}
+            <p class="larp-card__when">{% if edition|edition_dates %}<strong>{{ edition|edition_dates }}</strong>{% endif %}{% if edition.location %} <span>{{ edition.location }}</span>{% endif %}</p>
+        {% endif %}
+        {% if not past %}
+            <div class="larp-card__status">
+                {% include 'partials/_recruitment.html.twig' %}
+                {% if edition.facebookEventUrl %}
+                    <a class="larp-card__event" href="{{ edition.facebookEventUrl }}" target="_blank" rel="noopener" title="{{ 'larp.facebook_event'|trans }}">
+                        <twig:ux:icon name="simple-icons:facebook" aria-hidden="true" /><span class="visually-hidden">{{ 'larp.facebook_event'|trans }}: {{ edition.title }}</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if edition.displayTeaser %}<p class="larp-card__teaser">{{ edition.displayTeaser }}</p>{% endif %}
+    </div>
+</article>

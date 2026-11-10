@@ -10,11 +10,13 @@ use App\Entity\Larp;
 use App\Entity\LarpEdition;
 use App\Repository\CharacterRepository;
 use App\Repository\GalleryRepository;
+use App\Repository\LarpEditionRepository;
 use App\Repository\LarpRepository;
 use App\Repository\SiteSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -38,15 +40,22 @@ class LarpController extends AbstractController
         private readonly CharacterRepository $characters,
         private readonly SiteSettingsRepository $settings,
         private readonly GalleryRepository $galleries,
+        private readonly LarpEditionRepository $editions,
     ) {
     }
 
+    /**
+     * Every edition as its own event: upcoming ones, and with ?minione=1 also the
+     * past ones; initiatives (no editions) below.
+     */
     #[Route('/larpy', name: 'app_larp_index')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('larp/index.html.twig', [
             'settings' => $this->settings->get(),
-            'sections' => $this->larps->findPublishedSections(),
+            'events' => $this->editions->findPublishedEvents(),
+            'showPast' => $request->query->getBoolean('minione'),
+            'initiatives' => $this->larps->findPublishedSections()['initiatives'],
         ]);
     }
 

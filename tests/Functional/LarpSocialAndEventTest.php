@@ -53,10 +53,18 @@ final class LarpSocialAndEventTest extends WebTestCase
 
     public function testCardsShowAFacebookEventIcon(): void
     {
+        // Upcoming events show their Facebook event; move both current editions into the future.
+        foreach (['pradawne-zwoje', 'cybercrush'] as $slug) {
+            $edition = $this->larp($slug)->getCurrentEdition();
+            self::assertNotNull($edition);
+            $edition->setStartDate(new \DateTimeImmutable('+20 days'))->setEndDate(new \DateTimeImmutable('+22 days'));
+        }
+        $this->em()->flush();
+
         $crawler = $this->client->request('GET', '/larpy');
-        $card = $crawler->filter('.larp-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Pradawne Zwoje'));
+        $card = $crawler->filter('.event-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Pradawne Zwoje'));
         self::assertCount(1, $card->filter('.larp-card__event[href="https://fb.me/e/hlDppZ9HB"][target="_blank"]'));
-        $cyber = $crawler->filter('.larp-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Cybercrush'));
+        $cyber = $crawler->filter('.event-card')->reduce(static fn (Crawler $c): bool => str_contains($c->text(), 'Cybercrush'));
         self::assertCount(0, $cyber->filter('.larp-card__event'));
     }
 

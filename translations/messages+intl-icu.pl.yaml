@@ -13,6 +13,11 @@ home:
     all_larps: Wszystkie larpy
 
 larp:
+    filter_label: Które edycje pokazać
+    filter_upcoming: Nadchodzące
+    filter_with_past: Wszystkie, także minione
+    no_upcoming: 'Nie ogłosiliśmy jeszcze kolejnych terminów — zajrzyj wkrótce albo śledź nas w mediach społecznościowych.'
+    show_past: '{count, plural, one {Pokaż minioną edycję} few {Pokaż # minione edycje} other {Pokaż # minionych edycji}}'
     current_edition: Aktualna
     edition_empty: 'Postacie i galerie tej edycji pojawią się tutaj.'
     character_count: '{count, plural, one {# postać} few {# postacie} other {# postaci}}'
@@ -23,6 +28,8 @@ larp:
     follow_us: Śledź nas
     index_title: Nasze larpy
     section:
+        upcoming: Nadchodzące edycje
+        past_editions: Minione edycje
         current: Aktualnie organizowane larpy
         past: Poprzednie projekty larpowe
         initiatives: Inne inicjatywy

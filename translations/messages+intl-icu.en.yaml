@@ -13,6 +13,11 @@ home:
     all_larps: All LARPs
 
 larp:
+    filter_label: Which editions to show
+    filter_upcoming: Upcoming
+    filter_with_past: All, including past
+    no_upcoming: "We haven't announced the next dates yet — check back soon or follow us on social media."
+    show_past: '{count, plural, one {Show the past edition} other {Show # past editions}}'
     current_edition: Current
     edition_empty: "This edition's characters and galleries will appear here."
     character_count: '{count, plural, one {# character} other {# characters}}'
@@ -23,6 +28,8 @@ larp:
     follow_us: Follow us
     index_title: Our LARPs
     section:
+        upcoming: Upcoming editions
+        past_editions: Past editions
         current: Currently organized LARPs
         past: Previous LARP projects
         initiatives: Other initiatives

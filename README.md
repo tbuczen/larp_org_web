@@ -83,7 +83,8 @@ is required; tag cells look like `Polityka / intryga 50%; Magia 30%`. *Pobierz s
 a ready-to-fill file. Code: `src/Import/`, `src/Tagging/TagResolver.php`.
 In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
 
-Public pages: `/larpy`, `/larp/{slug}` (the LARP with its current edition and cards for all
+Public pages: `/larpy` (every edition as its own event card: upcoming ones soonest first; past
+ones hidden until "Wszystkie, także minione" / `?minione=1`; initiatives below), `/larp/{slug}` (the LARP with its current edition and cards for all
 editions), `/larp/{slug}/{edition}` (one edition: dates, characters, galleries; past ones too),
 `/larp/{slug}/{edition}/postac/{character}`, and the character matcher at `/postacie` (all current
 LARPs), `/larp/{slug}/postacie` (current edition) and `/larp/{slug}/{edition}/postacie`. Edition

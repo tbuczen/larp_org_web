@@ -582,3 +582,14 @@ html.has-lightbox { overflow: hidden; }
 .edition-empty { margin-top: 2rem; }
 .notice { border-left: 3px solid var(--color-accent); color: var(--color-muted); padding: .5rem 1rem; }
 .edition-card__teaser { font-size: .9rem; margin: .4rem 0 0; }
+
+/* "Nasze larpy": upcoming / all toggle and edition event cards */
+.event-filter { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 2rem; }
+.event-filter__link { align-items: center; border: 1px solid var(--color-border); border-radius: var(--radius-small); color: var(--color-text); display: inline-flex; gap: .5rem; min-height: 44px; padding: .4rem 1rem; text-decoration: none; }
+.event-filter__link:hover { border-color: var(--color-primary); }
+.event-filter__link[aria-current="page"] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
+.event-filter__count { font-size: .85em; opacity: .75; }
+.event-card__edition { color: var(--color-accent); font-family: var(--font-ui); margin: -.2rem 0 .4rem; }
+.event-card--past .larp-card__media { filter: grayscale(.6); }
+.event-empty { border: 1px dashed var(--color-border); border-radius: var(--radius); color: var(--color-muted); padding: 1.5rem; }
+.event-more { margin-top: 1rem; }
