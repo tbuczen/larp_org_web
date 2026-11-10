@@ -380,7 +380,7 @@ class LarpEdition implements SluggableInterface, \Stringable
         return $this;
     }
 
-    /** @return Collection<int, Character> */
+    /** All characters, hidden ones included (for the admin list). */
     public function getCharacterCount(): int
     {
         return \count($this->characters);
