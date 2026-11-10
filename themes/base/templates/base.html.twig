@@ -23,6 +23,8 @@
                 <link rel="stylesheet" href="{{ asset(path) }}">
             {% endfor %}
         {% endblock %}
+        {# Page-specific token overrides, e.g. a LARP's colours (partials/_larp_colors.html.twig). #}
+        {% block theme_overrides %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
             {% for path in theme_scripts() %}

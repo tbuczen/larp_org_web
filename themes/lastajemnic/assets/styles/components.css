@@ -61,7 +61,7 @@ h1, h2, h3 { letter-spacing: var(--heading-tracking); }
 /* Covers without an image: the dryad's branches, faint */
 .cover--placeholder, .character-card__portrait {
     background: url("../images/card-placeholder.svg") center / cover, var(--color-surface-2);
-    color: rgb(236 230 216 / .18);
+    color: color-mix(in srgb, var(--color-text) 18%, transparent);
     font-family: var(--font-heading);
     font-size: 5.5rem;
 }
@@ -100,7 +100,7 @@ a.badge--open, .badge--open { background: var(--color-text); border-color: var(-
 
 /* Placeholder covers: the letter becomes a small monogram, so it doesn't sit on the dryad */
 .cover--placeholder { align-items: flex-end; justify-content: flex-start; padding: .4rem 1rem; }
-.cover--placeholder span { color: rgb(236 230 216 / .35); font-size: 3rem; line-height: 1; }
+.cover--placeholder span { color: color-mix(in srgb, var(--color-text) 35%, transparent); font-size: 3rem; line-height: 1; }
 
 /* Phones: the text spans the full width, so darken the hero from the middle down
    and move the dryad to the right, keeping the headline and subtitle readable. */
@@ -152,3 +152,9 @@ a.badge--open, .badge--open { background: var(--color-text); border-color: var(-
 /* Facebook event icon on LARP cards: square, bone outline */
 .larp-card__event { border-color: var(--color-text); border-radius: 0; }
 .larp-card__event:hover { background: var(--color-text); color: var(--color-on-primary); }
+
+/* LARP cards in their own colours: the frame stays, a line in the LARP's primary colour on top */
+.larp-card--colored { box-shadow: var(--frame), inset 0 3px 0 var(--color-primary); }
+
+/* The logo images are bone on ink; on a LARP with light colours (--logo-invert: 1) they flip to ink on bone */
+.lt-brand__wordmark, .site-brand__logo, .site-footer__logo { filter: invert(var(--logo-invert, 0)); }

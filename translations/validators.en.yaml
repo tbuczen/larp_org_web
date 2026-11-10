@@ -15,3 +15,4 @@ social.network_unknown: 'Choose a network from the list.'
 social.url_https: 'The address must start with https://'
 social.url_wrong_site: "This doesn't look like a %network% address (it must start with https://)."
 edition.facebook_event_invalid: 'Enter a Facebook event address: https://www.facebook.com/events/… or https://fb.me/e/…'
+larp.color_invalid: 'Enter a colour as #rrggbb, e.g. #c9a24a.'

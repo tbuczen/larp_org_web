@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice">
-  <!-- Placeholder cover for LARPs without an uploaded image: the logo's branches, faint, in the dark. -->
+  <!-- Placeholder cover for LARPs without an uploaded image: the logo's branches, faint. Transparent, so the
+       card colour (the surface-2 token) shows through: works on dark and light LARP colours. -->
   <defs>
     <radialGradient id="f" gradientUnits="userSpaceOnUse" cx="330" cy="170" r="190"><stop offset=".4" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
     <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="360"><rect width="640" height="360" fill="url(#f)"/></mask>
   </defs>
-  <rect width="640" height="360" fill="#0c0c0c"/>
-  <g mask="url(#m)"><g fill="#ece6d8" opacity=".14" transform="translate(150 -60) scale(0.42)"><g transform="scale(0.5)"><g transform="translate(0.000000,2332.000000) scale(0.100000,-0.100000)">
+  <g mask="url(#m)"><g fill="#8a8478" opacity=".25" transform="translate(150 -60) scale(0.42)"><g transform="scale(0.5)"><g transform="translate(0.000000,2332.000000) scale(0.100000,-0.100000)">
 <path d="M2960 23312 c0 -35 112 -146 238 -237 297 -215 411 -313 595 -513
 497 -539 928 -1259 1031 -1723 60 -270 73 -1318 21 -1702 -15 -111 -19 -127
 -35 -127 -46 0 -270 380 -449 758 -107 226 -196 321 -429 459 -272 159 -361

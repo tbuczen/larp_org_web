@@ -59,11 +59,13 @@ class LarpFixtures extends Fixture
         // Current LARPs
         $cybercrush = $this->larp($manager, 'Cybercrush', LarpStatus::Current, 'Larp chamber', 'Shadowrun',
             'Larp chamber inspirowany uniwersum Shadowrun.', 1)
-            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/profile.php?id=61586144905657']]);
+            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/profile.php?id=61586144905657']])
+            ->setColorPreset('cyberpunk');
         $cyberEdition = $this->edition($cybercrush, '1. edycja', '2026-07-17', '2026-07-18', 'Dąbrowa Górnicza', RecruitmentStatus::Closed);
 
         $zwoje = $this->larp($manager, 'Pradawne Zwoje', LarpStatus::Current, 'Larp terenowy', 'Skyrim',
             'Larp terenowy w świecie Skyrim.', 2)->setFeatured(true)
+            ->setColorPreset('frost')
             ->setSocialLinks([
                 ['network' => 'facebook', 'url' => 'https://www.facebook.com/pradawnezwoje'],
                 ['network' => 'facebook', 'url' => 'https://www.facebook.com/groups/287396224278365/', 'label' => 'Grupa graczy'],
@@ -77,20 +79,23 @@ class LarpFixtures extends Fixture
         // Previous LARPs
         $vault = $this->larp($manager, 'Vault 47', LarpStatus::Past, 'Larp terenowy', 'Fallout',
             'Larp w świecie Fallouta, przedstawiający historię mieszkańców Krypty 47, którzy dzięki mocy GECKa stworzyli niepowtarzalne miejsce, ściągając na siebie uwagę całego rejonu.', 3)
-            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/larpvault47']]);
+            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/larpvault47']])
+            ->setColorPreset('postapo');
         foreach (['2023', '2024', '2025'] as $i => $year) {
             $this->edition($vault, ($i + 1).'. edycja', $year.'-06-01', null, null, RecruitmentStatus::Closed);
         }
 
         $pogarda = $this->larp($manager, 'Czasy Pogardy', LarpStatus::Past, null, 'Wiedźmin',
-            'Larp inspirowany światem Wiedźmina.', 4);
+            'Larp inspirowany światem Wiedźmina.', 4)
+            ->setColorPreset('dark_fantasy');
         $this->edition($pogarda, '1. edycja', '2023-09-01', null, null, RecruitmentStatus::Closed);
 
         // Other initiatives
         $this->larp($manager, 'Wyprawa Rycerska Talabeclandu', LarpStatus::Current, 'Grupa larpowa', 'Warhammer Fantasy',
             'Wyjazdy na larpy terenowe i bitewne w świecie Warhammer Fantasy.', 5)
             ->setProjectType(ProjectType::Initiative)
-            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/WyprawaRycerskaTalabeclandu']]);
+            ->setSocialLinks([['network' => 'facebook', 'url' => 'https://www.facebook.com/WyprawaRycerskaTalabeclandu']])
+            ->setColorPreset('parchment');
 
         // A draft that must stay hidden on the public site.
         $this->larp($manager, 'Projekt w przygotowaniu', LarpStatus::Draft, null, null, 'Szkic — niewidoczny publicznie.', 9);

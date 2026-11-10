@@ -69,6 +69,25 @@ common:
     position_help: 'Lower numbers come first.'
 
 larp:
+    color:
+        preset: Colour preset
+        preset_none: "— the site theme's colours —"
+        preset_help: "Colours for this LARP's pages and its card. Single colours below replace the preset's; an empty field = the preset's colour (or the theme's)."
+        background: Background
+        background_help: "Background of the LARP's pages."
+        text: Text
+        text_help: 'Text colour — must read well on the background.'
+        primary: Primary
+        primary_help: 'Buttons and links.'
+        secondary: Secondary
+        secondary_help: 'Background of cards and panels. Empty = derived from the background.'
+        accent: Accent
+        accent_help: 'Small highlights: eyebrows, icons.'
+        theme_colors: "This LARP's pages use the theme's colours."
+        clear: "Clear (the preset's or theme's colour)"
+        low_contrast_text: "Text may be hard to read on this LARP's background: contrast %ratio%:1 (at least %min%:1 recommended)."
+        low_contrast_primary: 'Buttons may not stand out from the background: primary colour contrast %ratio%:1 (at least %min%:1 recommended).'
+        low_contrast_accent: 'The accent may not stand out from the background: contrast %ratio%:1 (at least %min%:1 recommended).'
     social_links: Social media links
     social_links_help: "This LARP's profiles: Facebook page or group, Instagram, Discord server, YouTube… Empty = the LARP page shows the organization's profiles. The Facebook event is set on the edition."
     label: LARP
@@ -80,6 +99,7 @@ larp:
         description: Description
         media: Images
         links: Social media
+        colors: Colours
         editions: Editions
     name: Name
     slug: URL slug

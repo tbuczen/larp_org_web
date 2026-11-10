@@ -59,6 +59,17 @@ themes/<name>/
 | `--radius`, `--radius-small`, `--max-width`, `--gutter`, `--header-height` | shape and layout |
 | `--shadow`, `--hero-overlay`, `--page-background`, `--header-bg`, `--header-border`, `--cta-bg`, `--footer-bg`, `--block-spacing` | effects and backgrounds |
 
+## LARP colour schemes
+
+A LARP can have its own colours (preset + own colours, `src/Theme/LarpColors.php`). On that
+LARP's pages they override the tokens on `:root` (`partials/_larp_colors.html.twig` in the
+`theme_overrides` block), and on its cards through a `style` attribute. Overridden tokens:
+`--color-bg`, `--color-surface`, `--color-surface-2`, `--color-border`, `--color-text`,
+`--color-muted`, `--color-link`, `--color-primary`, `--color-on-primary`, `--color-accent`,
+`--cta-bg`, `color-scheme`, and `--logo-invert` (1 on light backgrounds; use
+`filter: invert(var(--logo-invert, 0))` on light-on-dark logo images). So: keep colours in
+tokens, and build other tokens from them with `var()` where they are used, not in `:root`.
+
 ## Templates
 
 | Template | What it renders |

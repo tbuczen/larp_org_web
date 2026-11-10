@@ -1,6 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block title %}{{ 'character.title'|trans }} · {{ larp.name }} · {{ settings.organizationName }}{% endblock %}
+{% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 
 {% block content %}
     <nav class="breadcrumbs"><a href="{{ path('app_larp_show', {slug: larp.slug}) }}">← {{ larp.name }}</a></nav>

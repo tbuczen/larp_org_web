@@ -14,6 +14,7 @@ use App\Import\CsvReader;
 use App\Import\ImportPlan;
 use App\Repository\TagRepository;
 use App\Tagging\TagResolver;
+use App\Theme\LarpColors;
 use App\Util\DateRangeFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
@@ -125,6 +126,32 @@ class LarpCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $characters)
             ->add(Crud::PAGE_EDIT, $tags)
             ->add(Crud::PAGE_EDIT, $view);
+    }
+
+    public function persistEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        parent::persistEntity($entityManager, $entityInstance);
+        $this->warnAboutContrast($entityInstance);
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        parent::updateEntity($entityManager, $entityInstance);
+        $this->warnAboutContrast($entityInstance);
+    }
+
+    /** Saves anyway, but says when the colours are hard to read (WCAG AA). */
+    private function warnAboutContrast(object $larp): void
+    {
+        if (!$larp instanceof Larp) {
+            return;
+        }
+        foreach (LarpColors::contrastProblems($larp) as $problem) {
+            $this->addFlash('warning', new TranslatableMessage('larp.color.low_contrast_'.$problem['pair'], [
+                '%ratio%' => number_format($problem['ratio'], 1, ',', ''),
+                '%min%' => number_format($problem['min'], 1, ',', ''),
+            ], 'admin'));
+        }
     }
 
     /** URL of one of this controller's LARP screens (tags, importCharacters, ...). */
@@ -471,6 +498,34 @@ class LarpCrudController extends AbstractCrudController
             ->setRequired(false)
             ->setHelp('larp.cover_image_alt_help')
             ->onlyOnForms();
+
+        yield FormField::addTab('larp.tab.colors', 'fa fa-palette');
+        $presets = [];
+        foreach (LarpColors::PRESETS as $key => $preset) {
+            $presets[$key] = array_combine(LarpColors::FIELDS, \array_slice($preset, 1));
+        }
+        yield ChoiceField::new('colorPreset', 'larp.color.preset')
+            ->setChoices(array_combine(array_column(LarpColors::PRESETS, 0), array_keys(LarpColors::PRESETS)))
+            ->setFormTypeOption('choice_translation_domain', false)
+            ->setFormTypeOption('placeholder', 'larp.color.preset_none')
+            ->setFormTypeOption('attr', [
+                'data-color-presets' => json_encode($presets, \JSON_THROW_ON_ERROR),
+                'data-theme-label' => $this->translator->trans('larp.color.theme_colors', [], 'admin'),
+                'data-clear-label' => $this->translator->trans('larp.color.clear', [], 'admin'),
+            ])
+            ->setRequired(false)
+            ->setHelp('larp.color.preset_help')
+            ->setColumns(6)
+            ->onlyOnForms();
+        yield FormField::addRow();
+        foreach (LarpColors::FIELDS as $field) {
+            yield TextField::new('color'.ucfirst($field), 'larp.color.'.$field)
+                ->setRequired(false)
+                ->setFormTypeOption('attr', ['data-color-input' => $field, 'placeholder' => '#rrggbb', 'maxlength' => 7, 'autocomplete' => 'off'])
+                ->setHelp('larp.color.'.$field.'_help')
+                ->setColumns(4)
+                ->onlyOnForms();
+        }
 
         yield FormField::addTab('larp.tab.links', 'fa fa-share-nodes');
         yield CollectionField::new('socialLinks', 'larp.social_links')

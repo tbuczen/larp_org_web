@@ -9,6 +9,7 @@ use App\Enum\ProjectType;
 use App\Repository\LarpRepository;
 use App\Social\SocialLink;
 use App\Social\SocialNetwork;
+use App\Theme\LarpColors;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -87,6 +88,36 @@ class Larp implements SluggableInterface, \Stringable
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $socialLinks = null;
+
+    /** Colour preset key (App\Theme\LarpColors::PRESETS); null = the theme's colours. */
+    #[ORM\Column(length: 40, nullable: true)]
+    #[Assert\Choice(callback: [LarpColors::class, 'presetKeys'])]
+    private ?string $colorPreset = null;
+
+    /** Own background colour (#rrggbb), replacing the preset's; null = preset / theme. */
+    #[ORM\Column(length: 7, nullable: true)]
+    #[Assert\Regex('/^#[0-9a-f]{6}$/', message: 'larp.color_invalid')]
+    private ?string $colorBackground = null;
+
+    /** Own text colour (#rrggbb), replacing the preset's; null = preset / theme. */
+    #[ORM\Column(length: 7, nullable: true)]
+    #[Assert\Regex('/^#[0-9a-f]{6}$/', message: 'larp.color_invalid')]
+    private ?string $colorText = null;
+
+    /** Own primary colour (#rrggbb), replacing the preset's; null = preset / theme. */
+    #[ORM\Column(length: 7, nullable: true)]
+    #[Assert\Regex('/^#[0-9a-f]{6}$/', message: 'larp.color_invalid')]
+    private ?string $colorPrimary = null;
+
+    /** Own secondary colour (#rrggbb), replacing the preset's; null = preset / theme. */
+    #[ORM\Column(length: 7, nullable: true)]
+    #[Assert\Regex('/^#[0-9a-f]{6}$/', message: 'larp.color_invalid')]
+    private ?string $colorSecondary = null;
+
+    /** Own accent colour (#rrggbb), replacing the preset's; null = preset / theme. */
+    #[ORM\Column(length: 7, nullable: true)]
+    #[Assert\Regex('/^#[0-9a-f]{6}$/', message: 'larp.color_invalid')]
+    private ?string $colorAccent = null;
 
     #[ORM\Column]
     private bool $featured = false;
@@ -332,6 +363,104 @@ class Larp implements SluggableInterface, \Stringable
     public function getSocialButtons(): array
     {
         return SocialLink::fromRows($this->getSocialLinks());
+    }
+
+    public function getColorPreset(): ?string
+    {
+        return $this->colorPreset;
+    }
+
+    public function setColorPreset(?string $colorPreset): static
+    {
+        $this->colorPreset = '' === $colorPreset ? null : $colorPreset;
+
+        return $this;
+    }
+
+    /** One of LarpColors::FIELDS. */
+    public function getColor(string $field): ?string
+    {
+        return match ($field) {
+            'background' => $this->colorBackground,
+            'text' => $this->colorText,
+            'primary' => $this->colorPrimary,
+            'secondary' => $this->colorSecondary,
+            'accent' => $this->colorAccent,
+            default => throw new \InvalidArgumentException($field),
+        };
+    }
+
+    public function hasColors(): bool
+    {
+        return null !== LarpColors::colorsOf($this);
+    }
+
+    /** "#ABC" → "#aabbcc"; anything that isn't a colour is kept so validation can complain. */
+    private static function color(?string $value): ?string
+    {
+        $value = null === $value ? '' : trim($value);
+
+        return '' === $value ? null : (LarpColors::normalize($value) ?? $value);
+    }
+
+    public function getColorBackground(): ?string
+    {
+        return $this->colorBackground;
+    }
+
+    public function setColorBackground(?string $color): static
+    {
+        $this->colorBackground = self::color($color);
+
+        return $this;
+    }
+
+    public function getColorText(): ?string
+    {
+        return $this->colorText;
+    }
+
+    public function setColorText(?string $color): static
+    {
+        $this->colorText = self::color($color);
+
+        return $this;
+    }
+
+    public function getColorPrimary(): ?string
+    {
+        return $this->colorPrimary;
+    }
+
+    public function setColorPrimary(?string $color): static
+    {
+        $this->colorPrimary = self::color($color);
+
+        return $this;
+    }
+
+    public function getColorSecondary(): ?string
+    {
+        return $this->colorSecondary;
+    }
+
+    public function setColorSecondary(?string $color): static
+    {
+        $this->colorSecondary = self::color($color);
+
+        return $this;
+    }
+
+    public function getColorAccent(): ?string
+    {
+        return $this->colorAccent;
+    }
+
+    public function setColorAccent(?string $color): static
+    {
+        $this->colorAccent = self::color($color);
+
+        return $this;
     }
 
     public function isFeatured(): bool

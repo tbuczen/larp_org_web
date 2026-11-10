@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Entity\Larp;
 use App\Entity\LarpEdition;
+use App\Theme\LarpColors;
 use App\Util\DateRangeFormatter;
 use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
 
 final class AppExtension
 {
@@ -22,5 +25,16 @@ final class AppExtension
     public function shortDate(?\DateTimeInterface $date): ?string
     {
         return DateRangeFormatter::format($date);
+    }
+
+    /**
+     * {{ larp_colors(larp) }} → "--color-bg: #120d0b; --color-text: …" (empty when
+     * the LARP keeps the theme's colours). Used in partials/_larp_colors.html.twig
+     * and on LARP cards.
+     */
+    #[AsTwigFunction('larp_colors')]
+    public function larpColors(?Larp $larp): string
+    {
+        return null === $larp ? '' : LarpColors::css($larp);
     }
 }

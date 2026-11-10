@@ -1,0 +1,8 @@
+{#
+    The LARP's colour scheme as overrides of the theme's tokens, for every page of
+    that LARP. Include it in the theme_overrides block with {larp: …}.
+#}
+{% set larp_css = larp_colors(larp ?? null) %}
+{% if larp_css %}
+    <style>:root { {{ larp_css }}; }</style>
+{% endif %}

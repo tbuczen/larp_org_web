@@ -114,6 +114,15 @@ Each edition can have a Facebook event (`facebook.com/events/…` or `fb.me/e/�
 page gets a "Wydarzenie na Facebooku" button and LARP cards a small Facebook icon. Upcoming
 editions also offer "Dodaj do kalendarza", an `.ics` file at `/larp/{slug}/kalendarz.ics`.
 
+### LARP colour schemes
+
+*Larp → Kolory*: pick a preset (Dark fantasy, Mroźna północ, Cyberpunk neon, Postapo rdza,
+Historyczny pergamin) and/or set own colours (background, text, primary, secondary, accent;
+empty = the preset's, or the theme's). The LARP's pages and its cards then use them: the
+colours override the theme's tokens (`src/Theme/LarpColors.php`), so this works with any
+theme. The form has colour pickers and a live preview with WCAG contrast ratios; saving
+colours that are hard to read shows a warning. Clearing everything returns to the theme.
+
 ### Photo galleries
 
 *Admin → Galerie zdjęć*. A gallery usually **links to an album elsewhere** (Google Photos,

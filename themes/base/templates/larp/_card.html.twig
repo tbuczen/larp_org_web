@@ -1,5 +1,7 @@
 {% set edition = larp.currentEdition %}
-<article class="larp-card">
+{# The LARP's own colours apply to its card too (see Theme\LarpColors). #}
+{% set card_colors = larp_colors(larp) %}
+<article class="larp-card{{ card_colors ? ' larp-card--colored' }}"{% if card_colors %} style="{{ card_colors }}"{% endif %}>
     <a class="larp-card__media" href="{{ path('app_larp_show', {slug: larp.slug}) }}" tabindex="-1" aria-hidden="true">
         {% include 'partials/_cover.html.twig' %}
     </a>

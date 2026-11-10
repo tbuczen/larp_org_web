@@ -259,3 +259,20 @@
     .social-link-item__label { grid-column: 2 / 3; }
 }
 .form-group.field-collection:has(.social-link-item) .ea-form-collection-items { border: 0; }
+
+/* LARP colours (assets/admin.js initLarpColors) */
+.color-field { align-items: center; display: flex; gap: .4rem; }
+.color-field .form-control { font-family: var(--font-family-monospace, monospace); }
+.color-picker { block-size: 38px; border: 1px solid var(--border-color, #ced4da); border-radius: 6px; cursor: pointer; flex: 0 0 44px; padding: 2px; }
+.color-picker.is-inherited { opacity: .55; }
+.color-clear { font-size: 1.3rem; line-height: 1; padding: 0 .25rem; text-decoration: none; }
+.larp-color-preview { align-items: flex-start; display: flex; flex-wrap: wrap; gap: 2rem; margin: .5rem 0 1.5rem; padding: 12px; width: 100%; }
+.larp-color-preview__card { display: grid; gap: .35rem; margin: 12px; max-width: 300px; min-width: 240px; padding: 1rem 1.2rem; }
+.larp-color-preview__eyebrow { font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
+.larp-color-preview__title { font-size: 1.3rem; text-transform: uppercase; }
+.larp-color-preview__panel { padding: .35rem .6rem; }
+.larp-color-preview__button { display: inline-block; font-weight: 600; padding: .35rem .9rem; }
+.larp-color-preview__checks { list-style: none; margin: 12px 0 0; padding: 0; }
+.larp-color-preview__checks li { margin-bottom: .3rem; }
+.larp-color-preview__checks .is-ok { color: #198754; }
+.larp-color-preview__checks .is-low { color: #b54708; font-weight: 600; }

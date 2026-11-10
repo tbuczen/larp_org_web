@@ -69,6 +69,25 @@ common:
     position_help: 'Mniejsza liczba = wyżej na liście.'
 
 larp:
+    color:
+        preset: Gotowy zestaw kolorów
+        preset_none: '— kolory motywu strony —'
+        preset_help: 'Kolory dla stron tego larpa i jego karty. Pojedyncze kolory poniżej zastępują kolory zestawu; puste pole = kolor z zestawu (albo motywu).'
+        background: Tło
+        background_help: 'Tło stron larpa.'
+        text: Tekst
+        text_help: 'Kolor tekstu — musi być dobrze czytelny na tle.'
+        primary: Kolor główny
+        primary_help: 'Przyciski i linki.'
+        secondary: Kolor drugoplanowy
+        secondary_help: 'Tło kart i paneli. Puste = wyliczone z tła.'
+        accent: Akcent
+        accent_help: 'Drobne wyróżnienia: nadtytuły, ikony.'
+        theme_colors: 'Strony tego larpa używają kolorów motywu.'
+        clear: 'Wyczyść (kolor z zestawu albo motywu)'
+        low_contrast_text: 'Tekst może być słabo czytelny na tle tego larpa: kontrast %ratio%:1 (zalecane co najmniej %min%:1).'
+        low_contrast_primary: 'Przyciski mogą słabo odcinać się od tła: kontrast koloru głównego %ratio%:1 (zalecane co najmniej %min%:1).'
+        low_contrast_accent: 'Akcent może słabo odcinać się od tła: kontrast %ratio%:1 (zalecane co najmniej %min%:1).'
     social_links: Linki do social mediów
     social_links_help: 'Profile tego larpa: strona albo grupa na Facebooku, Instagram, serwer Discord, YouTube… Puste = na stronie larpa pokażą się profile stowarzyszenia. Wydarzenie na Facebooku dodaje się w edycji.'
     label: Larp
@@ -80,6 +99,7 @@ larp:
         description: Opis
         media: Grafika
         links: Social media
+        colors: Kolory
         editions: Edycje
     name: Nazwa
     slug: Adres (slug)
