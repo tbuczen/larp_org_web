@@ -20,8 +20,10 @@ final class CountdownCalendarTest extends TestCase
         self::assertSame('sierpień 2026', mb_strtolower($months[0]['label']));
         $first = $months[0]['weeks'][0];
         self::assertSame([null, null, null, null, null], \array_slice($first, 0, 5), 'Mon–Fri before the 1st are empty');
-        self::assertSame(1, $first[5]['day'] ?? null);
-        self::assertTrue($first[5]['today'] ?? false);
+        $saturday = $first[5];
+        self::assertNotNull($saturday);
+        self::assertSame(1, $saturday['day']);
+        self::assertTrue($saturday['today']);
 
         $days = array_merge(...$months[0]['weeks']);
         $event = array_values(array_map(static fn (array $d): int => $d['day'], array_filter($days, static fn (?array $d): bool => null !== $d && $d['event'])));
