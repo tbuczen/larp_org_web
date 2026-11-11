@@ -187,6 +187,24 @@ final class AdminPagesAndMenusTest extends WebTestCase
         self::assertCount(0, $crawler->filter('link[href*="themes/lastajemnic"]'));
     }
 
+    /** Image fields inside block settings need EasyAdmin's upload script, or "Dodaj plik" does nothing. */
+    public function testBlockFormsWithImagesLoadTheUploadScript(): void
+    {
+        $page = (new Page())->setTitle('Obrazki')->setSlug('obrazki');
+        foreach (['parallax_banner', 'hero', 'image_text', 'gallery'] as $type) {
+            $page->addBlock(new PageBlock($type));
+        }
+        $this->em()->persist($page);
+        $this->em()->flush();
+
+        foreach ($page->getBlocks() as $block) {
+            $crawler = $this->client->request('GET', '/admin/page-block/'.$block->getId().'/edit');
+            self::assertResponseIsSuccessful();
+            self::assertSelectorExists('button[data-ea-fileupload-add]', $block->getType());
+            self::assertCount(1, $crawler->filter('script[src*="field-file-upload"]'), $block->getType());
+        }
+    }
+
     public function testGalleryUploadsSeveralPhotosAndKeepsAddingToThem(): void
     {
         $page = (new Page())->setTitle('Galeria')->setSlug('galeria-test');

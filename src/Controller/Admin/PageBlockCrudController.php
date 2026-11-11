@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -81,6 +82,9 @@ class PageBlockCrudController extends AbstractCrudController
                 // Hook for admin.css, which brings back the labels that EasyAdmin's
                 // "field-array" styling (its guess for a JSON column) hides.
                 ->addCssClass('field-block-settings')
+                // Image fields inside the settings form need EasyAdmin's upload script
+                // (it's only added automatically for top-level File/Image fields).
+                ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-file-upload.js'))
                 ->onlyOnForms();
         }
         yield TextField::new('adminLabel', 'block.admin_label')
