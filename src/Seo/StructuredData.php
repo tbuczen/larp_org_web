@@ -37,7 +37,7 @@ final class StructuredData
             'description' => Text::meta($settings->getTagline()),
             'logo' => $this->seoUrls->defaultImage(),
             'email' => $settings->getContactEmail(),
-            'sameAs' => array_values(array_map(static fn ($link): string => $link->url, $settings->getSocialButtons())) ?: null,
+            'sameAs' => array_map(static fn ($link): string => $link->url, $settings->getSocialButtons()) ?: null,
         ], static fn (mixed $v): bool => null !== $v && '' !== $v);
     }
 
