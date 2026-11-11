@@ -30,7 +30,9 @@ themes/<name>/
   `assets/`); they're preloaded so the menu doesn't shift when the font arrives.
 - **Special images** (found by name, first theme in the chain that has them wins):
   `images/logo.svg` (header logo), `images/favicon.svg`, `images/hero.svg`
-  (hero background when a block has no image and features no LARP with a cover).
+  (hero background when a block has no image and features no LARP with a cover),
+  `images/og.png` (link preview picture when a page has none of its own: 1200×630 PNG;
+  not SVG, which Facebook ignores).
 - Uploaded content images (LARP covers, block images) always take priority over theme art.
 
 ## Rules for theme authors (and AI assistants)

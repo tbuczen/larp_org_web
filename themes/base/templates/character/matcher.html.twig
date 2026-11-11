@@ -1,5 +1,6 @@
 {% extends 'layout.html.twig' %}
 
+{% set seo = {description: 'seo.matcher_description'|trans({org: settings.organizationName})} %}
 {% block title %}{{ 'matcher.title'|trans }} · {{ settings.organizationName }}{% endblock %}
 
 {% block content %}

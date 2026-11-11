@@ -115,7 +115,7 @@ larp:
     player_count: Number of players
     price: Price
     teaser: Teaser
-    teaser_help: 'Short text for the LARP card (up to 500 characters).'
+    teaser_help: 'Short text for the LARP card (up to 500 characters). Its first ~160 characters also show in Google and link previews.'
     description: Full description
     cover_image: Cover image
     cover_image_help: 'Large photo or poster of the LARP (JPG/PNG/WebP, up to 8 MB).'
@@ -136,7 +136,7 @@ edition:
         media: Image
     cover_image: Edition image
     cover_image_help: "E.g. this edition's poster. Empty = the LARP's image."
-    teaser_help: "One sentence about this edition. Empty = the LARP's teaser."
+    teaser_help: "One sentence about this edition, also shown in Google and link previews. Empty = the LARP's teaser."
     description_help: "What's new in this edition: plot, changes, practical info. Shown on the edition page."
     fallback_help: "Empty = as in the LARP's details."
     slug: Address (slug)
@@ -223,7 +223,7 @@ page:
     is_home_help: 'Only one page can be the front page.'
     published: Published
     meta_description: Search engine description
-    meta_description_help: 'Short description (up to 300 characters) shown in Google and when shared.'
+    meta_description_help: 'Shown in Google and when the link is shared. Google shows about 160 characters; longer text is cut. Empty = the tagline.'
     blocks: Blocks
     layout: Page layout
     layout_help: 'Drag blocks by the handle (⠿) or use the arrows to reorder them. Hidden blocks are not shown on the site.'

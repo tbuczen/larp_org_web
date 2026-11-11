@@ -132,3 +132,9 @@ gallery:
         google: Google Photos
         facebook: Facebook
         other: '{host}'
+seo:
+    larps_description: 'LARPs by {org}: upcoming dates, sign-ups, characters and photos from past runs.'
+    characters_description: 'Characters for {larp} ({edition}): rate what you enjoy in a game and see the roles that suit you.'
+    matcher_description: 'Find your character at a {org} LARP: rate what you enjoy and see the roles that suit you best.'
+    galleries_description: 'Photos from {org} LARPs.'
+    gallery_description: 'Photo gallery: {title}.'

@@ -7,7 +7,12 @@
 {% extends 'layout.html.twig' %}
 
 {% block title %}{{ edition.title }} · {{ settings.organizationName }}{% endblock %}
-{% block meta %}{% if edition.displayTeaser %}<meta name="description" content="{{ edition.displayTeaser }}">{% endif %}{% endblock %}
+{% set seo = {
+    description: edition.displayTeaser ?? edition.description ?? larp.description,
+    image: seo_image(edition),
+    image_alt: edition.coverImage ? edition.coverImageAlt : larp.coverImageAlt,
+    jsonld: [ld().event(edition, settings), ld().larpBreadcrumbs(settings, larp, edition)],
+} %}
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 
 {% block content %}

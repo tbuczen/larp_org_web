@@ -1,5 +1,10 @@
 {% extends 'layout.html.twig' %}
 
+{% set seo = {
+    description: 'seo.characters_description'|trans({larp: larp.name, edition: edition.name}),
+    image: seo_image(edition),
+    jsonld: [ld().larpBreadcrumbs(settings, larp, edition, [['character.title'|trans, url('app_edition_characters', {slug: larp.slug, edition: edition.slug})]])],
+} %}
 {% block title %}{{ 'character.title'|trans }} · {{ larp.name }} · {{ settings.organizationName }}{% endblock %}
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 

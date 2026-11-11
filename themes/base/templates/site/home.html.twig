@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% set seo = {jsonld: [ld().organization(settings), ld().website(settings)]} %}
+
 {#
     Fallback front page, used only until a page is marked as "Front page" in
     Admin → Pages & layout.

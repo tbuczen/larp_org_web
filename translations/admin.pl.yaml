@@ -115,7 +115,7 @@ larp:
     player_count: Liczba graczy
     price: Cena
     teaser: Zajawka
-    teaser_help: 'Krótki opis na karcie larpa (do 500 znaków).'
+    teaser_help: 'Krótki opis na karcie larpa (do 500 znaków). Pierwsze ~160 znaków pokaże też Google i podgląd linku na Facebooku.'
     description: Pełny opis
     cover_image: Grafika główna
     cover_image_help: 'Duże zdjęcie lub plakat larpa (JPG/PNG/WebP, do 8 MB).'
@@ -136,7 +136,7 @@ edition:
         media: Grafika
     cover_image: Grafika edycji
     cover_image_help: 'Np. plakat tej edycji. Puste = grafika larpa.'
-    teaser_help: 'Jedno zdanie o tej edycji. Puste = zajawka larpa.'
+    teaser_help: 'Jedno zdanie o tej edycji, pokazywane też w Google i podglądzie linku. Puste = zajawka larpa.'
     description_help: 'Co nowego w tej edycji: fabuła, zmiany, informacje praktyczne. Pokazywane na stronie edycji.'
     fallback_help: 'Puste = tak jak w danych larpa.'
     slug: Adres (slug)
@@ -223,7 +223,7 @@ page:
     is_home_help: 'Tylko jedna strona może być stroną główną.'
     published: Opublikowana
     meta_description: Opis dla wyszukiwarek
-    meta_description_help: 'Krótki opis (do 300 znaków), widoczny w Google i przy udostępnianiu.'
+    meta_description_help: 'Opis widoczny w Google i przy udostępnianiu linku. Google pokazuje ok. 160 znaków, dłuższy zostanie przycięty. Puste = hasło organizacji.'
     blocks: Bloki
     layout: Układ strony
     layout_help: 'Przeciągnij bloki za uchwyt (⠿) albo użyj strzałek, aby zmienić kolejność. Ukryte bloki nie są widoczne na stronie.'

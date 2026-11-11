@@ -6,6 +6,11 @@
 #}
 {% extends 'layout.html.twig' %}
 
+{% set seo = {
+    description: gallery.description ?? 'seo.gallery_description'|trans({title: gallery.title}),
+    image: seo_image(gallery),
+    jsonld: [ld().breadcrumbs([[settings.organizationName, url('app_home')], ['gallery.index_title'|trans, url('app_gallery_index')], [gallery.title, url('app_gallery_show', {slug: gallery.slug})]])],
+} %}
 {% block title %}{{ gallery.title }} · {{ settings.organizationName }}{% endblock %}
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: gallery.larp} %}{% endblock %}
 

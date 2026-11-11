@@ -8,9 +8,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <title>{% block title %}{{ settings.organizationName ?? 'LARP' }}{% endblock %}</title>
-        {% block meta %}
-            {% if settings.tagline is defined and settings.tagline %}<meta name="description" content="{{ settings.tagline }}">{% endif %}
-        {% endblock %}
+        {# Description, canonical link, sharing preview and structured data; pages set `seo` (see the partial). #}
+        {% block meta %}{% include 'partials/_seo.html.twig' with {page_title: block('title')|trim} %}{% endblock %}
         <meta name="theme-color" content="#111318">
         {# Turbo morphs between pages with a cross-fade; the header keeps its place (view-transition-name in base.css). #}
         <meta name="view-transition" content="same-origin">

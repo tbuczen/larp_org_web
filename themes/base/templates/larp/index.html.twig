@@ -5,6 +5,7 @@
 #}
 {% extends 'layout.html.twig' %}
 
+{% set seo = {description: 'seo.larps_description'|trans({org: settings.organizationName})} %}
 {% block title %}{{ 'larp.index_title'|trans }} · {{ settings.organizationName }}{% endblock %}
 
 {% block content %}

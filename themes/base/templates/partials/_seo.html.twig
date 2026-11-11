@@ -1,0 +1,32 @@
+{#
+    Search and sharing tags for every public page. A page describes itself with a
+    top-level {% set seo = {...} %} (all keys optional):
+      description  text or HTML; cut to 160 characters (default: the tagline)
+      image        absolute URL of the share picture (default: seo_image(), the theme's images/og.png)
+      type         og:type, default "website"
+      title        share title (default: the <title>)
+      canonical    absolute URL (default: this address without its query string)
+      noindex      true keeps the page out of search results
+      jsonld       schema.org data, see App\Seo\StructuredData
+    Variables: seo, page_title (the rendered <title>).
+#}
+{% set seo = seo|default({}) %}
+{% set site_name = settings.organizationName ?? null %}
+{% set description = (seo.description ?? (settings.tagline ?? null))|meta_text %}
+{% set canonical = seo.canonical ?? (app.request.schemeAndHttpHost ~ app.request.baseUrl ~ app.request.pathInfo) %}
+{% set image = seo.image ?? seo_image() %}
+{% if description %}<meta name="description" content="{{ description }}">{% endif %}
+{% if seo.noindex ?? false %}<meta name="robots" content="noindex, follow">{% endif %}
+<link rel="canonical" href="{{ canonical }}">
+<meta property="og:type" content="{{ seo.type ?? 'website' }}">
+<meta property="og:title" content="{{ seo.title ?? page_title }}">
+{% if description %}<meta property="og:description" content="{{ description }}">{% endif %}
+<meta property="og:url" content="{{ canonical }}">
+{% if site_name %}<meta property="og:site_name" content="{{ site_name }}">{% endif %}
+<meta property="og:locale" content="{{ app.request.locale == 'pl' ? 'pl_PL' : 'en_GB' }}">
+{% if image %}
+    <meta property="og:image" content="{{ image }}">
+    {% if seo.image_alt ?? null %}<meta property="og:image:alt" content="{{ seo.image_alt }}">{% endif %}
+{% endif %}
+<meta name="twitter:card" content="{{ image ? 'summary_large_image' : 'summary' }}">
+{{ json_ld(seo.jsonld ?? null) }}

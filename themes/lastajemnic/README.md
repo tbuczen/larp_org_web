@@ -49,6 +49,7 @@ game gets its own accent.
 | `assets/images/logo-original.jpg` | the source image the SVGs were traced from |
 | `assets/images/hero.svg` | default hero: the dryad's branches fading out of the dark |
 | `assets/images/card-placeholder.svg` | cover for LARPs without an uploaded image |
+| `assets/images/og.png` | link preview picture (1200×630) for pages without their own image; rendered from `logo-full.svg` over `hero.svg` |
 
 The logo SVGs were vector-traced (potrace) from `logo-original.jpg`. To swap the
 logo, replace those files and keep the same names; the base layout picks up

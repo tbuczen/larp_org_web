@@ -1,5 +1,6 @@
 {% extends 'layout.html.twig' %}
 
+{% set seo = {description: 'seo.galleries_description'|trans({org: settings.organizationName})} %}
 {% block title %}{{ 'gallery.index_title'|trans }} · {{ settings.organizationName }}{% endblock %}
 
 {% block content %}

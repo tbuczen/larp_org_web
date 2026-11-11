@@ -161,6 +161,31 @@ Uploaded images go to `public/uploads/` (not committed; back it up together with
 For big galleries, give PHP a reasonable `upload_max_filesize` (e.g. 16M); the uploader adapts to
 whatever the server allows.
 
+### Search engines and link previews
+
+Every public page gets, without any setup:
+
+- a `<meta name="description">`: the page's "Opis dla wyszukiwarek", the LARP or edition
+  teaser, the character teaser… (HTML stripped, cut to ~160 characters), else the tagline;
+- a canonical link without the query string, so matcher filters (`?ocena[…]=…`) don't
+  count as separate pages;
+- Open Graph / Twitter tags for Facebook, Messenger and Discord previews, with the
+  edition/LARP cover, character portrait or gallery cover as the picture, else the
+  theme's `images/og.png`;
+- schema.org JSON-LD: the organisation and website on the front page, each edition as an
+  **Event** (dates, place, price, sign-up link, so Google can show it in event results),
+  breadcrumbs everywhere below a LARP.
+
+`/sitemap.xml` lists the pages, LARPs, editions, character pages and galleries (no drafts,
+hidden characters or link-only galleries); `/robots.txt` points to it and keeps crawlers
+out of `/admin` and `/login`, which also send `X-Robots-Tag: noindex`.
+
+After going live: add the site to [Google Search Console](https://search.google.com/search-console),
+submit `https://<domain>/sitemap.xml`, and check an edition with the
+[Rich Results Test](https://search.google.com/test/rich-results). Behind a reverse proxy,
+set `framework.trusted_proxies` (and `trusted_headers`) so absolute URLs use `https://` and the
+real domain.
+
 ## Themes, pages and menus
 
 - **Themes** live in `themes/<name>/` and are chosen in *Admin → Ustawienia strony → Wygląd*.

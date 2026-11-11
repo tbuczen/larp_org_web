@@ -132,3 +132,9 @@ gallery:
         google: Google Photos
         facebook: Facebook
         other: '{host}'
+seo:
+    larps_description: 'Larpy {org}: najbliższe terminy, zapisy, postacie i relacje z minionych edycji.'
+    characters_description: 'Postacie na {larp} ({edition}): oceń, co lubisz w grze, a dobierzemy pasujące role.'
+    matcher_description: 'Wybierz postać na larpa {org}: oceń, co lubisz w grze, a pokażemy najlepiej pasujące role.'
+    galleries_description: 'Zdjęcia z larpów {org}.'
+    gallery_description: 'Galeria zdjęć: {title}.'

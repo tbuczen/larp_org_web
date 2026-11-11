@@ -1,5 +1,14 @@
 {% extends 'layout.html.twig' %}
 
+{% set seo = {
+    type: 'article',
+    description: character.teaser ?? character.description ?? edition.displayTeaser,
+    image: seo_image(character),
+    jsonld: [ld().larpBreadcrumbs(settings, larp, edition, [
+        ['character.title'|trans, url('app_edition_characters', {slug: larp.slug, edition: edition.slug})],
+        [character.name, url('app_edition_character', {slug: larp.slug, edition: edition.slug, characterSlug: character.slug})],
+    ])],
+} %}
 {% block title %}{{ character.name }}{% if character.characterName %} ({{ character.characterName }}){% endif %} · {{ larp.name }} · {{ settings.organizationName }}{% endblock %}
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 

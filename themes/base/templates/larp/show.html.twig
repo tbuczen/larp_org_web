@@ -1,5 +1,11 @@
 {% extends 'layout.html.twig' %}
 
+{% set seo = {
+    description: larp.teaser ?? larp.description,
+    image: seo_image(larp),
+    image_alt: larp.coverImageAlt,
+    jsonld: [ld().larpBreadcrumbs(settings, larp)]|merge(larp.sortedEditions|filter(e => not e.past)|map(e => ld().event(e, settings))),
+} %}
 {% block title %}{{ larp.name }} · {{ settings.organizationName }}{% endblock %}
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 

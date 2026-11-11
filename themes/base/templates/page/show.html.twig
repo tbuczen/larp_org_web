@@ -2,12 +2,11 @@
 
 {% block title %}{{ page.isHome ? settings.organizationName ~ (settings.tagline ? ' — ' ~ settings.tagline : '') : page.title ~ ' · ' ~ settings.organizationName }}{% endblock %}
 
-{% block meta %}
-    {% set description = page.metaDescription ?: settings.tagline %}
-    {% if description %}<meta name="description" content="{{ description }}">{% endif %}
-    <meta property="og:title" content="{{ page.isHome ? settings.organizationName : page.title }}">
-    {% if description %}<meta property="og:description" content="{{ description }}">{% endif %}
-{% endblock %}
+{% set seo = {
+    title: page.isHome ? settings.organizationName : page.title,
+    description: page.metaDescription ?: settings.tagline,
+    jsonld: page.isHome ? [ld().organization(settings), ld().website(settings)] : [ld().breadcrumbs([[settings.organizationName, url('app_home')], [page.title, url('app_page', {slug: page.slug})]])],
+} %}
 
 {% block body_class %}page page--{{ page.isHome ? 'home' : page.slug }}{% endblock %}
 
