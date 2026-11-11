@@ -99,6 +99,17 @@ block:
     matcher_teaser:
         button: Find your character
     countdown:
+        next_larp: Next LARP
+        see_edition: Details and sign-up
+        time_left: Time left until the start
+        weekday:
+            1: Mo
+            2: Tu
+            3: We
+            4: Th
+            5: Fr
+            6: Sa
+            7: Su
         default_title: 'Time left until {name}'
         days: days
         hours: hours

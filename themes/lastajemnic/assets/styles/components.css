@@ -169,3 +169,8 @@ a.badge--open, .badge--open { background: var(--color-text); border-color: var(-
 /* "Nasze larpy" toggle: square tabs */
 .event-filter__link { font-family: var(--font-ui); font-size: 1.05rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 .event-card__edition { font-size: 1.05rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+
+/* "Next LARP" widget: double frame, square calendar */
+.next-larp { box-shadow: var(--frame); margin: 5px; }
+.next-larp__title { font-weight: 700; text-transform: uppercase; }
+.mini-calendar caption, .mini-calendar th { letter-spacing: .12em; text-transform: uppercase; }

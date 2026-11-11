@@ -99,6 +99,17 @@ block:
     matcher_teaser:
         button: Znajdź swoją postać
     countdown:
+        next_larp: Najbliższy larp
+        see_edition: Szczegóły i zapisy
+        time_left: Do rozpoczęcia zostało
+        weekday:
+            1: pn
+            2: wt
+            3: śr
+            4: cz
+            5: pt
+            6: so
+            7: nd
         default_title: 'Do {name} zostało'
         days: dni
         hours: godz.

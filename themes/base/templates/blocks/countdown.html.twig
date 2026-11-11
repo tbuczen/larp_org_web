@@ -1,18 +1,73 @@
-{# Hidden when there is no upcoming edition. The numbers tick in the browser (countdown_controller.js). #}
+{#
+    "Next LARP" widget: countdown (ticks in the browser, countdown_controller.js),
+    a month calendar with the event days, links to the edition, its .ics file and
+    its Facebook event. In the LARP's own colours. Hidden when nothing is upcoming,
+    unless an "empty" text is set.
+#}
 {% if start %}
     {% set seconds = start.timestamp - 'now'|date('U') %}
+    {% set colors = larp_colors(larp) %}
+    {% set edition_url = path('app_edition_show', {slug: larp.slug, edition: edition.slug}) %}
     <section class="block block--countdown" id="block-{{ block.id }}">
-        <div class="container center">
-            <h2 class="block__title">{{ settings.title ?: 'block.countdown.default_title'|trans({name: larp.name}) }}</h2>
-            <div class="countdown" data-controller="countdown" data-countdown-target-value="{{ start|date('c') }}" role="timer">
-                {% for unit, value in {days: seconds // 86400, hours: (seconds % 86400) // 3600, minutes: (seconds % 3600) // 60, seconds: seconds % 60} %}
-                    <div class="countdown__unit">
-                        <span class="countdown__value" data-countdown-target="{{ unit }}">{{ value }}</span>
-                        <span class="countdown__label">{{ ('block.countdown.' ~ unit)|trans }}</span>
+        <div class="container">
+            <div class="next-larp{{ months is empty ? ' next-larp--no-calendar' }}{{ colors ? ' larp-card--colored' }}"{% if colors %} style="{{ colors }}"{% endif %}>
+                <div class="next-larp__info">
+                    <p class="eyebrow">{{ settings.title ?: 'block.countdown.next_larp'|trans }}</p>
+                    <h2 class="next-larp__title"><a href="{{ edition_url }}">{{ larp.name }}</a></h2>
+                    <p class="next-larp__edition">{{ edition.name }}{% if edition|edition_dates %} · {{ edition|edition_dates }}{% endif %}{% if edition.location %} · {{ edition.location }}{% endif %}</p>
+
+                    <div class="countdown" data-controller="countdown" data-countdown-target-value="{{ start|date('c') }}" role="timer" aria-label="{{ 'block.countdown.time_left'|trans }}">
+                        {% for unit, value in {days: seconds // 86400, hours: (seconds % 86400) // 3600, minutes: (seconds % 3600) // 60, seconds: seconds % 60} %}
+                            <div class="countdown__unit">
+                                <span class="countdown__value" data-countdown-target="{{ unit }}">{{ value }}</span>
+                                <span class="countdown__label">{{ ('block.countdown.' ~ unit)|trans }}</span>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+
+                    <div class="button-row">
+                        <a class="button button--primary" href="{{ edition_url }}">{{ 'block.countdown.see_edition'|trans }}</a>
+                        <a class="button button--ghost" href="{{ path('app_edition_calendar', {slug: larp.slug, edition: edition.slug}) }}" download>
+                            <twig:ux:icon name="lucide:calendar-plus" aria-hidden="true" /> {{ 'larp.add_to_calendar'|trans }}
+                        </a>
+                        {% if edition.facebookEventUrl %}
+                            <a class="button button--ghost" href="{{ edition.facebookEventUrl }}" target="_blank" rel="noopener">
+                                <twig:ux:icon name="simple-icons:facebook" aria-hidden="true" /> {{ 'larp.facebook_event'|trans }}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if months is not empty %}
+                    <div class="next-larp__calendars">
+                        {% for month in months %}
+                            <table class="mini-calendar">
+                                <caption>{{ month.label|capitalize }}</caption>
+                                <thead>
+                                    <tr>{% for i in 1..7 %}<th scope="col">{{ ('block.countdown.weekday.' ~ i)|trans }}</th>{% endfor %}</tr>
+                                </thead>
+                                <tbody>
+                                    {% for week in month.weeks %}
+                                        <tr>
+                                            {% for day in week %}
+                                                {% if day %}
+                                                    <td class="{{ html_classes({'is-event': day.event, 'is-start': day.start, 'is-end': day.end, 'is-today': day.today}) }}"{% if day.event %} aria-label="{{ day.day }} — {{ larp.name }}"{% endif %}>{{ day.day }}</td>
+                                                {% else %}
+                                                    <td></td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
-            <p><a href="{{ path('app_larp_show', {slug: larp.slug}) }}">{{ larp.name }} · {{ edition|edition_dates }}{% if edition.location %} · {{ edition.location }}{% endif %}</a></p>
         </div>
+    </section>
+{% elseif settings.empty_text %}
+    <section class="block block--countdown" id="block-{{ block.id }}">
+        <div class="container center"><p class="next-larp__empty">{{ settings.empty_text }}</p></div>
     </section>
 {% endif %}

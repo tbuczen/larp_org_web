@@ -336,9 +336,15 @@ block:
         style_primary: Podstawowy
         style_accent: Akcent
     countdown:
-        label: Odliczanie
-        description: 'Ile zostało do najbliższego larpa.'
+        label: Odliczanie do larpa
+        description: 'Odliczanie do najbliższego larpa z kalendarzem terminu i przyciskiem „Dodaj do kalendarza”.'
         larp: Do którego larpa
+        larp_help: '„Najbliższy larp” sam wybiera najwcześniejszą nadchodzącą edycję spośród wszystkich larpów.'
+        next: 'Najbliższy larp (automatycznie)'
+        title_help: 'Puste = „Najbliższy larp”.'
+        show_calendar: Pokaż kalendarz z terminem
+        empty_text: Tekst, gdy nie ma terminu
+        empty_text_help: 'Np. „Nowe terminy ogłosimy wkrótce”. Puste = blok się chowa, gdy nic nie jest zaplanowane.'
     embed:
         label: Film lub mapa
         description: 'Film z YouTube albo mapa Google.'

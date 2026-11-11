@@ -336,9 +336,15 @@ block:
         style_primary: Primary
         style_accent: Accent
     countdown:
-        label: Countdown
-        description: 'Time left until the next LARP.'
+        label: Countdown to a LARP
+        description: 'Countdown to the next LARP with a calendar of its dates and an "Add to calendar" button.'
         larp: Which LARP
+        larp_help: '"Next LARP" picks the earliest upcoming edition of all LARPs by itself.'
+        next: 'Next LARP (automatic)'
+        title_help: 'Empty = "Next LARP".'
+        show_calendar: Show a calendar with the dates
+        empty_text: Text when nothing is scheduled
+        empty_text_help: 'E.g. "New dates coming soon". Empty = the block hides when nothing is planned.'
     embed:
         label: Video or map
         description: 'A YouTube video or a Google map.'

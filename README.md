@@ -170,7 +170,9 @@ whatever the server allows.
   tokens and rules, written so an AI assistant can work from it too).
 - **Pages** (*Admin → Strony i układ*) are built from blocks: hero, LARP cards, text,
   image + text, photo gallery (drifting strips, parallax or grid, with a full-screen viewer),
-  parallax photo banner, matcher invitation, social/contact, call to action, countdown,
+  parallax photo banner, matcher invitation, social/contact, call to action, "next LARP" countdown
+  (the soonest upcoming edition or a chosen LARP, with a month calendar of its days and
+  "Dodaj do kalendarza"),
   video/map.
   The page marked *Strona główna* is the front page; others are served at `/{slug}`.
   On a page's *Układ* screen blocks are added, dragged into order (or moved with arrows on a

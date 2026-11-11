@@ -597,3 +597,25 @@ html.has-lightbox { overflow: hidden; }
 /* Character's in-game name under the vacancy name ("Inżynier" → "Emily Jones / Eddy Jones") */
 .character-card__name { color: var(--color-accent); font-style: italic; margin: -.3rem 0 .4rem; }
 .character-page__name { color: var(--color-accent); font-size: 1.25rem; font-style: italic; margin: -.4rem 0 .8rem; }
+
+/* "Next LARP" widget (blocks/countdown.html.twig): info + countdown, month calendar */
+.next-larp { align-items: center; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); color: var(--color-text); display: grid; gap: clamp(1.25rem, 4vw, 3rem); padding: clamp(1.25rem, 4vw, 2.5rem); }
+@media (min-width: 860px) { .next-larp { grid-template-columns: minmax(0, 1.4fr) auto; } .next-larp--no-calendar { grid-template-columns: 1fr; } }
+.next-larp__title { font-size: clamp(1.8rem, 5vw, 2.8rem); margin: 0 0 .2rem; }
+.next-larp__title a { color: inherit; text-decoration: none; }
+.next-larp__edition { color: var(--color-muted); margin: 0; }
+.next-larp .countdown { justify-content: flex-start; }
+.next-larp .button svg { height: 1.1em; width: 1.1em; }
+.next-larp__calendars { display: flex; flex-wrap: wrap; gap: 1.25rem; justify-content: center; }
+.next-larp__empty { color: var(--color-muted); font-size: 1.1rem; }
+.mini-calendar { border-collapse: separate; border-spacing: 3px; font-variant-numeric: tabular-nums; text-align: center; }
+.mini-calendar caption { color: var(--color-text); font-family: var(--font-ui); font-weight: 700; padding-bottom: .4rem; }
+.mini-calendar th { color: var(--color-muted); font-size: .75rem; font-weight: 600; padding: .2rem; text-transform: uppercase; }
+.mini-calendar td { border-radius: var(--radius-small); color: var(--color-muted); font-size: .9rem; height: 2.2rem; width: 2.2rem; }
+.mini-calendar td.is-event { background: var(--color-primary); color: var(--color-on-primary); font-weight: 700; }
+.mini-calendar td.is-event:not(.is-start) { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.mini-calendar td.is-event:not(.is-end) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.mini-calendar td.is-today { box-shadow: inset 0 0 0 2px var(--color-accent); color: var(--color-text); }
+.next-larp .countdown { display: grid; gap: .5rem; grid-template-columns: repeat(4, minmax(0, 4.5rem)); }
+.next-larp .countdown__unit { min-width: 0; padding-inline: .4rem; }
+@media (max-width: 420px) { .next-larp .countdown__value { font-size: 1.8rem; } }
