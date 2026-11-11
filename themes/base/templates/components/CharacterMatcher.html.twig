@@ -8,6 +8,14 @@
         <p class="hint">{{ 'character.none'|trans }}</p>
     {% else %}
     <aside class="matcher__prefs" aria-label="{{ 'matcher.preferences'|trans }}">
+        {# Quick search over gameplay tags and triggers, for LARPs with many of them.
+           data-live-ignore: re-renders leave the box (and what's typed) alone. #}
+        <div class="tag-search" data-live-ignore data-controller="tag-search">
+            <label class="visually-hidden" for="tag-search-{{ larpSlug ?? 'all' }}">{{ 'matcher.search_label'|trans }}</label>
+            <input type="search" id="tag-search-{{ larpSlug ?? 'all' }}" class="tag-search__input" placeholder="{{ 'matcher.search_placeholder'|trans }}"
+                   autocomplete="off" data-action="input->tag-search#filter" data-tag-search-target="input">
+            <p class="tag-search__none" data-tag-search-target="none" hidden>{{ 'matcher.search_none'|trans }}</p>
+        </div>
         <section class="matcher__block">
             <h2>{{ 'matcher.step1'|trans }}</h2>
             <p class="hint">{{ 'matcher.step1_hint'|trans }}</p>
@@ -21,7 +29,10 @@
                 {% if category %}<h3 class="matcher__category">{{ category }}</h3>{% endif %}
                 {% for tag in tags %}
                     {% set current = this.rating(tag) %}
-                    <fieldset class="rating-row">
+                    {# The id includes the saved rating, so when it changes the row is replaced
+                       rather than patched: patching could leave the old radio ticked in the
+                       browser, and a radio that looks ticked can't be clicked again. #}
+                    <fieldset class="rating-row" id="rating-{{ tag.id }}-{{ current }}" data-tag-search="{{ tag.name|search_key }}">
                         <legend>{{ tag.name }}</legend>
                         {% for value in this.ratingScale %}
                             <label class="rating-option rating-option--{{ scale_keys[value] }}">
@@ -50,7 +61,7 @@
                     <details class="trigger-group" {{ open ? 'open' }}>
                         <summary>{{ category ?: 'matcher.other'|trans }}</summary>
                         {% for tag in tags %}
-                            <label class="check">
+                            <label class="check" data-tag-search="{{ tag.name|search_key }}">
                                 <input type="checkbox" value="{{ tag.id }}" data-model="triggers[]" {{ this.triggerSelected(tag) ? 'checked' }}>
                                 {{ tag.name }}
                             </label>

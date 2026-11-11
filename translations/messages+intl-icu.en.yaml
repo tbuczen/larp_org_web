@@ -55,6 +55,9 @@ character:
     no_triggers: No triggers listed.
 
 matcher:
+    search_label: Search tags
+    search_placeholder: 'Search a tag or trigger, e.g. "magic"…'
+    search_none: 'No such tag.'
     past_edition: '{edition} has already taken place — you can browse its characters, but sign-ups are closed.'
     title: Find your character
     intro: 'Rate what you enjoy, tick the triggers you want to avoid, and characters are sorted from the best match.'

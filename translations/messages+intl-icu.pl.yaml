@@ -55,6 +55,9 @@ character:
     no_triggers: Brak zgłoszonych triggerów.
 
 matcher:
+    search_label: Szukaj tagu
+    search_placeholder: 'Szukaj tagu lub triggera, np. „magia”…'
+    search_none: 'Nie ma takiego tagu.'
     past_edition: '{edition} już się odbyła — możesz przejrzeć jej postacie, ale zapisy są zamknięte.'
     title: Znajdź swoją postać
     intro: 'Oceń, co lubisz w grze, zaznacz triggery, których chcesz uniknąć — postacie ułożą się od najlepiej dopasowanych.'

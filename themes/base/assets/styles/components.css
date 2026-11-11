@@ -619,3 +619,9 @@ html.has-lightbox { overflow: hidden; }
 .next-larp .countdown { display: grid; gap: .5rem; grid-template-columns: repeat(4, minmax(0, 4.5rem)); }
 .next-larp .countdown__unit { min-width: 0; padding-inline: .4rem; }
 @media (max-width: 420px) { .next-larp .countdown__value { font-size: 1.8rem; } }
+
+/* Matcher: quick tag search (controllers/tag_search_controller.js) */
+.tag-search { margin-bottom: 1rem; position: sticky; top: calc(var(--header-height) + .5rem); z-index: 2; }
+.tag-search__input { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-small); color: var(--color-text); font: inherit; min-height: 44px; padding: .5rem .9rem; width: 100%; }
+.tag-search__input:focus { border-color: var(--color-primary); outline: none; }
+.tag-search__none { color: var(--color-muted); margin: .5rem 0 0; }

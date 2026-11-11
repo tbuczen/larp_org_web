@@ -117,6 +117,31 @@ final class CharacterMatcherTest extends WebTestCase
         self::assertNull($component->component()->onlyAvailable);
     }
 
+    public function testRatingRowsAreReplacedWhenTheirRatingChanges(): void
+    {
+        // Regression: patching a row in place could leave the old radio ticked in the
+        // browser after going back to neutral, and a ticked radio can't be clicked again.
+        $component = $this->createLiveComponent(CharacterMatcher::class, ['larpSlug' => 'pradawne-zwoje'], $this->client);
+        $combat = $this->tagId('Konflikt / walka');
+
+        self::assertCount(1, $component->render()->crawler()->filter('#rating-'.$combat.'-0'));
+        $component->call('rate', ['tag' => $combat, 'value' => 2]);
+        $crawler = $component->render()->crawler();
+        self::assertCount(1, $crawler->filter('#rating-'.$combat.'-2'));
+        self::assertCount(0, $crawler->filter('#rating-'.$combat.'-0'));
+        $component->call('rate', ['tag' => $combat, 'value' => 0]);
+        self::assertCount(1, $component->render()->crawler()->filter('#rating-'.$combat.'-0 input[value="0"][checked]'));
+    }
+
+    public function testTagSearchBoxAndSearchKeys(): void
+    {
+        $crawler = $this->get('/postacie', []);
+
+        self::assertCount(1, $crawler->filter('.tag-search[data-live-ignore] input[type=search]'));
+        self::assertCount(1, $crawler->filter('fieldset.rating-row[data-tag-search="konflikt-walka"]'), 'accent- and case-free keys');
+        self::assertGreaterThan(0, $crawler->filter('label.check[data-tag-search]')->count(), 'triggers are searchable too');
+    }
+
     public function testUncheckedFiltersBecomeNull(): void
     {
         $component = $this->createLiveComponent(CharacterMatcher::class, [], $this->client);

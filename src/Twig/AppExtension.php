@@ -8,6 +8,7 @@ use App\Entity\Larp;
 use App\Entity\LarpEdition;
 use App\Theme\LarpColors;
 use App\Util\DateRangeFormatter;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
 
@@ -36,5 +37,12 @@ final class AppExtension
     public function larpColors(?Larp $larp): string
     {
         return null === $larp ? '' : LarpColors::css($larp);
+    }
+
+    /** {{ tag.name|search_key }} → "smierc-bliskiej-osoby": for client-side tag search (no case, no diacritics). */
+    #[AsTwigFilter('search_key')]
+    public function searchKey(string $text): string
+    {
+        return (new AsciiSlugger())->slug($text)->lower()->toString();
     }
 }
