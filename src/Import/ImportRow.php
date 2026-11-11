@@ -23,6 +23,9 @@ final class ImportRow
     /** @var list<array{0: string, 1: array<string, string|int>}> translation key + parameters (domain "admin") */
     public array $errors = [];
 
+    /** @var list<array{0: string, 1: array<string, string|int>}> why the row is skipped (translation key + parameters) */
+    public array $notes = [];
+
     /** @var list<string> tag names this row will create for the LARP */
     public array $newTags = [];
 
@@ -46,6 +49,17 @@ final class ImportRow
     {
         $this->errors[] = [$key, $parameters];
         $this->action = self::ERROR;
+    }
+
+    /**
+     * Leaves the row out of the import without blocking the rest.
+     *
+     * @param array<string, string|int> $parameters
+     */
+    public function skip(string $key, array $parameters = []): void
+    {
+        $this->notes[] = [$key, $parameters];
+        $this->action = self::SKIP;
     }
 
     public function hasErrors(): bool

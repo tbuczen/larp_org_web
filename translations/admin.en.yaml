@@ -387,6 +387,7 @@ larp_tags:
     shared_link: Shared tags
 
 import:
+    nothing_to_import: 'Nothing to import — all rows would be skipped.'
     columns_title: 'Character import — columns: %larp%'
     columns_intro: 'Say what each column of the file holds. Column names can be anything; columns we recognised are already set.'
     columns_help: 'Only the character name (*) is required. Each field can be chosen once; other columns are skipped. Your choice is remembered for these column names.'
@@ -464,7 +465,7 @@ import:
         duplicate_mapping: 'Each field can be chosen for one column only.'
     row:
         too_many_columns: 'More columns than the header. Does a cell contain "%delimiter%" without quotes? Quote it, or separate tags with commas or "|".'
-        name_missing: 'The character name is missing.'
+        no_name_skipped: 'No character name — skipped.'
         too_long: '"%field%" is too long (max %max% characters).'
         duplicate: 'The same character is already in row %line%.'
         bad_value: 'Unknown value in the "%field%" column: "%value%".'

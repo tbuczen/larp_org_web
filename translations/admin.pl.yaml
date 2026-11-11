@@ -387,6 +387,7 @@ larp_tags:
     shared_link: Wspólne tagi
 
 import:
+    nothing_to_import: 'Nie ma nic do zaimportowania — wszystkie wiersze zostaną pominięte.'
     columns_title: 'Import postaci — kolumny: %larp%'
     columns_intro: 'Wskaż, co jest w każdej kolumnie pliku. Nazwy kolumn mogą być dowolne; kolumny, które rozpoznaliśmy, są już ustawione.'
     columns_help: 'Wymagana jest tylko nazwa postaci (*). Każde pole można wybrać raz; pozostałe kolumny zostaną pominięte. Zapamiętamy Twój wybór dla tych nazw kolumn.'
@@ -464,7 +465,7 @@ import:
         duplicate_mapping: 'Każde pole można wybrać tylko dla jednej kolumny.'
     row:
         too_many_columns: 'Więcej kolumn niż w nagłówku. Komórka zawiera „%delimiter%” bez cudzysłowu? Ujmij ją w cudzysłów albo rozdziel tagi przecinkiem lub „|”.'
-        name_missing: 'Brak nazwy postaci.'
+        no_name_skipped: 'Bez nazwy postaci — pominięty.'
         too_long: '„%field%” jest za długie (maks. %max% znaków).'
         duplicate: 'Ta sama postać jest już w wierszu %line%.'
         bad_value: 'Nieznana wartość w kolumnie „%field%”: „%value%”.'

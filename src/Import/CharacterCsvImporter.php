@@ -74,6 +74,13 @@ final class CharacterCsvImporter
         foreach ($table->rows as ['line' => $line, 'cells' => $cells]) {
             $row = new ImportRow($line, (string) $table->value($cells, 'name'));
 
+            // No name: not a character (e.g. a note or a section title in the sheet), so leave it out.
+            if ('' === $row->name) {
+                $row->skip('import.row.no_name_skipped');
+                $rows[] = $row;
+                continue;
+            }
+
             // More cells than headers almost always means an unquoted delimiter inside a
             // cell (e.g. "Tag 50%; Tag 50%" in a ";" file), which shifts the columns.
             $extra = $table->headerCount > 0 ? \array_slice($cells, $table->headerCount) : [];
@@ -81,9 +88,7 @@ final class CharacterCsvImporter
                 $row->error('import.row.too_many_columns', ['%delimiter%' => "\t" === $table->delimiter ? 'TAB' : $table->delimiter]);
             }
 
-            if ('' === $row->name) {
-                $row->error('import.row.name_missing');
-            } elseif (mb_strlen($row->name) > 160) {
+            if (mb_strlen($row->name) > 160) {
                 $row->error('import.row.too_long', ['%field%' => 'nazwa', '%max%' => 160]);
             }
 

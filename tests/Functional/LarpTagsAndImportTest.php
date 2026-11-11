@@ -180,12 +180,38 @@ final class LarpTagsAndImportTest extends WebTestCase
         $crawler = $this->upload('cybercrush', "nazwa,obsada,rozgrywka\nA,kosmita,\nB,,Hakowanie 150%\nB,,\n,M,\n");
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSelectorTextContains('.import-count--error', '4');
+        self::assertSelectorTextContains('.import-count--error', '3');
         $text = $crawler->filter('.import-table')->text();
         self::assertStringContainsString('Nieznana wartość w kolumnie „obsada”: „kosmita”', $text);
         self::assertStringContainsString('Procent dla „Hakowanie” musi być od 1 do 100', $text);
         self::assertStringContainsString('Ta sama postać jest już w wierszu 3', $text);
-        self::assertStringContainsString('Brak nazwy postaci', $text);
+        self::assertStringContainsString('Bez nazwy postaci — pominięty', $text, 'a row without a name is skipped, not an error');
+        self::assertSelectorNotExists('form[action$="/characters/import/confirm"]');
+    }
+
+    public function testRowsWithoutANameAreSkipped(): void
+    {
+        $crawler = $this->upload('cybercrush', "nazwa;zajawka;obsada\nVex;Hakerka;K\n;Notatka do tabeli;\n   ;;M\nBolek;Fixer;M\n");
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.import-count--create', '2');
+        self::assertSelectorTextContains('.import-count--skip', '2');
+        self::assertSelectorTextContains('.import-count--error', '0');
+        self::assertCount(2, $crawler->filter('.import-row--skip'));
+        self::assertStringContainsString('Bez nazwy postaci — pominięty', $crawler->filter('.import-row--skip')->first()->text());
+
+        $this->client->submit($crawler->filter('form[action$="/characters/import/confirm"]')->form());
+        self::assertResponseRedirects();
+        self::assertNotNull($this->em()->getRepository(Character::class)->findOneBy(['slug' => 'vex']));
+        self::assertNotNull($this->em()->getRepository(Character::class)->findOneBy(['slug' => 'bolek']));
+    }
+
+    public function testOnlyNamelessRowsMeanNothingToImport(): void
+    {
+        $this->upload('cybercrush', "nazwa;zajawka\n;Sama notatka\n");
+
+        self::assertSelectorTextContains('.import-count--skip', '1');
+        self::assertSelectorTextContains('.alert-info', 'Nie ma nic do zaimportowania');
         self::assertSelectorNotExists('form[action$="/characters/import/confirm"]');
     }
 

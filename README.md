@@ -81,7 +81,7 @@ Sheets (`;` `,` or tab; UTF-8 or Windows-1250), say which column holds what (any
 known ones like `nazwa`, `zajawka`, `rozgrywka`, `triggery` are pre-selected, choices for other
 names are remembered; files without a header row work too), check the preview (new / updated /
 skipped / errors, new tags), then confirm — all rows are saved in one transaction, or none. Only
-the character name is required; tag cells look like `Polityka / intryga 50%; Magia 30%`.
+the character name is required (rows without a name are skipped); tag cells look like `Polityka / intryga 50%; Magia 30%`.
 *Pobierz szablon CSV* gives a ready-to-fill file. Code: `src/Import/`, `src/Tagging/TagResolver.php`.
 In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
 

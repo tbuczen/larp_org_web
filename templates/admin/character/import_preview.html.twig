@@ -52,6 +52,7 @@
                         <td>
                             <span class="badge import-badge--{{ row.action }}">{{ ('import.action_' ~ row.action)|trans }}</span>
                             {% for error in row.errors %}<div class="text-danger small">{{ error[0]|trans(error[1]) }}</div>{% endfor %}
+                            {% for note in row.notes %}<div class="text-muted small">{{ note[0]|trans(note[1]) }}</div>{% endfor %}
                         </td>
                         {% for type in ['gameplay', 'trigger'] %}
                             <td class="small">
@@ -71,6 +72,9 @@
     <div class="import-actions">
         {% if plan.hasErrors %}
             <div class="alert alert-danger">{{ 'import.fix_errors'|trans }}</div>
+            <a class="btn btn-primary" href="{{ backUrl }}"><i class="fa fa-arrow-left"></i> {{ 'import.upload_again'|trans }}</a>
+        {% elseif plan.count('create') + plan.count('update') == 0 %}
+            <div class="alert alert-info">{{ 'import.nothing_to_import'|trans }}</div>
             <a class="btn btn-primary" href="{{ backUrl }}"><i class="fa fa-arrow-left"></i> {{ 'import.upload_again'|trans }}</a>
         {% else %}
             <form method="post" action="{{ confirmUrl }}">
