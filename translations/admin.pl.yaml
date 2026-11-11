@@ -428,7 +428,7 @@ import:
         name: { header: nazwa, help: 'Imię / nazwa postaci (wymagane).' }
         teaser: { header: zajawka, help: 'Krótki opis, do 500 znaków.' }
         description: { header: opis, help: 'Pełny opis; pusta linia = nowy akapit.' }
-        casting: { header: obsada, help: 'dowolna, kobieca (K), męska (M), niebinarna (NB).' }
+        casting: { header: obsada, help: 'dowolna (też: unisex), kobieca (K), męska (M), niebinarna (NB).' }
         availability: { header: dostępność, help: 'dostępna, zajęta, ukryta.' }
         position: { header: kolejność, help: 'Liczba; mniejsza = wyżej.' }
         gameplay: { header: rozgrywka, help: 'Tagi rozgrywki z procentami.' }

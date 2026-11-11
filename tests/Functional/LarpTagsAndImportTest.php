@@ -232,6 +232,19 @@ final class LarpTagsAndImportTest extends WebTestCase
         self::assertSelectorTextContains('body', 'kodowanie Windows-1250');
     }
 
+    public function testUnisexMeansAnyCasting(): void
+    {
+        $crawler = $this->upload('cybercrush', "nazwa;obsada\nVex;Unisex\nBolek;UNISEX\nZed;M\n");
+        self::assertSelectorTextContains('.import-count--error', '0');
+        $this->client->submit($crawler->filter('form[action$="/characters/import/confirm"]')->form());
+
+        foreach (['vex' => CharacterCasting::Any, 'bolek' => CharacterCasting::Any, 'zed' => CharacterCasting::Male] as $slug => $casting) {
+            $character = $this->em()->getRepository(Character::class)->findOneBy(['slug' => $slug]);
+            self::assertNotNull($character, $slug);
+            self::assertSame($casting, $character->getCasting(), $slug);
+        }
+    }
+
     public function testWithoutANameColumnTheColumnsScreenAsksForIt(): void
     {
         $this->upload('cybercrush', "zajawka;obsada\nx;k\n");

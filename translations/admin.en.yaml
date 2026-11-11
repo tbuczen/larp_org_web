@@ -428,7 +428,7 @@ import:
         name: { header: name, help: 'Character name (required).' }
         teaser: { header: teaser, help: 'Short description, up to 500 characters.' }
         description: { header: description, help: 'Full description; a blank line starts a paragraph.' }
-        casting: { header: casting, help: 'any, female (F), male (M), non-binary (NB).' }
+        casting: { header: casting, help: 'any (also: unisex), female (F), male (M), non-binary (NB).' }
         availability: { header: availability, help: 'available, taken, hidden.' }
         position: { header: position, help: 'A number; lower comes first.' }
         gameplay: { header: gameplay, help: 'Gameplay tags with percentages.' }

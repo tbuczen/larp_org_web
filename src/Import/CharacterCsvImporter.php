@@ -33,7 +33,7 @@ final class CharacterCsvImporter
     public const DEFAULT_PERCENTAGE = 50;
 
     private const CASTING = [
-        CharacterCasting::Any->value => ['', 'any', 'dowolna', 'dowolny', 'dowolne', 'kazda', 'x', '-'],
+        CharacterCasting::Any->value => ['', 'any', 'dowolna', 'dowolny', 'dowolne', 'kazda', 'unisex', 'obojetna', 'obojetnie', 'both', 'either', 'x', '-'],
         CharacterCasting::Female->value => ['female', 'kobieca', 'kobieta', 'k', 'f', 'w', 'woman'],
         CharacterCasting::Male->value => ['male', 'meska', 'mezczyzna', 'm', 'man'],
         CharacterCasting::NonBinary->value => ['non-binary', 'non_binary', 'nonbinary', 'niebinarna', 'niebinarny', 'niebinarne', 'nb', 'enby'],
