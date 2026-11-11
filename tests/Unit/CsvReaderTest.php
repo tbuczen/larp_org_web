@@ -33,11 +33,12 @@ final class CsvReaderTest extends TestCase
 
     public function testWindows1250IsConvertedAndHeadersMatchWithoutDiacritics(): void
     {
-        $csv = (string) iconv('UTF-8', 'WINDOWS-1250', "IMIĘ;Dostępność;Kolejność;Uwagi\nKapłanka Mary;zajęta;2;x\n");
+        $csv = (string) iconv('UTF-8', 'WINDOWS-1250', "WAKAT;Imię postaci;Dostępność;Kolejność;Uwagi\nKapłanka;Mary Ślęzak;zajęta;2;x\n");
         $table = (new CsvReader())->read($csv);
 
         self::assertSame('Windows-1250', $table->encoding);
-        self::assertSame('Kapłanka Mary', $table->value($table->rows[0]['cells'], 'name'));
+        self::assertSame('Kapłanka', $table->value($table->rows[0]['cells'], 'name'));
+        self::assertSame('Mary Ślęzak', $table->value($table->rows[0]['cells'], 'character_name'));
         self::assertSame('zajęta', $table->value($table->rows[0]['cells'], 'availability'));
         self::assertSame(['Uwagi'], $table->ignoredHeaders);
     }
@@ -94,9 +95,9 @@ final class CsvReaderTest extends TestCase
         $reader = new CsvReader();
 
         self::assertSame(
-            [0 => 'name', 1 => '', 2 => 'gameplay', 3 => ''],
-            $reader->guess(['Nazwa', 'Kolor oczu', 'Rozgrywka', 'Imię']),
-            'the second name-like column is not used twice',
+            [0 => 'name', 1 => '', 2 => 'gameplay', 3 => 'character_name', 4 => ''],
+            $reader->guess(['Nazwa', 'Kolor oczu', 'Rozgrywka', 'Imię', 'Rola']),
+            '"Imię" is the in-game name; a second vacancy column is not used twice',
         );
         self::assertSame([0 => 'name', 1 => 'teaser'], $reader->guess(['Postać gracza', 'Krótko'], ['postac-gracza' => 'name', 'krotko' => 'teaser']));
     }

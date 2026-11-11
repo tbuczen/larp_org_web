@@ -13,6 +13,7 @@ use App\Import\CsvImportException;
 use App\Import\CsvReader;
 use App\Import\CsvTable;
 use App\Import\ImportPlan;
+use App\Import\ImportRow;
 use App\Repository\TagRepository;
 use App\Tagging\TagResolver;
 use App\Theme\LarpColors;
@@ -429,11 +430,16 @@ class LarpCrudController extends AbstractCrudController
         /** @var array<int, string>|null $mapping */
         $mapping = isset($stored['mapping']) ? (array) $stored['mapping'] : null;
         $plan = $this->importer->prepare((string) base64_decode((string) $stored['csv'], true), $edition, (bool) $stored['update'], (bool) $stored['createTags'], $mapping, (bool) ($stored['hasHeader'] ?? true));
-        if ($plan->hasErrors()) {
+        // Only the ticked rows that can be imported (rows with errors have no checkbox).
+        $importable = array_map(static fn ($r): int => $r->line, array_filter($plan->rows, static fn ($r): bool => \in_array($r->action, [ImportRow::CREATE, ImportRow::UPDATE], true)));
+        $lines = array_values(array_intersect($importable, array_map('intval', $request->request->all('rows'))));
+        if ([] === $lines) {
+            $this->addFlash('warning', new TranslatableMessage('import.nothing_selected', [], 'admin'));
+
             return $this->renderPreview($larp, $plan, (string) $stored['token'], (string) $stored['filename']);
         }
 
-        $result = $this->importer->apply($plan);
+        $result = $this->importer->apply($plan, $lines);
         $request->getSession()->remove(self::IMPORT_SESSION_KEY);
         $this->addFlash('success', new TranslatableMessage('import.done', [
             '%created%' => $result['created'], '%updated%' => $result['updated'], '%tags%' => $result['tags'],
@@ -458,9 +464,9 @@ class LarpCrudController extends AbstractCrudController
         };
 
         $rows = [
-            ['nazwa', 'zajawka', 'opis', 'obsada', 'dostępność', 'kolejność', 'rozgrywka', 'triggery'],
-            ['Przykładowa postać', 'Jedno zdanie o postaci.', 'Pełny opis. Pusta linia zaczyna nowy akapit.', 'dowolna', 'dostępna', '1', $tagCell($gameplay, [50, 30, 20]), $tagCell($triggers, [60, 30])],
-            ['Druga postać', '', '', 'kobieca', 'zajęta', '2', $tagCell(array_reverse($gameplay), [70, 30]), ''],
+            ['nazwa', 'imię postaci', 'zajawka', 'opis', 'obsada', 'dostępność', 'kolejność', 'rozgrywka', 'triggery'],
+            ['Inżynier', 'Emily Jones / Eddy Jones', 'Jedno zdanie o postaci.', 'Pełny opis. Pusta linia zaczyna nowy akapit.', 'dowolna', 'dostępna', '1', $tagCell($gameplay, [50, 30, 20]), $tagCell($triggers, [60, 30])],
+            ['Druga postać', '', '', '', 'kobieca', 'zajęta', '2', $tagCell(array_reverse($gameplay), [70, 30]), ''],
         ];
 
         $out = fopen('php://temp', 'r+');

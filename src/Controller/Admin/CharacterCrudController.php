@@ -225,7 +225,11 @@ class CharacterCrudController extends AbstractCrudController
         yield ImageField::new('portrait', 'character.portrait')
             ->setBasePath(self::BASE_PATH)
             ->onlyOnIndex();
-        yield TextField::new('name', 'character.name')->setColumns(6);
+        yield TextField::new('name', 'character.name')->setHelp('character.name_help')->setColumns(6);
+        yield TextField::new('characterName', 'character.character_name')
+            ->setRequired(false)
+            ->setHelp('character.character_name_help')
+            ->setColumns(6);
         yield SlugField::new('slug', 'character.slug')
             ->setTargetFieldName('name')
             ->setColumns(6)

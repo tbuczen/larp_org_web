@@ -80,8 +80,10 @@ the shared tags plus its LARP's own; a LARP tag can't reuse a shared tag's name.
 Sheets (`;` `,` or tab; UTF-8 or Windows-1250), say which column holds what (any column names;
 known ones like `nazwa`, `zajawka`, `rozgrywka`, `triggery` are pre-selected, choices for other
 names are remembered; files without a header row work too), check the preview (new / updated /
-skipped / errors, new tags), then confirm — all rows are saved in one transaction, or none. Only
-the character name is required (rows without a name are skipped); tag cells look like `Polityka / intryga 50%; Magia 30%`.
+skipped / errors, new tags), untick any characters you don't want, then confirm — the ticked rows
+are saved in one transaction (rows with errors can't be ticked). Only the character name (the
+vacancy, e.g. "Inżynier") is required, rows without one are skipped; the in-game name ("Emily Jones /
+Eddy Jones") is a separate optional column; tag cells look like `Polityka / intryga 50%; Magia 30%`.
 *Pobierz szablon CSV* gives a ready-to-fill file. Code: `src/Import/`, `src/Tagging/TagResolver.php`.
 In the admin, each character has two lists, *Triggers* and *Gameplay*, that store into the same `CharacterTag` table.
 

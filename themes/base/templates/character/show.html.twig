@@ -1,6 +1,6 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ character.name }} · {{ larp.name }} · {{ settings.organizationName }}{% endblock %}
+{% block title %}{{ character.name }}{% if character.characterName %} ({{ character.characterName }}){% endif %} · {{ larp.name }} · {{ settings.organizationName }}{% endblock %}
 {% block theme_overrides %}{% include 'partials/_larp_colors.html.twig' with {larp: larp} %}{% endblock %}
 
 {% block content %}
@@ -22,6 +22,7 @@
             <div>
                 <p class="eyebrow">{{ larp.name }} · {{ edition.name }}</p>
                 <h1>{{ character.name }}</h1>
+                {% if character.characterName %}<p class="character-page__name">{{ character.characterName }}</p>{% endif %}
                 <p class="character-card__meta">
                     {{ 'character.casting'|trans }}: {{ character.casting|trans }}
                     <span class="badge badge--{{ character.availability.value }}">{{ character.availability|trans }}</span>

@@ -20,7 +20,8 @@ final class CsvReader
 
     /** Internal column => accepted headers (compared as lowercase ASCII slugs). */
     public const COLUMNS = [
-        'name' => ['nazwa', 'imie', 'imie-nazwa', 'postac', 'name', 'character'],
+        'name' => ['nazwa', 'nazwa-postaci', 'wakat', 'rola', 'postac', 'name', 'character', 'vacancy', 'role'],
+        'character_name' => ['imie-postaci', 'imie', 'imie-i-nazwisko', 'imie-w-grze', 'character-name', 'in-game-name', 'full-name'],
         'slug' => ['slug', 'adres'],
         'teaser' => ['zajawka', 'teaser', 'krotki-opis', 'short-description'],
         'description' => ['opis', 'pelny-opis', 'description'],

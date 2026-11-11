@@ -283,3 +283,4 @@
 .import-columns__samples span + span { color: var(--text-muted, #6c757d); font-size: .875em; }
 .import-columns__table tr.is-ignored th, .import-columns__table tr.is-ignored td:not(:last-child) { opacity: .6; }
 .import-columns__table select { min-width: 220px; }
+.import-table__check { width: 2.5rem; }

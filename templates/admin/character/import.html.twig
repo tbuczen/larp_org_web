@@ -25,7 +25,7 @@
             <table class="table table-sm">
                 <thead><tr><th>{{ 'import.column'|trans }}</th><th>{{ 'import.values'|trans }}</th></tr></thead>
                 <tbody>
-                    {% for column in ['name', 'teaser', 'description', 'casting', 'availability', 'position', 'gameplay', 'triggers'] %}
+                    {% for column in ['name', 'character_name', 'teaser', 'description', 'casting', 'availability', 'position', 'gameplay', 'triggers'] %}
                         <tr><td><code>{{ ('import.col.' ~ column ~ '.header')|trans }}</code></td><td>{{ ('import.col.' ~ column ~ '.help')|trans }}</td></tr>
                     {% endfor %}
                 </tbody>

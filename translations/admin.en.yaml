@@ -175,7 +175,10 @@ character:
         description: Description
         tags: Triggers & gameplay
     portrait: Portrait
-    name: Name
+    name: Character name (vacancy)
+    name_help: 'The unique name of the role in this edition, e.g. "Engineer". It gives the address and is matched on import.'
+    character_name: In-game name
+    character_name_help: 'The name in the game, may depend on casting, e.g. "Emily Jones / Eddy Jones". Optional.'
     slug: URL slug
     casting: Casting
     availability: Availability
@@ -387,6 +390,12 @@ larp_tags:
     shared_link: Shared tags
 
 import:
+    select_all: Select all
+    select_row: 'Import: %name%'
+    confirm_selected: 'Import selected: %count%'
+    nothing_selected: 'Select at least one character to import.'
+    errors_left_out: '{1}1 row has errors and will not be imported — fix the file if you need it.|]1,Inf[%count% rows have errors and will not be imported — fix the file if you need them.'
+    back_to_columns: Back to columns
     nothing_to_import: 'Nothing to import — all rows would be skipped.'
     columns_title: 'Character import — columns: %larp%'
     columns_intro: 'Say what each column of the file holds. Column names can be anything; columns we recognised are already set.'
@@ -402,6 +411,7 @@ import:
     target:
         ignore: '— skip —'
         name: Character name
+        character_name: In-game name
         slug: Address (slug)
         teaser: Teaser
         description: Description
@@ -426,7 +436,8 @@ import:
     column: Column
     values: Values
     col:
-        name: { header: name, help: 'Character name (required).' }
+        name: { header: name, help: 'Character name — the vacancy, e.g. "Engineer" (required, unique in the edition).' }
+        character_name: { header: character name, help: 'In-game name, e.g. "Emily Jones / Eddy Jones".' }
         teaser: { header: teaser, help: 'Short description, up to 500 characters.' }
         description: { header: description, help: 'Full description; a blank line starts a paragraph.' }
         casting: { header: casting, help: 'any (also: unisex), female (F), male (M), non-binary (NB).' }

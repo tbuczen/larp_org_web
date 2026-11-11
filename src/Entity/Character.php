@@ -41,10 +41,22 @@ class Character implements SluggableInterface, \Stringable
     #[Assert\NotNull]
     private ?LarpEdition $edition = null;
 
+    /**
+     * The vacancy: the unique name of the role in its edition, e.g. "Inżynier".
+     * It gives the address (slug) and is matched on CSV import.
+     */
     #[ORM\Column(length: 160)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 160)]
     private string $name = '';
+
+    /**
+     * The character's in-game name, which may depend on who plays it, e.g.
+     * "Emily Jones / Eddy Jones". Optional.
+     */
+    #[ORM\Column(length: 160, nullable: true)]
+    #[Assert\Length(max: 160)]
+    private ?string $characterName = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message: 'slug.invalid')]
@@ -144,6 +156,18 @@ class Character implements SluggableInterface, \Stringable
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCharacterName(): ?string
+    {
+        return $this->characterName;
+    }
+
+    public function setCharacterName(?string $characterName): static
+    {
+        $this->characterName = null === $characterName || '' === trim($characterName) ? null : trim($characterName);
 
         return $this;
     }

@@ -31,6 +31,8 @@ final class ImportRow
 
     public ?Character $existing = null;
     public string $slug = '';
+    /** In-game name; null = no such column, "" = clear it. */
+    public ?string $characterName = null;
     public ?string $teaser = null;
     public ?string $description = null;
     public ?CharacterCasting $casting = null;

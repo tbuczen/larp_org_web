@@ -118,6 +118,7 @@
                             <a href="{{ path('app_edition_character', {slug: character.larp.slug, edition: character.edition.slug, characterSlug: character.slug}) }}">{{ character.name }}</a>
                             {% if larpSlug is null %}<small>{{ character.larp.name }}</small>{% endif %}
                         </h3>
+                        {% if character.characterName %}<p class="character-card__name">{{ character.characterName }}</p>{% endif %}
                         <p class="character-card__meta">
                             {{ character.casting|trans }}
                             {% if character.taken %}<span class="badge badge--taken">{{ character.availability|trans }}</span>{% endif %}

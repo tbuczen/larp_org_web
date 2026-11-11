@@ -101,6 +101,11 @@ final class CharacterCsvImporter
                 $seenSlugs[$row->slug] ??= $line;
             }
 
+            $row->characterName = $table->value($cells, 'character_name');
+            if (null !== $row->characterName && mb_strlen($row->characterName) > 160) {
+                $row->error('import.row.too_long', ['%field%' => 'imię postaci', '%max%' => 160]);
+            }
+
             $row->teaser = $table->value($cells, 'teaser');
             if (null !== $row->teaser && mb_strlen($row->teaser) > 500) {
                 $row->error('import.row.too_long', ['%field%' => 'zajawka', '%max%' => 500]);
@@ -146,22 +151,34 @@ final class CharacterCsvImporter
     }
 
     /**
-     * Saves a plan without errors. Returns the number of created and updated characters.
+     * Saves the plan, or only the rows on $lines (file line numbers) when given;
+     * rows with errors can then be left out. Returns the number of created and
+     * updated characters and new tags.
+     *
+     * @param list<int>|null $lines
      *
      * @return array{created: int, updated: int, tags: int}
      */
-    public function apply(ImportPlan $plan): array
+    public function apply(ImportPlan $plan, ?array $lines = null): array
     {
-        if ($plan->hasErrors()) {
+        if (null === $lines && $plan->hasErrors()) {
             throw new \LogicException('A plan with errors cannot be applied.');
+        }
+        foreach ($plan->rows as $row) {
+            if (null !== $lines && $row->hasErrors() && \in_array($row->line, $lines, true)) {
+                throw new \LogicException(sprintf('Row %d has errors and cannot be imported.', $row->line));
+            }
         }
         $larp = $plan->edition->getLarp() ?? throw new \LogicException('Edition without LARP.');
 
-        return $this->em->wrapInTransaction(function () use ($plan, $larp): array {
+        return $this->em->wrapInTransaction(function () use ($plan, $larp, $lines): array {
             $result = ['created' => 0, 'updated' => 0, 'tags' => 0];
             $nextPosition = \count($plan->edition->getCharacters());
 
             foreach ($plan->rows as $row) {
+                if (null !== $lines && !\in_array($row->line, $lines, true)) {
+                    continue;
+                }
                 if (ImportRow::CREATE === $row->action) {
                     $character = (new Character())->setEdition($plan->edition)->setSlug($row->slug)->setPosition($nextPosition++);
                     $plan->edition->getCharacters()->add($character);
@@ -175,6 +192,9 @@ final class CharacterCsvImporter
                 }
 
                 $character->setName($row->name);
+                if (null !== $row->characterName) {
+                    $character->setCharacterName($row->characterName);
+                }
                 if (null !== $row->teaser) {
                     $character->setTeaser('' === $row->teaser ? null : $row->teaser);
                 }

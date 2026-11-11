@@ -287,7 +287,29 @@ function initLarpColors(form) {
     update();
 }
 
+// CSV import preview: "select all" and the count on the import button.
+function initImportChecks(table) {
+    const all = table.querySelector('[data-import-check-all]');
+    const rows = [...table.querySelectorAll('[data-import-check]')];
+    const button = document.querySelector('[data-import-confirm]');
+    const update = () => {
+        const checked = rows.filter((r) => r.checked).length;
+        all.checked = checked === rows.length;
+        all.indeterminate = checked > 0 && checked < rows.length;
+        if (button) {
+            button.disabled = checked === 0;
+            button.querySelector('span').textContent = button.dataset.label.replace('__N__', String(checked));
+        }
+    };
+    all.addEventListener('change', () => { rows.forEach((r) => { r.checked = all.checked; }); update(); });
+    rows.forEach((r) => r.addEventListener('change', update));
+    update();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.import-table').forEach((table) => {
+        if (table.querySelector('[data-import-check-all]')) initImportChecks(table);
+    });
     document.querySelectorAll('form').forEach((form) => {
         if (form.querySelector('[data-color-presets]')) initLarpColors(form);
     });

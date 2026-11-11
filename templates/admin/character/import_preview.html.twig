@@ -34,6 +34,9 @@
         <table class="table import-table">
             <thead>
                 <tr>
+                    <th class="import-table__check">
+                        <input class="form-check-input" type="checkbox" checked data-import-check-all aria-label="{{ 'import.select_all'|trans }}" title="{{ 'import.select_all'|trans }}">
+                    </th>
                     <th>{{ 'import.line'|trans }}</th>
                     <th>{{ 'character.name'|trans }}</th>
                     <th>{{ 'import.what'|trans }}</th>
@@ -43,10 +46,18 @@
             </thead>
             <tbody>
                 {% for row in plan.rows %}
+                    {% set importable = row.action in ['create', 'update'] %}
                     <tr class="import-row--{{ row.action }}">
+                        <td class="import-table__check">
+                            {% if importable %}
+                                <input class="form-check-input" type="checkbox" name="rows[]" value="{{ row.line }}" form="import-confirm" checked data-import-check
+                                       aria-label="{{ 'import.select_row'|trans({'%name%': row.name}) }}">
+                            {% endif %}
+                        </td>
                         <td>{{ row.line }}</td>
                         <td>
                             <strong>{{ row.name ?: '—' }}</strong>
+                            {% if row.characterName %}<div class="small"><em>{{ row.characterName }}</em></div>{% endif %}
                             {% if row.casting %}<div class="text-muted small">{{ row.casting|trans }}{% if row.availability %} · {{ row.availability|trans }}{% endif %}</div>{% endif %}
                         </td>
                         <td>
@@ -70,18 +81,21 @@
     </div>
 
     <div class="import-actions">
+        {% set importable_count = plan.count('create') + plan.count('update') %}
         {% if plan.hasErrors %}
-            <div class="alert alert-danger">{{ 'import.fix_errors'|trans }}</div>
-            <a class="btn btn-primary" href="{{ backUrl }}"><i class="fa fa-arrow-left"></i> {{ 'import.upload_again'|trans }}</a>
-        {% elseif plan.count('create') + plan.count('update') == 0 %}
+            <div class="alert alert-warning">{{ 'import.errors_left_out'|trans({'%count%': plan.count('error')}) }}</div>
+        {% endif %}
+        {% if importable_count == 0 %}
             <div class="alert alert-info">{{ 'import.nothing_to_import'|trans }}</div>
             <a class="btn btn-primary" href="{{ backUrl }}"><i class="fa fa-arrow-left"></i> {{ 'import.upload_again'|trans }}</a>
         {% else %}
-            <form method="post" action="{{ confirmUrl }}">
+            <form method="post" action="{{ confirmUrl }}" id="import-confirm">
                 <input type="hidden" name="_token" value="{{ csrf_token(csrfId) }}">
                 <input type="hidden" name="token" value="{{ token }}">
-                <button class="btn btn-primary"><i class="fa fa-check"></i> {{ 'import.confirm'|trans({'%count%': plan.count('create') + plan.count('update')}) }}</button>
-                <a class="btn btn-link" href="{{ backUrl }}">{{ 'import.cancel'|trans }}</a>
+                <button class="btn btn-primary" data-import-confirm data-label="{{ 'import.confirm_selected'|trans({'%count%': '__N__'}) }}">
+                    <i class="fa fa-check"></i> <span>{{ 'import.confirm_selected'|trans({'%count%': importable_count}) }}</span>
+                </button>
+                <a class="btn btn-link" href="{{ backUrl }}">{{ 'import.back_to_columns'|trans }}</a>
             </form>
         {% endif %}
     </div>

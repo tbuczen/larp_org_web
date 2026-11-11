@@ -175,7 +175,10 @@ character:
         description: Opis
         tags: Triggery i rozgrywka
     portrait: Portret
-    name: Imię / nazwa
+    name: Nazwa postaci (wakat)
+    name_help: 'Unikalna nazwa roli w tej edycji, np. „Inżynier”. Z niej powstaje adres i po niej import rozpoznaje postać.'
+    character_name: Imię postaci
+    character_name_help: 'Imię w grze, może zależeć od obsady, np. „Emily Jones / Eddy Jones”. Opcjonalne.'
     slug: Adres (slug)
     casting: Obsada
     availability: Dostępność
@@ -387,6 +390,12 @@ larp_tags:
     shared_link: Wspólne tagi
 
 import:
+    select_all: Zaznacz wszystkie
+    select_row: 'Importuj: %name%'
+    confirm_selected: 'Importuj zaznaczone: %count%'
+    nothing_selected: 'Zaznacz przynajmniej jedną postać do zaimportowania.'
+    errors_left_out: '{1}1 wiersz ma błędy i nie zostanie zaimportowany — popraw plik, jeśli jest potrzebny.|[2,4]%count% wiersze mają błędy i nie zostaną zaimportowane — popraw plik, jeśli są potrzebne.|]4,Inf[%count% wierszy ma błędy i nie zostanie zaimportowanych — popraw plik, jeśli są potrzebne.'
+    back_to_columns: Wróć do kolumn
     nothing_to_import: 'Nie ma nic do zaimportowania — wszystkie wiersze zostaną pominięte.'
     columns_title: 'Import postaci — kolumny: %larp%'
     columns_intro: 'Wskaż, co jest w każdej kolumnie pliku. Nazwy kolumn mogą być dowolne; kolumny, które rozpoznaliśmy, są już ustawione.'
@@ -402,6 +411,7 @@ import:
     target:
         ignore: '— pomiń —'
         name: Nazwa postaci
+        character_name: Imię postaci
         slug: Adres (slug)
         teaser: Zajawka
         description: Opis
@@ -426,7 +436,8 @@ import:
     column: Kolumna
     values: Wartości
     col:
-        name: { header: nazwa, help: 'Imię / nazwa postaci (wymagane).' }
+        name: { header: nazwa, help: 'Nazwa postaci — wakat, np. „Inżynier” (wymagane, unikalna w edycji).' }
+        character_name: { header: imię postaci, help: 'Imię w grze, np. „Emily Jones / Eddy Jones”.' }
         teaser: { header: zajawka, help: 'Krótki opis, do 500 znaków.' }
         description: { header: opis, help: 'Pełny opis; pusta linia = nowy akapit.' }
         casting: { header: obsada, help: 'dowolna (też: unisex), kobieca (K), męska (M), niebinarna (NB).' }

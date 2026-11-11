@@ -258,6 +258,63 @@ final class LarpTagsAndImportTest extends WebTestCase
         self::assertSelectorTextContains('body', 'kodowanie Windows-1250');
     }
 
+    public function testOnlyTickedCharactersAreImported(): void
+    {
+        $crawler = $this->upload('cybercrush', "nazwa;imię postaci;obsada\nInżynier;Emily Jones / Eddy Jones;Unisex\nMedyczka;Dr Lena Kowal;K\nOchroniarz;;M\n");
+        self::assertCount(3, $crawler->filter('input[name="rows[]"][checked]'), 'all ticked by default');
+
+        $form = $crawler->filter('form#import-confirm')->form();
+        $checkboxes = $form->get('rows');
+        self::assertIsArray($checkboxes);
+        $medic = $checkboxes[1] ?? null;
+        self::assertInstanceOf(ChoiceFormField::class, $medic);
+        $medic->untick();
+        $this->client->submit($form);
+        self::assertResponseRedirects();
+
+        $repository = $this->em()->getRepository(Character::class);
+        $engineer = $repository->findOneBy(['slug' => 'inzynier']);
+        self::assertNotNull($engineer);
+        self::assertSame('Emily Jones / Eddy Jones', $engineer->getCharacterName(), 'the in-game name next to the vacancy');
+        self::assertSame('Inżynier', $engineer->getName());
+        self::assertNull($repository->findOneBy(['slug' => 'medyczka']), 'unticked');
+        self::assertNotNull($repository->findOneBy(['slug' => 'ochroniarz']));
+
+        $crawler = $this->client->request('GET', '/larp/cybercrush/'.$engineer->getEdition()?->getSlug().'/postac/inzynier');
+        self::assertSelectorTextContains('h1', 'Inżynier');
+        self::assertSelectorTextContains('.character-page__name', 'Emily Jones / Eddy Jones');
+    }
+
+    public function testRowsWithErrorsCanBeLeftOut(): void
+    {
+        $crawler = $this->upload('cybercrush', "nazwa;obsada\nInżynier;M\nKosmita;zielony\n");
+
+        self::assertSelectorTextContains('.alert-warning', '1 wiersz ma błędy i nie zostanie zaimportowany');
+        self::assertCount(1, $crawler->filter('input[name="rows[]"]'), 'no checkbox on the row with an error');
+        self::assertCount(0, $crawler->filter('.import-row--error input[name="rows[]"]'));
+
+        // A forged request can't sneak the broken row in.
+        $form = $crawler->filter('form#import-confirm')->form();
+        $values = $form->getPhpValues();
+        $values['rows'] = ['2', '3'];
+        $this->client->request('POST', (string) $form->getUri(), $values);
+        self::assertResponseRedirects();
+        self::assertNotNull($this->em()->getRepository(Character::class)->findOneBy(['slug' => 'inzynier']));
+        self::assertNull($this->em()->getRepository(Character::class)->findOneBy(['slug' => 'kosmita']));
+    }
+
+    public function testNothingTickedImportsNothing(): void
+    {
+        $crawler = $this->upload('cybercrush', "nazwa\nInżynier\n");
+        $form = $crawler->filter('form#import-confirm')->form();
+        $values = $form->getPhpValues();
+        unset($values['rows']);
+        $this->client->request('POST', (string) $form->getUri(), $values);
+
+        self::assertSelectorTextContains('.alert-warning', 'Zaznacz przynajmniej jedną postać');
+        self::assertNull($this->em()->getRepository(Character::class)->findOneBy(['slug' => 'inzynier']));
+    }
+
     public function testUnisexMeansAnyCasting(): void
     {
         $crawler = $this->upload('cybercrush', "nazwa;obsada\nVex;Unisex\nBolek;UNISEX\nZed;M\n");
@@ -368,7 +425,7 @@ final class LarpTagsAndImportTest extends WebTestCase
         self::assertResponseHeaderSame('Content-Type', 'text/csv; charset=UTF-8');
         self::assertStringContainsString('postacie-pradawne-zwoje.csv', (string) $this->client->getResponse()->headers->get('Content-Disposition'));
         $content = (string) $this->client->getResponse()->getContent();
-        self::assertStringStartsWith("\xEF\xBB\xBFnazwa;zajawka;opis;obsada;dostępność;kolejność;rozgrywka;triggery", $content);
+        self::assertStringStartsWith("\xEF\xBB\xBFnazwa;\"imię postaci\";zajawka;opis;obsada;dostępność;kolejność;rozgrywka;triggery", $content);
     }
 
     public function testTheTemplateImportsCleanly(): void
