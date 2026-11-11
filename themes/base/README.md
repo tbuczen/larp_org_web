@@ -55,7 +55,7 @@ themes/<name>/
 | `--color-bg`, `--color-surface`, `--color-surface-2`, `--color-border` | page, cards, inputs, lines |
 | `--color-text`, `--color-muted` | text, secondary text |
 | `--color-primary`, `--color-on-primary`, `--color-link` | buttons, links, highlights; text on primary |
-| `--color-accent`, `--color-danger` | eyebrows, hover, warnings/triggers |
+| `--color-accent`, `--color-danger`, `--color-success` | eyebrows, hover, warnings/triggers, positive choices (liked tags) |
 | `--font-body`, `--font-heading`, `--font-ui`, `--font-brand` | body text, headings, buttons/labels, logo text |
 | `--heading-weight`, `--heading-tracking`, `--button-radius`, `--button-tracking` | typographic details |
 | `--radius`, `--radius-small`, `--max-width`, `--gutter`, `--header-height` | shape and layout |

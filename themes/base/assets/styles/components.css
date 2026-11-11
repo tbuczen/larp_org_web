@@ -282,8 +282,23 @@ a.badge--open { background: var(--color-primary); border-color: var(--color-prim
 .rating-row { border: 0; border-top: 1px solid var(--color-border); margin: 0; padding: .35rem 0; }
 .rating-row legend { float: left; font-size: .9rem; padding: 0; } /* float keeps legend inside the grid */
 .rating-option { cursor: pointer; display: flex; justify-content: center; }
-.rating-option input { accent-color: var(--color-primary); cursor: pointer; height: 1.1rem; margin: 0; width: 1.1rem; }
-.rating-option--hate input, .rating-option--dislike input { accent-color: var(--color-danger); }
+/* Rating dots: red-ish for "no", neutral in the middle, green for "yes"; tinted
+   even before they're picked, so the scale reads at a glance. */
+.rating-option { --dot: var(--color-primary); --dot-tint: 0%; }
+.rating-option--hate { --dot: var(--color-danger); --dot-tint: 45%; }
+.rating-option--dislike { --dot: var(--color-danger); --dot-tint: 25%; }
+.rating-option--like { --dot: var(--color-success); --dot-tint: 25%; }
+.rating-option--love { --dot: var(--color-success); --dot-tint: 45%; }
+.rating-option input {
+    appearance: none; -webkit-appearance: none;
+    background: color-mix(in srgb, var(--dot) var(--dot-tint), var(--color-surface-2));
+    border: 2px solid color-mix(in srgb, var(--dot) calc(var(--dot-tint) + 25%), var(--color-border));
+    border-radius: 50%; cursor: pointer; height: 1.15rem; margin: 0; transition: background .15s, box-shadow .15s, transform .15s; width: 1.15rem;
+}
+.rating-option input:hover { border-color: var(--dot); transform: scale(1.1); }
+.rating-option input:checked { background: var(--dot); border-color: var(--dot); box-shadow: inset 0 0 0 3px var(--color-surface), 0 0 0 1px var(--dot); }
+.rating-option input:focus-visible { outline: 2px solid var(--dot); outline-offset: 2px; }
+@media (forced-colors: active) { .rating-option input { appearance: auto; } }
 
 .trigger-group { border-top: 1px solid var(--color-border); padding: .4rem 0; }
 .trigger-group summary { cursor: pointer; font-size: .9rem; }
