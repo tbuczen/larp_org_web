@@ -3,8 +3,12 @@
  *  - drag-and-drop ordering for lists marked with data-sortable-url (page blocks, menu items)
  *  - gallery photos: ordering inside the save form, and the bulk uploader
  *  - LARP colours: colour pickers next to the #rrggbb fields, live preview and contrast check
+ *  - date pickers: a start/end range (edition dates) and single dates
  */
 import Sortable from 'sortablejs';
+import flatpickr from 'flatpickr';
+import { Polish } from 'flatpickr/dist/l10n/pl.js';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function initSortable(list) {
     if (list.dataset.sortableReady) {
@@ -287,6 +291,54 @@ function initLarpColors(form) {
     update();
 }
 
+/*
+ * Date pickers (flatpickr, Polish). The real inputs keep yyyy-mm-dd for the form;
+ * people see "6 sierpnia 2026". For a start/end pair (data-date-range="start" /
+ * "end"): picking the start opens the end picker on that month, with earlier
+ * days disabled; an end before the new start is cleared.
+ */
+const polishDate = new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+const datePickerOptions = {
+    locale: Polish,
+    dateFormat: 'Y-m-d',
+    altInput: true,
+    altFormat: 'long',
+    allowInput: true,
+    disableMobile: true,
+    // "12 stycznia 2027" (the right grammatical case) for people; Y-m-d for the form.
+    formatDate: (date, format, locale) => (format === 'long' ? polishDate.format(date) : flatpickr.formatDate(date, format, locale)),
+};
+
+function initDatePickers(root) {
+    root.querySelectorAll('input[data-date-range="start"]').forEach((startInput) => {
+        const scope = startInput.closest('form, fieldset') || root;
+        const endInput = scope.querySelector('input[data-date-range="end"]');
+        const end = endInput ? flatpickr(endInput, {
+            ...datePickerOptions,
+            minDate: startInput.value || null,
+            onOpen: (selected, value, instance) => {
+                // Nothing picked yet: show the start's month rather than today's.
+                const startDate = start.selectedDates[0];
+                if (selected.length === 0 && startDate) instance.jumpToDate(startDate);
+            },
+        }) : null;
+        const start = flatpickr(startInput, {
+            ...datePickerOptions,
+            onChange: ([date]) => {
+                if (!end) return;
+                end.set('minDate', date || null);
+                if (!date) return;
+                const current = end.selectedDates[0];
+                if (current && current < date) end.clear();
+                end.jumpToDate(current && current >= date ? current : date);
+                // Fast input: straight on to the end date.
+                if (!end.selectedDates[0]) setTimeout(() => end.open(), 0);
+            },
+        });
+    });
+    root.querySelectorAll('input[data-date-picker]').forEach((input) => flatpickr(input, datePickerOptions));
+}
+
 // CSV import preview: "select all" and the count on the import button.
 function initImportChecks(table) {
     const all = table.querySelector('[data-import-check-all]');
@@ -307,6 +359,7 @@ function initImportChecks(table) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initDatePickers(document);
     document.querySelectorAll('.import-table').forEach((table) => {
         if (table.querySelector('[data-import-check-all]')) initImportChecks(table);
     });

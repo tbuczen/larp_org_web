@@ -141,6 +141,9 @@ class GalleryCrudController extends AbstractCrudController
             ->setHelp('gallery.photographer_help')
             ->setColumns(6);
         yield DateField::new('eventDate', 'gallery.event_date')
+            ->renderAsText()
+            ->setFormTypeOption('format', 'yyyy-MM-dd')
+            ->setFormTypeOption('attr', ['data-date-picker' => '', 'placeholder' => 'rrrr-mm-dd', 'autocomplete' => 'off'])
             ->setRequired(false)
             ->setHelp('gallery.event_date_help')
             ->setColumns(6)

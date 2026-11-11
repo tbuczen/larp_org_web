@@ -118,8 +118,20 @@ class LarpEditionCrudController extends AbstractCrudController
         yield TextField::new('name', 'edition.name')->setHelp('edition.name_help')->setColumns(4);
         yield TextField::new('slug', 'edition.slug')->setRequired(false)->setHelp('edition.slug_help')->setColumns(4)->hideOnIndex();
         yield FormField::addRow();
-        yield DateField::new('startDate', 'edition.start_date')->setColumns(4);
-        yield DateField::new('endDate', 'edition.end_date')->setColumns(4)->hideOnIndex();
+        // A date range picker (assets/admin.js): picking the start opens the end on
+        // the same month, with earlier days disabled.
+        yield DateField::new('startDate', 'edition.start_date')
+            ->renderAsText()
+            ->setFormTypeOption('format', 'yyyy-MM-dd')
+            ->setFormTypeOption('attr', ['data-date-range' => 'start', 'placeholder' => 'rrrr-mm-dd', 'autocomplete' => 'off'])
+            ->setColumns(4);
+        yield DateField::new('endDate', 'edition.end_date')
+            ->renderAsText()
+            ->setFormTypeOption('format', 'yyyy-MM-dd')
+            ->setFormTypeOption('attr', ['data-date-range' => 'end', 'placeholder' => 'rrrr-mm-dd', 'autocomplete' => 'off'])
+            ->setHelp('edition.end_date_help')
+            ->setColumns(4)
+            ->hideOnIndex();
         yield FormField::addRow();
         yield TextField::new('location', 'edition.location')->setRequired(false)->setColumns(6);
         yield UrlField::new('locationUrl', 'edition.location_url')->setRequired(false)->setColumns(6)->hideOnIndex();

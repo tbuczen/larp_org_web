@@ -124,6 +124,7 @@ larp:
     editions: Editions
 
 edition:
+    end_date_help: 'After picking the start, the end calendar opens by itself on the same month. One-day event: leave empty.'
     larp: LARP
     new: New edition
     add: Add edition

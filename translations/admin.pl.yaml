@@ -124,6 +124,7 @@ larp:
     editions: Edycje
 
 edition:
+    end_date_help: 'Po wybraniu początku kalendarz końca otworzy się sam, od tego samego miesiąca. Jednodniowe wydarzenie: zostaw puste.'
     larp: Larp
     new: Nowa edycja
     add: Dodaj edycję
