@@ -73,7 +73,12 @@ matcher:
     other: Inne
     reset: Wyczyść wybory
     count: '{count, plural, =0 {Brak postaci} one {# postać} few {# postacie} other {# postaci}}'
-    start_hint: 'zacznij od oceny rozgrywki po lewej'
+    start_hint: 'zacznij od oceny rozgrywki'
+    restored: 'Przywróciliśmy Twoje wcześniejsze wybory.'
+    restored_reset: 'Zacznij od nowa'
+    restored_close: 'Zamknij'
+    jump_results: '{count, plural, one {Zobacz # postać} few {Zobacz # postacie} other {Zobacz # postaci}}'
+    jump_prefs: 'Zmień wybory'
     no_results: 'Żadna postać nie spełnia filtrów.'
     match: Dopasowanie
     your_triggers: Twoje triggery

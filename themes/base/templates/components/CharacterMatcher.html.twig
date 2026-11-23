@@ -3,11 +3,17 @@
     server; see App\Twig\Components\CharacterMatcher.
 #}
 {% set scale_keys = {'-2': 'hate', '-1': 'dislike', '0': 'neutral', '1': 'like', '2': 'love'} %}
-<div {{ attributes.defaults({class: 'matcher', 'data-controller': 'remember-query'}) }}>
+<div {{ attributes.defaults({class: 'matcher', 'data-controller': 'remember-query matcher-jump'}) }}>
     {% if not this.hasCharacters %}
         <p class="hint">{{ 'character.none'|trans }}</p>
     {% else %}
     <aside class="matcher__prefs" aria-label="{{ 'matcher.preferences'|trans }}">
+        {# Shown by remember_query_controller.js after it restored the visitor's earlier choices. #}
+        <p class="matcher__restored" data-remember-query-target="notice" data-live-ignore hidden>
+            <span>{{ 'matcher.restored'|trans }}</span>
+            <button type="button" class="button-link" data-action="live#action" data-live-action-param="reset">{{ 'matcher.restored_reset'|trans }}</button>
+            <button type="button" class="matcher__restored-close" data-action="remember-query#dismiss" aria-label="{{ 'matcher.restored_close'|trans }}">×</button>
+        </p>
         {# Quick search over gameplay tags and triggers, for LARPs with many of them.
            data-live-ignore: re-renders leave the box (and what's typed) alone. #}
         <div class="tag-search" data-live-ignore data-controller="tag-search">
@@ -169,5 +175,15 @@
             {% endfor %}
         </ol>
     </section>
+
+    {# Phones: jump between the preferences and the results (matcher_jump_controller.js). #}
+    <div class="matcher__jump" aria-hidden="true">
+        <button type="button" class="matcher__jump-button matcher__jump-button--down" tabindex="-1" data-action="matcher-jump#toResults">
+            {{ 'matcher.jump_results'|trans({count: results|length}) }} <span aria-hidden="true">↓</span>
+        </button>
+        <button type="button" class="matcher__jump-button matcher__jump-button--up" tabindex="-1" data-action="matcher-jump#toPrefs">
+            <span aria-hidden="true">↑</span> {{ 'matcher.jump_prefs'|trans }}
+        </button>
+    </div>
     {% endif %}
 </div>

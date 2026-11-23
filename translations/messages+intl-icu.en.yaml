@@ -73,7 +73,12 @@ matcher:
     other: Other
     reset: Clear choices
     count: '{count, plural, =0 {No characters} one {# character} other {# characters}}'
-    start_hint: 'start by rating the gameplay on the left'
+    start_hint: 'start by rating the gameplay'
+    restored: 'We restored your earlier choices.'
+    restored_reset: 'Start over'
+    restored_close: 'Close'
+    jump_results: '{count, plural, one {See # character} other {See # characters}}'
+    jump_prefs: 'Change choices'
     no_results: 'No character matches the filters.'
     match: Match
     your_triggers: Your triggers

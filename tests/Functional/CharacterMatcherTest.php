@@ -142,6 +142,18 @@ final class CharacterMatcherTest extends WebTestCase
         self::assertGreaterThan(0, $crawler->filter('label.check[data-tag-search]')->count(), 'triggers are searchable too');
     }
 
+    public function testRestoreNoticeAndPhoneJumpButtons(): void
+    {
+        $crawler = $this->get('/postacie', []);
+
+        $notice = $crawler->filter('.matcher__restored[data-remember-query-target=notice][data-live-ignore]');
+        self::assertCount(1, $notice, 'kept out of re-renders, shown by remember_query_controller.js');
+        self::assertNotNull($notice->attr('hidden'));
+        self::assertSame('reset', $notice->filter('button[data-live-action-param]')->attr('data-live-action-param'));
+        self::assertStringContainsString('matcher-jump', (string) $crawler->filter('.matcher')->attr('data-controller'));
+        self::assertMatchesRegularExpression('/Zobacz \d+ postac/', $crawler->filter('.matcher__jump-button--down')->text());
+    }
+
     public function testUncheckedFiltersBecomeNull(): void
     {
         $component = $this->createLiveComponent(CharacterMatcher::class, [], $this->client);

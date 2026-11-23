@@ -174,3 +174,6 @@ a.badge--open, .badge--open { background: var(--color-text); border-color: var(-
 .next-larp { box-shadow: var(--frame); margin: 5px; }
 .next-larp__title { font-weight: 700; text-transform: uppercase; }
 .mini-calendar caption, .mini-calendar th { letter-spacing: .12em; text-transform: uppercase; }
+
+/* The condensed font needs a larger size to stay readable at small sizes. */
+.facts dt { font-size: .95rem; letter-spacing: .08em; }
