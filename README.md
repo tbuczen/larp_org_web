@@ -114,7 +114,7 @@ Triggers never change the score: matching characters get a ⚠ warning, or are h
 "Ukryj postacie z moimi triggerami". Choices live in the URL (shareable) and are saved in
 localStorage after every change, so closing the tab by accident loses nothing: coming back to
 the same page restores them with a "Przywróciliśmy Twoje wcześniejsze wybory · Zacznij od nowa"
-note. On phones the tag name sits above a full-width row of dots, the scale labels stay under the
+note. Saved choices expire 30 days after their last change. On phones the tag name sits above a full-width row of dots, the scale labels stay under the
 sticky search box, and a floating button jumps between the choices and the results.
 ### Social links and Facebook events
 

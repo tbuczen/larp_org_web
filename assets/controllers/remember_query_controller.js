@@ -8,12 +8,14 @@ import { getComponent } from '@symfony/ux-live-component';
  * shared result) always wins.
  *
  * Saved after every change, not only when leaving: phones often kill a tab in
- * the background without any "page closed" event. After a restore, the notice
- * target is shown ("your choices were restored · start over").
+ * the background without any "page closed" event. Saved choices expire 30 days
+ * after the last change. After a restore, the notice target is shown ("your
+ * choices were restored · start over").
  *
  * Usage: <div data-controller="remember-query"> … <p data-remember-query-target="notice" hidden>
  */
 const RESTORED_FLAG = 'remember-query:restored';
+const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
 export default class extends Controller {
     static targets = ['notice'];
@@ -27,6 +29,8 @@ export default class extends Controller {
 
         const stored = this.read();
         if (!window.location.search && stored) {
+            // Leaving this empty page must not "save" its empty choices over the stored ones.
+            this.restoring = true;
             this.flag(window.location.pathname);
             window.location.replace(window.location.pathname + stored);
 
@@ -55,9 +59,16 @@ export default class extends Controller {
     }
 
     save() {
+        if (this.restoring) {
+            return;
+        }
         try {
-            if (window.location.search) {
-                localStorage.setItem(this.key, window.location.search);
+            const query = window.location.search;
+            if (query) {
+                // Unchanged choices keep their date: the 30 days count from the last change, not the last visit.
+                if (query !== this.read()) {
+                    localStorage.setItem(this.key, JSON.stringify({ query, savedAt: Date.now() }));
+                }
             } else {
                 localStorage.removeItem(this.key);
             }
@@ -78,9 +89,35 @@ export default class extends Controller {
         }
     }
 
+    /** The saved query string, or null when there is none or it is older than 30 days. */
     read() {
         try {
-            return localStorage.getItem(this.key);
+            const raw = localStorage.getItem(this.key);
+            if (!raw) {
+                return null;
+            }
+            let entry;
+            try {
+                entry = JSON.parse(raw);
+            } catch {
+                entry = null;
+            }
+            // Saved before expiry existed (a bare query string): keep it and date it from now.
+            if (typeof entry !== 'object' || entry === null) {
+                if (!raw.startsWith('?')) {
+                    return null;
+                }
+                localStorage.setItem(this.key, JSON.stringify({ query: raw, savedAt: Date.now() }));
+
+                return raw;
+            }
+            if (typeof entry.query !== 'string' || !(Date.now() - entry.savedAt < MAX_AGE_MS)) {
+                localStorage.removeItem(this.key);
+
+                return null;
+            }
+
+            return entry.query;
         } catch {
             return null;
         }
